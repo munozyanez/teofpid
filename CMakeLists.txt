@@ -26,11 +26,13 @@ endif()
 
 INCLUDE_DIRECTORIES(${fpid_INCLUDE_DIR})
 
+find_package(YARP REQUIRED)
+
 
 add_executable(${PROJECT_NAME} ${SRC_LIST})
 
 #link with libs
-target_link_libraries( ${PROJECT_NAME} fpid )
+target_link_libraries( ${PROJECT_NAME} fpid ${YARP_LIBRARIES})
 #echo_all_cmake_variable_values()
 
 
