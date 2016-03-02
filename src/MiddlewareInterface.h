@@ -24,13 +24,13 @@ class Port : MiddlewareInterface
 
 public:
     Port();
-    Port(std::string portname);
-
-
-
+    Port(const std::string portname);
+    bool Read(std::istream &indices, std::ostream &data);
+    bool Setup(std::string portname);
 private:
     yarp::os::BufferedPort<yarp::os::Bottle> PortBuffer;
     yarp::os::Bottle* PortData;
+    std::string yarpPortString;
 
 
 };

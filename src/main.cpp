@@ -28,7 +28,20 @@ int main()
 
 
 
-    MWI::Port imuPort("/inertial:i");
+    //Setup imu middleware port
+    MWI::Port imuPort("/inertial");
+    std::stringstream dataIndices, imudata;
+    dataIndices << "3 4 5" ;//yarp imu port Linear acceleration in X Y Z [m/s^2]
+
+    //READ SENSOR
+    double a_x,a_y,a_z;
+
+    imuPort.Read(dataIndices, imudata);
+    imudata >> a_x;
+    imudata >> a_y;
+    imudata >> a_z;
+
+
 
     return 0;
 }

@@ -7,35 +7,51 @@ MiddlewareInterface::MiddlewareInterface()
 
 }
 
-Port::Port(std::string portname)
+Port::Port(const std::string portname)
 {
+    Port::Setup(portname);
 
+}
+
+bool Port::Setup(std::string portname)
+{
+    yarpPortString = portname;
     //OPEN imu port
-    PortBuffer.open(portname);
+    PortBuffer.open(yarpPortString+":i");
     if (PortBuffer.isClosed())
     {
-        std::cerr << "Can not open "<< portname  << std::endl;
+        std::cerr << "Can not open "<< yarpPortString+":i"  << std::endl;
     }
     else
     {
-        yarp::os::Network::connect("/inertial", "/inertial:i");
+        yarp::os::Network::connect(yarpPortString, yarpPortString+":i");
 
     }
+    //Time::delay(10);  //Wait for port to open [s]
 
-    //READ SENSOR
-    double a_x,a_y,a_z;
+    return true;
 
-    PortData = PortBuffer.read(false); //false is not waiting for now
+}
+
+
+bool Port::Read(std::istream &indices, std::ostream& data)
+{
+
+    int index;
+
+    PortData = PortBuffer.read(false); //not waiting. TODO: manage wait.
     if (PortData==NULL)
     {
         std::cerr << "No data from imu" << std::endl;
     }
     else
     {
-        a_x = PortData->get(3).asDouble();//Linear acceleration in X [m/s^2]
-        a_y = PortData->get(4).asDouble(); //Linear acceleration in Y [m/s^2]
-        a_z = PortData->get(5).asDouble(); //Linear acceleration in Z [m/s^2]
-    }
 
-    //Time::delay(10);  //Wait for port to open [s]
+        while(indices >> index)
+        {
+            data << PortData->get(index).asString();
+        }
+
+    }
+    return true;
 }
