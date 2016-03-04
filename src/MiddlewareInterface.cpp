@@ -39,7 +39,7 @@ bool Port::Read(std::istream &indices, std::ostream& data)
 
     int index;
 
-    PortData = PortBuffer.read(false); //not waiting. TODO: manage wait.
+    PortData = PortBuffer.read(true); //not waiting. TODO: manage wait.
     if (PortData==NULL)
     {
         std::cerr << "No data from imu" << std::endl;

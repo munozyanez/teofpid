@@ -47,6 +47,7 @@ int main()
     imudata >> a_y;
     imudata >> a_z;
 
+    std::cout << a_x << a_y << a_z;
 
 
     return 0;
