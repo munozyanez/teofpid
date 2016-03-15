@@ -25,6 +25,8 @@ bool Port::Setup(std::string portname)
     else
     {
         yarp::os::Network::connect(yarpPortString, yarpPortString+":i");
+        std::cout << "Connected to "<< PortBuffer.getName() << std::endl;
+        //std::cout << PortBuffer.getName();
 
     }
     //Time::delay(10);  //Wait for port to open [s]
@@ -39,17 +41,62 @@ bool Port::Read(std::istream &indices, std::ostream& data)
 
     int index;
 
-    PortData = PortBuffer.read(true); //not waiting. TODO: manage wait.
-    if (PortData==NULL)
+    onePortData = PortBuffer.read(false); //waiting data. TODO: manage wait.
+    if (onePortData==NULL)
     {
-        std::cerr << "No data from imu" << std::endl;
+        std::cerr << "No data in " << yarpPortString << std::endl;
     }
     else
     {
 
         while(indices >> index)
         {
-            data << PortData->get(index).asString();
+            data << onePortData->get(index).asString();
+        }
+
+    }
+    return true;
+}
+
+bool Port::ReadAllData(std::ostream& data)
+{
+
+    //int index,indices;
+
+    onePortData = PortBuffer.read(false); //waiting data. TODO: manage wait.
+    if (onePortData==NULL)
+    {
+        std::cerr << "No data in " << yarpPortString << std::endl;
+    }
+    else
+    {
+        for(int index=0; index<onePortData->size(); index++)
+        {
+            data << onePortData->get(index).asString();
+        }
+
+    }
+    return true;
+}
+
+
+bool Port::ShowAllData()
+{
+
+    //int index,indices;
+    onePortData = PortBuffer.read(false); //waiting data. TODO: manage wait.
+
+
+    if (onePortData==NULL)
+    {
+        std::cerr << "No data in " << yarpPortString << std::endl;
+    }
+    else
+    {
+        std::cout << onePortData->size();
+        for(int index=0; index<onePortData->size(); index++)
+        {
+            std::cout << onePortData->get(index).asString();
         }
 
     }

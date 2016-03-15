@@ -26,10 +26,13 @@ public:
     Port();
     Port(const std::string portname);
     bool Read(std::istream &indices, std::ostream &data);
+    bool ReadAllData(std::ostream &data);
+    bool ShowAllData();
     bool Setup(std::string portname);
+
 private:
     yarp::os::BufferedPort<yarp::os::Bottle> PortBuffer;
-    yarp::os::Bottle* PortData;
+    yarp::os::Bottle* onePortData;
     std::string yarpPortString;
 
 

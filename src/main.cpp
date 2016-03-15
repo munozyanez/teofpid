@@ -42,13 +42,19 @@ int main()
     //READ SENSOR
     double a_x,a_y,a_z;
 
-    imuPort.Read(dataIndices, imudata);
+    //imuPort.Read(dataIndices, imudata);
+    //imuPort.ShowAllData();
     imudata >> a_x;
     imudata >> a_y;
     imudata >> a_z;
 
-    std::cout << a_x << a_y << a_z;
+    std::cout << a_x << a_y << a_z <<std::endl;
 
+    //Setup position sensor
+    MWI::Port encoderPort("/teo/yarpmotorgui0/leftLeg/state");
+    std::stringstream encoderdata;
+
+    encoderPort.ShowAllData();
 
     return 0;
 }
