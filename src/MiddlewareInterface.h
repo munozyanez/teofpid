@@ -38,6 +38,13 @@ private:
 
 };
 
+class Joint : MiddlewareInterface
+{
+public:
+    bool GetPos();
+private:
+
+};
 
 }
 #endif // MIDDLEWAREINTERFACE_H
