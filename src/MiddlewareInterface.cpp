@@ -108,8 +108,8 @@ bool Port::ShowAllData()
 
 bool Joint::GetPos()
 {
-    /*//CONNECT TO ROBOT LEFT LEG
-    Property optionsLeftLeg;                                //YARP class for storing name-value (key-value) pairs
+    //CONNECT TO ROBOT LEFT LEG
+   /* Property optionsLeftLeg;                                //YARP class for storing name-value (key-value) pairs
     optionsLeftLeg.put("device","remote_controlboard");     //YARP device
     optionsLeftLeg.put("remote","/teo/leftLeg");            //To what will be connected
     optionsLeftLeg.put("local","/juan/leftLeg");            //How will be called on YARP network
@@ -150,3 +150,106 @@ bool Joint::GetPos()
     } else printf("[success] TEO_push acquired robot right leg IVelocityControl interface.\n");
     velRightLeg->setVelocityMode();*/
 }
+
+bool Joint::SetPos(double)
+{
+    std::cout << "TODO";
+}
+
+Robot::Robot(std::istream& config)
+{
+    std::string name,value;
+    while(config >> name)
+    {
+        config >> value;
+        robotOptions.put(name,value);
+        std::cout << name << value;
+    }
+    deviceDriver.open(robotOptions);               //YARP multi-use driver with the given options
+    if(!deviceDriver.isValid())
+    {
+      std::cerr << "Not avilable: " << robotOptions.toString() << std::endl;
+      deviceDriver.close();
+      //return;
+    }
+
+    if ( ! deviceDriver.view(iVel) )
+    {
+        std::cerr << "vControl Not avilable." << std::endl;
+        velAxes = 0;
+    }
+    else
+    {
+        iVel->setVelocityMode();
+        iVel->getAxes(&velAxes);
+    }
+
+    if ( ! deviceDriver.view(iEnc) )
+    {
+        std::cerr << "encoders Not avilable." << std::endl;
+        encoderAxes=0;
+    }
+    else
+    {
+        iEnc->getAxes(&encoderAxes);
+
+    }
+
+}
+
+bool Robot::GetJoints(std::ostream &positions)
+{
+    double* encValuePtr;
+
+    if (encoderAxes == 0)
+    {
+        std::cerr << "encoderAxes = 0" << std::endl;
+        return false;
+    }
+
+    iEnc->getEncoders(encValuePtr);
+
+    for (int i=0; i<encoderAxes; i++)
+    {
+        positions << *encValuePtr << " ";
+        encValuePtr++;
+
+    }
+
+
+    return true;
+}
+
+bool Robot::GetJoint(int encoderAxe, double& encoderValue)
+{
+
+    if (encoderAxe > encoderAxes)
+    {
+        std::cerr << "No such axe number" << std::endl;
+        return false;
+    }
+
+    iEnc->getEncoder(encoderAxe, &encoderValue);
+
+    return true;
+}
+
+bool Robot::SetJointVel(int axe, double &value)
+{
+
+    if (axe > velAxes)
+    {
+        std::cerr << "No such axe number" << std::endl;
+        return false;
+    }
+
+    iVel->velocityMove(axe, value);
+
+    return true;
+
+}
+
+
+
+
+

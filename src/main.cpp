@@ -1,6 +1,9 @@
 
 #include<iostream>
+#include <time.h>
+
 #include <yarp/os/all.h>
+
 
 #include "MiddlewareInterface.h"
 
@@ -36,13 +39,13 @@ int main()
      // i = 3,4,5 --> linear acceleration (m/s²)
      // i = 6,7,8 --> angular speed (deg/s)
      // i = 9,10,11 --> magnetic field (arbitrary units)
-    dataIndices << "3 4 5" ;//yarp imu port Linear acceleration in X Y Z [m/s^2]
+    dataIndices << "3 4 5" ;// X Y Z [m/s^2]
 
 
     //READ SENSOR
     double a_x,a_y,a_z;
 
-    //imuPort.Read(dataIndices, imudata);
+    imuPort.Read(dataIndices, imudata);
     //imuPort.ShowAllData();
     imudata >> a_x;
     imudata >> a_y;
@@ -50,11 +53,40 @@ int main()
 
     std::cout << a_x << a_y << a_z <<std::endl;
 
-    //Setup position sensor
-    MWI::Port encoderPort("/teo/yarpmotorgui0/leftLeg/state");
-    std::stringstream encoderdata;
 
-    encoderPort.ShowAllData();
+    //Robot teo right arm
+    std::stringstream robConfig;
+    //YARP device
+    robConfig << "device remote_controlboard" << " ";
+    //To what will be connected
+    robConfig << "remote /teo/rightArm" << " ";
+    //How will be called on YARP network
+    robConfig << "local /local/rightArm/" << " ";
+    MWI::Robot rightArm(robConfig);
+
+
+    double raj4;
+    rightArm.GetJoint(3,raj4);
+    std::cout << "raj4: " << raj4  <<std::endl;
+
+
+    double v1,v0;
+    v1=-1;
+    v0=0;
+    rightArm.SetJointVel(3,v1);
+    //yarp::os::Time::delay(1);
+    rightArm.SetJointVel(3,v0);
+
+
+    //controller
+
+    time_t current,last;
+
+    time(&current);
+    //get data
+    //calculate control
+    //
+
 
     return 0;
 }

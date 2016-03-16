@@ -6,6 +6,7 @@
 #include<string>
 #include<iostream>
 #include <yarp/os/all.h>
+#include <yarp/dev/all.h>
 
 namespace MWI
 {
@@ -42,7 +43,29 @@ class Joint : MiddlewareInterface
 {
 public:
     bool GetPos();
+    bool SetPos(double);
 private:
+
+};
+
+class Robot : MiddlewareInterface
+{
+public:
+    Robot(std::istream &config);
+    bool GetJoints(std::ostream & positions);
+    bool GetJoint(int encoderAxe, double& encoderValue);
+    bool SetJointVel(int axe, double& value);
+
+
+private:
+    yarp::os::Property robotOptions;
+    yarp::dev::PolyDriver deviceDriver;
+    std::vector<Joint> joints;
+    yarp::dev::IVelocityControl *iVel;                 //Velocity controller
+    yarp::dev::IPositionControl2 *iPos;                 //position controller
+    yarp::dev::IEncoders *iEnc;         //encoders
+    int encoderAxes;
+    int velAxes;
 
 };
 
