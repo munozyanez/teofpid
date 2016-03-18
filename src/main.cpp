@@ -6,6 +6,7 @@
 
 
 #include "MiddlewareInterface.h"
+#include "fpid.h"
 
 using namespace std;
 
@@ -65,20 +66,37 @@ int main()
     MWI::Robot rightArm(robConfig);
 
 
-    double raj4;
-    rightArm.GetJoint(3,raj4);
-    std::cout << "raj4: " << raj4  <<std::endl;
+    double elbowPos;
+    rightArm.GetJoint(3,elbowPos);
+    std::cout << "raj4: " << elbowPos  <<std::endl;
 
 
-    double v1,v0;
-    v1=-1;
+  /*   double v1,v0;
+    v1=1;
     v0=0;
     rightArm.SetJointVel(3,v1);
-    //yarp::os::Time::delay(1);
+    yarp::os::Time::delay(1);
     rightArm.SetJointVel(3,v0);
 
-
+*/
     //controller
+
+    fpid::Controller control;
+    double signal;
+
+   //control loop
+    control.SetTarget(3);
+    while(control.Finished()==false)
+    {
+        rightArm.GetJoint(3,elbowPos);
+        signal = control.ControlSignal(elbowPos);
+        std::cout << signal << std::endl;
+        rightArm.SetJointVel(3,signal);
+
+    }
+    signal =0;
+    rightArm.SetJointVel(3,signal);
+
 
     time_t current,last;
 
