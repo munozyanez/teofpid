@@ -77,21 +77,25 @@ int main()
     rightArm.SetJointVel(3,v1);
     yarp::os::Time::delay(1);
     rightArm.SetJointVel(3,v0);
-
 */
+
     //controller
 
     fpid::Controller control;
-    double signal;
+    double signal,command;
 
    //control loop
-    control.SetTarget(3);
+    control.SetTarget(0);
     while(control.Finished()==false)
     {
         rightArm.GetJoint(3,elbowPos);
         signal = control.ControlSignal(elbowPos);
-        std::cout << signal << std::endl;
+        std::cout << signal << "," << std::endl;
+        //std::cout << command << "" << std::endl;
+        //command=double(std::min(signal,1.0));
         rightArm.SetJointVel(3,signal);
+        yarp::os::Time::delay(0.05);
+
 
     }
     signal =0;

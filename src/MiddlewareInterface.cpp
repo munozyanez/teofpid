@@ -108,47 +108,7 @@ bool Port::ShowAllData()
 
 bool Joint::GetPos()
 {
-    //CONNECT TO ROBOT LEFT LEG
-   /* Property optionsLeftLeg;                                //YARP class for storing name-value (key-value) pairs
-    optionsLeftLeg.put("device","remote_controlboard");     //YARP device
-    optionsLeftLeg.put("remote","/teo/leftLeg");            //To what will be connected
-    optionsLeftLeg.put("local","/juan/leftLeg");            //How will be called on YARP network
-    PolyDriver deviceLeftLeg(optionsLeftLeg);               //YARP multi-use driver with the given options
-    if(!deviceLeftLeg.isValid())
-    {
-      printf("[error] /teo/leftLeg device not available.\n");
-      deviceLeftLeg.close();
-      Network::fini();
-      return 1;
-    }
-    IVelocityControl *velLeftLeg;                 //Velocity controller
-    if ( ! deviceLeftLeg.view(velLeftLeg) )
-    {
-        printf("[error] Problems acquiring robot left leg IVelocityControl interface.\n");
-        return false;
-    } else printf("[success] TEO_push acquired robot left leg IVelocityControl interface.\n");
-    velLeftLeg->setVelocityMode();
 
-    //CONNECT TO ROBOT RIGHT LEG
-    Property optionsRightLeg;                                //YARP class for storing name-value (key-value) pairs
-    optionsRightLeg.put("device","remote_controlboard");      //YARP device
-    optionsRightLeg.put("remote","/teo/rightLeg");            //To what will be connected
-    optionsRightLeg.put("local","/juan/rightLeg");            //How will be called on YARP network
-    PolyDriver deviceRightLeg(optionsRightLeg);               //YARP multi-use driver with the given options
-    if(!deviceRightLeg.isValid())
-    {
-      printf("[error] /teo/rightLeg device not available.\n");
-      deviceRightLeg.close();
-      Network::fini();
-      return 1;
-    }
-    IVelocityControl *velRightLeg;                 //Velocity controller
-    if ( ! deviceRightLeg.view(velRightLeg) )
-    {
-        printf("[error] Problems acquiring robot right leg IVelocityControl interface.\n");
-        return false;
-    } else printf("[success] TEO_push acquired robot right leg IVelocityControl interface.\n");
-    velRightLeg->setVelocityMode();*/
 }
 
 bool Joint::SetPos(double)
@@ -194,6 +154,7 @@ Robot::Robot(std::istream& config)
         iEnc->getAxes(&encoderAxes);
 
     }
+    vLimit = 1;
 
 }
 
@@ -242,9 +203,21 @@ bool Robot::SetJointVel(int axe, double &value)
         std::cerr << "No such axe number" << std::endl;
         return false;
     }
+    iVel->velocityMove(axe, std::min(value,vLimit) );
+/*
+    if (value <= vLimit)
+    {
+        iVel->velocityMove(axe, value);
+        std::cout << "value";
 
-    iVel->velocityMove(axe, value);
+    }
+    else
+    {
+        iVel->velocityMove(axe, vLimit);
+        std::cout << "vLimit";
 
+    }
+*/
     return true;
 
 }

@@ -5,7 +5,7 @@ fpid::Controller::Controller()
 {
     finished=true;
     maxRepeat = 50;
-    range = 0.1;
+    range = 0.2;
 }
 
 bool fpid::Controller::SetTarget(double newTarget)
@@ -24,11 +24,11 @@ double fpid::Controller::ControlSignal(double actual)
         {
             repeat++;
             std::cout << repeat <<"," <<delta << "," << range << std::endl;
-            return 0.1*(delta);
+            return 1*(delta);
         }
         else
         {
-            return 0.1*(delta);
+            return 1*(delta);
         }
 
 

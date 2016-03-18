@@ -66,6 +66,7 @@ private:
     yarp::dev::IEncoders *iEnc;         //encoders
     int encoderAxes;
     int velAxes;
+    double vLimit;
 
 };
 
