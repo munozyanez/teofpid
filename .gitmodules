@@ -1,0 +1,3 @@
+[submodule "lib/teoMWI"]
+	path = lib/teoMWI
+	url = https://github.com/munozyanez/teoMWI.git
