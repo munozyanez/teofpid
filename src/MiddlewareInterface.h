@@ -53,8 +53,8 @@ class Robot : MiddlewareInterface
 public:
     Robot(std::istream &config);
     bool GetJoints(std::ostream & positions);
-    bool GetJoint(int encoderAxe, double& encoderValue);
-    bool SetJointVel(int axe, double& value);
+    bool GetJoint(int encoderAxis, double& encoderValue);
+    bool SetJointVel(int axis, double& value);
 
 
 private:

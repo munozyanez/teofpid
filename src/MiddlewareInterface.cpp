@@ -154,7 +154,7 @@ Robot::Robot(std::istream& config)
         iEnc->getAxes(&encoderAxes);
 
     }
-    vLimit = 1;
+    vLimit = 2;
 
 }
 
@@ -181,29 +181,39 @@ bool Robot::GetJoints(std::ostream &positions)
     return true;
 }
 
-bool Robot::GetJoint(int encoderAxe, double& encoderValue)
+bool Robot::GetJoint(int encoderAxis, double& encoderValue)
 {
 
-    if (encoderAxe > encoderAxes)
+    if (encoderAxis > encoderAxes)
     {
-        std::cerr << "No such axe number" << std::endl;
+        std::cerr << "No such axis number" << std::endl;
         return false;
     }
 
-    iEnc->getEncoder(encoderAxe, &encoderValue);
+    iEnc->getEncoder(encoderAxis, &encoderValue);
 
     return true;
 }
 
-bool Robot::SetJointVel(int axe, double &value)
+bool Robot::SetJointVel(int axis, double &value)
 {
 
-    if (axe > velAxes)
+
+    if (axis > velAxes)
     {
         std::cerr << "No such axe number" << std::endl;
         return false;
     }
-    iVel->velocityMove(axe, std::min(value,vLimit) );
+
+    if(value>0)
+    {
+        iVel->velocityMove(axis, std::min(value,vLimit) );
+    }
+    else
+    {
+        iVel->velocityMove(axis, std::max(value,-vLimit) );
+    }
+
 /*
     if (value <= vLimit)
     {
