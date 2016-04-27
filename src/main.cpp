@@ -84,13 +84,20 @@ int main()
     fpid::Controller control;
     double signal,command;
 
+
+    time_t t;
+    double target = 0;
    //control loop
-    control.SetTarget(0);
+    control.SetTarget(target);
     while(control.Finished()==false)
     {
         rightArm.GetJoint(3,elbowPos);
         signal = control.ControlSignal(elbowPos);
-        std::cout << signal << "," << std::endl;
+        std::cout << time(NULL) << ","
+                  << target << ","
+                  << elbowPos << ","
+                  << signal << ","
+                  << std::endl;
         //std::cout << command << "" << std::endl;
         //command=double(std::min(signal,1.0));
         rightArm.SetJointVel(3,signal);
