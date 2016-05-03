@@ -1,6 +1,7 @@
 
 #include<iostream>
 #include <time.h>
+#include <fstream>      // std::fstream
 
 #include <yarp/os/all.h>
 
@@ -91,16 +92,21 @@ int main()
     double signal,command;
 
 
+    std::fstream gdata;
+    gdata.open ("gdata.csv", std::fstream::out);
+
+
+
     time_t t;
     double target = 0;
    //control loop
     control.SetTarget(target);
-  //  rightArm.SetJointPos(3,target);
+    rightArm.SetJointPos(0,target);
     while(control.Finished()==false)
     {
-        rightArm.GetJoint(3,elbowPos);
+        rightArm.GetJoint(0,elbowPos);
         signal = control.ControlSignal(elbowPos);
-        std::cout << time(NULL) << ","
+        gdata << time(NULL) << ","
                   << target << ","
                   << elbowPos << ","
                   << signal << ","
@@ -115,13 +121,8 @@ int main()
     //signal =0;
     //rightArm.SetJointVel(3,signal);
 
+    gdata.close();
 
-    time_t current,last;
-
-    time(&current);
-    //get data
-    //calculate control
-    //
 
 
     return 0;

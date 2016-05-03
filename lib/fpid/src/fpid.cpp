@@ -4,8 +4,8 @@
 fpid::Controller::Controller()
 {
     finished=true;
-    maxRepeat = 50;
-    range = 0.2;
+    maxRepeat = 30;
+    range = 1;
 }
 
 bool fpid::Controller::SetTarget(double newTarget)
