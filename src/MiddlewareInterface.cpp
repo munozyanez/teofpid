@@ -44,19 +44,49 @@ bool Port::Read(std::istream &indices, std::ostream& data)
     onePortData = PortBuffer.read(false); //waiting data. TODO: manage wait.
     if (onePortData==NULL)
     {
-        std::cerr << "No data in " << yarpPortString << std::endl;
+        std::cout << "No data in " << yarpPortString << std::endl;
+        return false;
     }
     else
     {
 
-        while(indices >> index)
+        while(indices>0)
         {
+            indices >> index;
+            std::cout << index << ", ";
             data << onePortData->get(index).asString();
         }
 
     }
     return true;
 }
+
+bool Port::Read(int indices[], std::vector<double> & data)
+{
+
+
+    onePortData = PortBuffer.read(false); //waiting data. TODO: manage wait.
+    if (onePortData==NULL)
+    {
+        std::cout << "No data in " << yarpPortString << std::endl;
+        return false;
+
+    }
+    else
+    {
+
+        for (int i=0; i<data.size(); i++)
+        {
+
+            std::cout << indices[i] << ", ";
+            data[i] = onePortData->get(indices[i]).asDouble();
+        }
+
+    }
+    return true;
+}
+
+
 
 bool Port::ReadAllData(std::ostream& data)
 {
@@ -135,7 +165,7 @@ Robot::Robot(std::istream& config)
 
     if ( ! deviceDriver.view(iVel) )
     {
-        std::cerr << "vControl Not avilable." << std::endl;
+        std::cerr << "Velocity Control Not avilable." << std::endl;
         velAxes = 0;
     }
     else
@@ -154,8 +184,56 @@ Robot::Robot(std::istream& config)
         iEnc->getAxes(&encoderAxes);
 
     }
+    if ( ! deviceDriver.view(iPos) )
+    {
+        std::cerr << "Position Control Not avilable." << std::endl;
+        posAxes=0;
+    }
+    else
+    {
+        iPos->getAxes(&posAxes);
+
+    }
     vLimit = 2;
 
+}
+
+bool Robot::SetControlMode(int newMode)
+{
+    if (controlMode == newMode)
+    {
+        return true;
+    }
+    else
+    {
+       switch (newMode)
+       {
+       case 1:
+           if(iPos->setPositionMode())
+           {
+               controlMode=newMode;
+           }
+           else
+           {
+               std::cerr << "Control mode not available. Keeping actual mode: " << controlMode << std::endl;
+           }
+           break;
+       case 2:
+           if (iVel->setVelocityMode())
+           {
+               controlMode=newMode;
+           }
+           else
+           {
+               std::cerr << "Control mode not available. Keeping actual mode: " << controlMode << std::endl;
+           }
+           break;
+       default:
+           std::cerr << "Control mode not available. Keeping actual mode: " << controlMode << std::endl;
+           break;
+
+       }
+    }
 }
 
 bool Robot::GetJoints(std::ostream &positions)
@@ -199,9 +277,10 @@ bool Robot::SetJointVel(int axis, double &value)
 {
 
 
+    SetControlMode(2);
     if (axis > velAxes)
     {
-        std::cerr << "No such axe number" << std::endl;
+        std::cerr << "No such axis number" << std::endl;
         return false;
     }
 
@@ -228,6 +307,23 @@ bool Robot::SetJointVel(int axis, double &value)
 
     }
 */
+    return true;
+
+}
+
+bool Robot::SetJointPos(int axis, double &value)
+{
+
+    SetControlMode(1);
+    if (axis > posAxes)
+    {
+        std::cerr << "No such axis number" << std::endl;
+        return false;
+    }
+
+
+    iPos->positionMove(axis, value );
+
     return true;
 
 }

@@ -23,6 +23,7 @@ public:
      * @return
      */
     double ControlSignal(double actual);
+    bool WriteLog();
     bool Finished();
 private:
     double target;

@@ -41,6 +41,11 @@ double fpid::Controller::ControlSignal(double actual)
 
 }
 
+bool fpid::Controller::WriteLog()
+{
+
+}
+
 bool fpid::Controller::Finished()
 {
     return finished;

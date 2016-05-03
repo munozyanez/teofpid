@@ -16,7 +16,6 @@ int main()
 {
 
     //MWI::Port imuPort;
-    cout << "Hello World!" << endl;
 
     //INITIALISE AND CHECK YARP
     yarp::os::Network yarpNet;
@@ -40,7 +39,11 @@ int main()
      // i = 3,4,5 --> linear acceleration (m/s²)
      // i = 6,7,8 --> angular speed (deg/s)
      // i = 9,10,11 --> magnetic field (arbitrary units)
-    dataIndices << "3 4 5" ;// X Y Z [m/s^2]
+    dataIndices << 3 << " " <<  "4 5" ;// X Y Z [m/s^2]
+
+    int indices [] = {3, 4, 5};
+    std::vector<double> imuAccel (3);
+
 
 
     //READ SENSOR
@@ -54,6 +57,9 @@ int main()
 
     std::cout << a_x << a_y << a_z <<std::endl;
 
+    imuPort.Read(indices,imuAccel);
+
+    std::cout << "vector" << imuAccel[0] << imuAccel[1] << imuAccel[2] <<std::endl;
 
     //Robot teo right arm
     std::stringstream robConfig;
@@ -89,6 +95,7 @@ int main()
     double target = 0;
    //control loop
     control.SetTarget(target);
+  //  rightArm.SetJointPos(3,target);
     while(control.Finished()==false)
     {
         rightArm.GetJoint(3,elbowPos);
@@ -100,13 +107,13 @@ int main()
                   << std::endl;
         //std::cout << command << "" << std::endl;
         //command=double(std::min(signal,1.0));
-        rightArm.SetJointVel(3,signal);
+        //rightArm.SetJointVel(3,signal);
         yarp::os::Time::delay(0.05);
 
 
     }
-    signal =0;
-    rightArm.SetJointVel(3,signal);
+    //signal =0;
+    //rightArm.SetJointVel(3,signal);
 
 
     time_t current,last;
