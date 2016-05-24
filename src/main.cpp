@@ -98,7 +98,7 @@ int main()
 
 
     time_t t;
-    double target = 0;
+    double target = 30;
     int jointNumber = 3;
    //control loop
     control.SetTarget(target);
