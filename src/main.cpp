@@ -73,9 +73,9 @@ int main()
     MWI::Robot rightArm(robConfig);
 
 
-    double elbowPos;
-    rightArm.GetJoint(3,elbowPos);
-    std::cout << "raj4: " << elbowPos  <<std::endl;
+    double jointPos;
+    rightArm.GetJoint(3,jointPos);
+    std::cout << "raj4: " << jointPos  <<std::endl;
 
 
   /*   double v1,v0;
@@ -99,16 +99,22 @@ int main()
 
     time_t t;
     double target = 0;
+    int jointNumber = 3;
    //control loop
     control.SetTarget(target);
-    rightArm.SetJointPos(0,target);
+    rightArm.SetJointPos(jointNumber,target);
+    gdata << "time(NULL)" << ","
+              << "target "<< ","
+              << "jointPos" << ","
+              << "signal" << ","
+              << std::endl;
     while(control.Finished()==false)
     {
-        rightArm.GetJoint(0,elbowPos);
-        signal = control.ControlSignal(elbowPos);
+        rightArm.GetJoint(jointNumber,jointPos);
+        signal = control.ControlSignal(jointPos);
         gdata << time(NULL) << ","
                   << target << ","
-                  << elbowPos << ","
+                  << jointPos << ","
                   << signal << ","
                   << std::endl;
         //std::cout << command << "" << std::endl;
