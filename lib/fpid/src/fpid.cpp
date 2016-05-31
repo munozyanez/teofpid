@@ -15,20 +15,20 @@ bool fpid::Controller::SetTarget(double newTarget)
     return true;
 }
 
-double fpid::Controller::ControlSignal(double actual)
+double fpid::Controller::ControlSignal(double error)
 {
-    double delta = target-actual;
+    //double delta = target-error;
     if (repeat < maxRepeat)
     {
-        if (std::abs(delta) < range)
+        if (std::abs(error) < range)
         {
             repeat++;
-            std::cout << repeat <<"," <<delta << "," << range << std::endl;
-            return 1*(delta);
+            std::cout << repeat <<"," <<error << "," << range << std::endl;
+            return 1*(error);
         }
         else
         {
-            return 1*(delta);
+            return 1*(error);
         }
 
 

@@ -15,19 +15,19 @@ using namespace std;
 
 int main()
 {
+    std::cout << "[error]";
 
     //MWI::Port imuPort;
-
     //INITIALISE AND CHECK YARP
     yarp::os::Network yarpNet;
     if ( !yarpNet.checkNetwork() )
     {
-        std::cerr << "[error] %s found no YARP network (try running \"yarp detect --write\")." << std::endl;
+        std::cout << "[error] %s found no YARP network (try running \"yarp detect --write\")." << std::endl;
         return -1;
     }
     else
     {
-        std::cerr << "[success] YARP network found." << std::endl;
+        std::cout << "[success] YARP network found." << std::endl;
     }
 
 
@@ -96,22 +96,25 @@ int main()
     gdata.open ("gdata.csv", std::fstream::out);
 
 
+    //control
 
     time_t t;
     double target = 30;
+    double error;
     int jointNumber = 3;
    //control loop
     control.SetTarget(target);
-    rightArm.SetJointPos(jointNumber,target);
+    /*rightArm.SetJointPos(jointNumber,target);
     gdata << "time(NULL)" << ","
               << "target "<< ","
               << "jointPos" << ","
               << "signal" << ","
-              << std::endl;
+              << std::endl;*/
     while(control.Finished()==false)
     {
         rightArm.GetJoint(jointNumber,jointPos);
-        signal = control.ControlSignal(jointPos);
+        error=target-jointPos;
+        signal = control.ControlSignal(error);
         gdata << time(NULL) << ","
                   << target << ","
                   << jointPos << ","
