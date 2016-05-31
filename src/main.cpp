@@ -16,11 +16,11 @@ using namespace std;
 int main()
 {
     std::cout << "[error]";
-
     //MWI::Port imuPort;
     //INITIALISE AND CHECK YARP
     yarp::os::Network yarpNet;
-    if ( !yarpNet.checkNetwork() )
+
+    if ( !yarpNet.checkNetwork(2) )
     {
         std::cout << "[error] %s found no YARP network (try running \"yarp detect --write\")." << std::endl;
         return -1;
@@ -78,13 +78,7 @@ int main()
     std::cout << "raj4: " << jointPos  <<std::endl;
 
 
-  /*   double v1,v0;
-    v1=1;
-    v0=0;
-    rightArm.SetJointVel(3,v1);
-    yarp::os::Time::delay(1);
-    rightArm.SetJointVel(3,v0);
-*/
+
 
     //controller
 
@@ -104,12 +98,7 @@ int main()
     int jointNumber = 3;
    //control loop
     control.SetTarget(target);
-    /*rightArm.SetJointPos(jointNumber,target);
-    gdata << "time(NULL)" << ","
-              << "target "<< ","
-              << "jointPos" << ","
-              << "signal" << ","
-              << std::endl;*/
+
     while(control.Finished()==false)
     {
         rightArm.GetJoint(jointNumber,jointPos);
