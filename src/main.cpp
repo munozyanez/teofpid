@@ -116,8 +116,39 @@ int main()
 
 
     }
-    //signal =0;
-    //rightArm.SetJointVel(3,signal);
+
+  /*  double T=0.5;
+    int loops = 6/T;
+    double step = -2;
+    int jointNumber = 3;
+
+    double lastJointPos;
+    rightArm.GetJoint(jointNumber,lastJointPos);
+
+    double actualVel;
+    rightArm.SetJointVel(jointNumber, step);
+
+
+    for(int i=0; i<loops; i++)
+    {
+        rightArm.GetJoint(jointNumber,jointPos);
+
+        actualVel = (jointPos-lastJointPos)/T;
+        gdata << T << ","
+              << step << ","
+              << actualVel << ","
+              << jointPos << ","
+              << std::endl;
+        //std::cout << command << "" << std::endl;
+
+        lastJointPos = jointPos;
+        yarp::os::Time::delay(T);
+
+
+    }
+    step =0;
+    rightArm.SetJointVel(jointNumber, step);
+*/
 
     gdata.close();
 
