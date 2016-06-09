@@ -93,7 +93,7 @@ int main()
     //control
 
     time_t t;
-    double target = 30;
+    double target = 0;
     double error;
     int jointNumber = 3;
    //control loop
@@ -104,18 +104,23 @@ int main()
         rightArm.GetJoint(jointNumber,jointPos);
         error=target-jointPos;
         signal = control.ControlSignal(error);
-        gdata << time(NULL) << ","
+
+        std::cout << time(NULL) << ","
                   << target << ","
                   << jointPos << ","
                   << signal << ","
                   << std::endl;
         //std::cout << command << "" << std::endl;
         //command=double(std::min(signal,1.0));
-        //rightArm.SetJointVel(3,signal);
-        yarp::os::Time::delay(0.05);
+        rightArm.SetJointVel(jointNumber,signal);
+        yarp::os::Time::delay(0.2);
 
 
     }
+
+    signal=0;
+    rightArm.SetJointVel(jointNumber,signal);
+
 
   /*  double T=0.5;
     int loops = 6/T;
