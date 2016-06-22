@@ -14,7 +14,7 @@ project(teofpid)
 cmake_minimum_required(VERSION 2.8)
 aux_source_directory(./src SRC_LIST)
 
-#cmake lines for libTemplate
+#cmake lines for libfpid
 find_package(fpid QUIET)
 if(fpid_FOUND)
   set(fpid_INCLUDE_DIR ${fpid_INCLUDE_DIRS})
@@ -25,6 +25,12 @@ else()
 endif()
 
 INCLUDE_DIRECTORIES(${fpid_INCLUDE_DIR})
+
+#teoMWI library
+add_subdirectory(${PROJECT_SOURCE_DIR}/lib/teoMWI)
+set(teoMWIINCLUDE_DIR ${PROJECT_SOURCE_DIR}/lib/teoMWI ${teoMWI_INCLUDE_DIR})
+INCLUDE_DIRECTORIES(${teoMWI_INCLUDE_DIR})
+
 
 find_package(YARP REQUIRED)
 
