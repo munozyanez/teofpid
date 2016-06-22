@@ -6,7 +6,7 @@
 #include <yarp/os/all.h>
 
 
-#include "lib/teoMWI/MiddlewareInterface.h"
+#include "MiddlewareInterface.h"
 #include "fpid.h"
 
 using namespace std;
