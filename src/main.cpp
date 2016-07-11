@@ -91,8 +91,8 @@ int main()
 
 
     //control
-
-    time_t t;
+/*
+    //time_t t;
     double target = 0;
     double error;
     int jointNumber = 3;
@@ -120,18 +120,18 @@ int main()
 
     signal=0;
     rightArm.SetJointVel(jointNumber,signal);
+*/
 
-
-  /*  double T=0.5;
+    double T=0.5;
     int loops = 6/T;
-    double step = -2;
+    double vel = -2;
     int jointNumber = 3;
 
     double lastJointPos;
     rightArm.GetJoint(jointNumber,lastJointPos);
 
     double actualVel;
-    rightArm.SetJointVel(jointNumber, step);
+    rightArm.SetJointVel(jointNumber, vel);
 
 
     for(int i=0; i<loops; i++)
@@ -140,7 +140,7 @@ int main()
 
         actualVel = (jointPos-lastJointPos)/T;
         gdata << T << ","
-              << step << ","
+              << vel << ","
               << actualVel << ","
               << jointPos << ","
               << std::endl;
@@ -151,9 +151,9 @@ int main()
 
 
     }
-    step =0;
-    rightArm.SetJointVel(jointNumber, step);
-*/
+    //step =0;
+    rightArm.SetJointVel(jointNumber, 0);
+
 
     gdata.close();
 
