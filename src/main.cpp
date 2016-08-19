@@ -74,7 +74,7 @@ int main()
 
 
     double jointPos;
-    rightArm.GetJoint(3,jointPos);
+    jointPos=rightArm.GetJoint(3);
     std::cout << "raj4: " << jointPos  <<std::endl;
 
 
@@ -128,7 +128,7 @@ int main()
     int jointNumber = 3;
 
     double lastJointPos;
-    rightArm.GetJoint(jointNumber,lastJointPos);
+    lastJointPos=rightArm.GetJoint(jointNumber);
 
     double actualVel;
     rightArm.SetJointVel(jointNumber, vel);
@@ -136,7 +136,7 @@ int main()
 
     for(int i=0; i<loops; i++)
     {
-        rightArm.GetJoint(jointNumber,jointPos);
+        jointPos=rightArm.GetJoint(jointNumber);
 
         actualVel = (jointPos-lastJointPos)/T;
         gdata << T << ","
