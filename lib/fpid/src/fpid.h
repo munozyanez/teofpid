@@ -30,6 +30,7 @@ private:
     bool finished;
     //variables to check finish
     double repeat,range, maxRepeat;
+    double lastError;
 
 };
 
