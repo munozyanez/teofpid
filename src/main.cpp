@@ -91,7 +91,7 @@ int main()
 
 
     //control
-
+/*
     //time_t t;
     double target = 45;
     double error;
@@ -127,11 +127,13 @@ int main()
 
     signal=0;
     rightArm.SetJointVel(jointNumber,signal);
-/*
+*/
 
-    double T=0.5;
+    rightArm.DefaultPosition();
+    yarp::os::Time::delay(5);
+    double T=0.05;
     int loops = 6/T;
-    double vel = 3;
+    double vel = 5;
     int jointNumber = 3;
 
     double lastJointPos;
@@ -160,7 +162,7 @@ int main()
     }
    //step =0;
     rightArm.SetJointVel(jointNumber, 0);
-*/
+
 
     gdata.close();
 
