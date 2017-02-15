@@ -9,14 +9,19 @@
 #include "MiddlewareInterface.h"
 #include "fpid.h"
 
+//local functions
+int velocityCurve(double Ts, double vel, int jointNumber, MWI::Robot& robot);
+
+
+//MWI::Robot rightArm(robConfig);
+
+
 using namespace std;
 
 
 
 int main()
 {
-    std::cout << "[error]";
-    //MWI::Port imuPort;
     //INITIALISE AND CHECK YARP
     yarp::os::Network yarpNet;
 
@@ -131,43 +136,58 @@ int main()
 
     rightArm.DefaultPosition();
     yarp::os::Time::delay(5);
-    double T=0.05;
-    int loops = 6/T;
-    double vel = 5;
-    int jointNumber = 3;
 
-    double lastJointPos;
-    lastJointPos=rightArm.GetJoint(jointNumber);
-
-    double actualVel;
-    rightArm.SetJointVel(jointNumber, vel);
-
-
-    for(int i=0; i<loops; i++)
-    {
-        jointPos=rightArm.GetJoint(jointNumber);
-
-        actualVel = (jointPos-lastJointPos)/T;
-        gdata << T << ","
-              << vel << ","
-              << actualVel << ","
-              << jointPos << ","
-              << std::endl;
-        //std::cout << command << "" << std::endl;
-
-        lastJointPos = jointPos;
-        yarp::os::Time::delay(T);
-
-
-    }
-   //step =0;
-    rightArm.SetJointVel(jointNumber, 0);
-
-
-    gdata.close();
+    velocityCurve(0.01, 5, 3, rightArm);
 
 
 
     return 0;
 }
 
+
+int velocityCurve(double Ts, double vel, int jointNumber, MWI::Robot& robot)
+{
+    int loops = 6/Ts;
+
+    std::fstream gdata;
+    gdata.open ("~/velocityProfile.csv", std::fstream::out);
+
+    //double Ts=0.05;
+    //int loops = 6/Ts;
+    //double vel = 5;
+    //int jointNumber = 3;
+
+    double jointPos;
+    //lastJointPos=robot.GetJoint(jointNumber);
+
+    double actualVel;
+    robot.SetJointVel(jointNumber, vel);
+
+
+    for(int i=0; i<loops; i++)
+    {
+        jointPos=robot.GetJoint(jointNumber);
+
+        actualVel = robot.GetJointVel(jointNumber);
+
+
+        //actualVel = (jointPos-lastJointPos)/Ts;
+        //fprintf (gdata, "%f - %f - %f - %f \n",Ts*i,vel,actualVel,jointPos);
+        gdata << Ts << " - "
+              << vel << " - "
+              << actualVel << " - "
+              << jointPos << " - "
+              << std::endl;
+        //std::cout << command << "" << std::endl;
+
+        //lastJointPos = jointPos;
+        yarp::os::Time::delay(Ts);
+
+
+    }
+   //step =0;
+    robot.SetJointVel(jointNumber, 0);
+
+
+    gdata.close();
+}
