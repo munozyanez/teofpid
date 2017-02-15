@@ -5,6 +5,8 @@
 
 #include <yarp/os/all.h>
 
+#include <chrono>
+#include <ctime>
 
 #include "MiddlewareInterface.h"
 #include "fpid.h"
@@ -135,9 +137,9 @@ int main()
 */
 
     rightArm.DefaultPosition();
-    yarp::os::Time::delay(5);
+    yarp::os::Time::delay(7);
 
-    velocityCurve(0.01, 5, 3, rightArm);
+    velocityCurve(0.01, 20, 3, rightArm);
 
 
 
@@ -148,17 +150,20 @@ int main()
 int velocityCurve(double Ts, double vel, int jointNumber, MWI::Robot& robot)
 {
     int loops = 6/Ts;
+    double totalTime=0;
+    double actualTime,lastTime, elapsedTime;
 
     std::fstream gdata;
-    gdata.open ("~/velocityProfile.csv", std::fstream::out);
+    gdata.open ("/home/buyus/Escritorio/velocityProfile.csv", std::fstream::out);
 
     //double Ts=0.05;
     //int loops = 6/Ts;
     //double vel = 5;
     //int jointNumber = 3;
 
-    double jointPos;
-    //lastJointPos=robot.GetJoint(jointNumber);
+    double lastJointPos,jointPos;
+    int repeat=1;
+    lastJointPos=robot.GetJoint(jointNumber);
 
     double actualVel;
     robot.SetJointVel(jointNumber, vel);
@@ -168,19 +173,35 @@ int velocityCurve(double Ts, double vel, int jointNumber, MWI::Robot& robot)
     {
         jointPos=robot.GetJoint(jointNumber);
 
-        actualVel = robot.GetJointVel(jointNumber);
 
+        if (jointPos==lastJointPos)
+        {
+            repeat++;
+        }
+        else
+        {
+     /*   lastTime = actualTime; //now actualTime is not actual but last
+        actualTime = ((float)clock())/CLOCKS_PER_SEC;
+        elapsedTime = actualTime-lastTime;
+        totalTime +=elapsedTime;*/
+        totalTime += Ts*repeat;
+        actualVel = (jointPos-lastJointPos)/(Ts*repeat);
 
-        //actualVel = (jointPos-lastJointPos)/Ts;
         //fprintf (gdata, "%f - %f - %f - %f \n",Ts*i,vel,actualVel,jointPos);
-        gdata << Ts << " - "
+        gdata << totalTime << " - "
+                 << repeat << " - "
               << vel << " - "
               << actualVel << " - "
-              << jointPos << " - "
+              << jointPos << " "
               << std::endl;
-        //std::cout << command << "" << std::endl;
 
-        //lastJointPos = jointPos;
+
+        lastJointPos = jointPos;
+        repeat=1;
+        }
+
+
+        //std::chrono::high_resolution_clock()
         yarp::os::Time::delay(Ts);
 
 
