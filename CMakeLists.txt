@@ -12,6 +12,9 @@ endfunction()
 project(teofpid)
 
 cmake_minimum_required(VERSION 2.8)
+
+#set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake )
+
 aux_source_directory(./src SRC_LIST)
 
 #cmake lines for libfpid
@@ -40,7 +43,7 @@ INCLUDE_DIRECTORIES(${SUBDIR_INCLUDE_DIRECTORIES})
 add_executable(${PROJECT_NAME} ${SRC_LIST})
 
 #link with libs
-target_link_libraries( ${PROJECT_NAME} fpid teoMWI ${YARP_LIBRARIES})
+target_link_libraries( ${PROJECT_NAME} LibraryInterface fpid teoMWI ${YARP_LIBRARIES})
 echo_all_cmake_variable_values()
 
 

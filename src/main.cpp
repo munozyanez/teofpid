@@ -26,7 +26,7 @@ using namespace std;
 int main()
 {
     //INITIALISE AND CHECK YARP
-    yarp::os::Network yarpNet;
+  /*  yarp::os::Network yarpNet;
 
     if ( !yarpNet.checkNetwork(2) )
     {
@@ -38,10 +38,10 @@ int main()
         std::cout << "[success] YARP network found." << std::endl;
     }
 
-
+*/
 
     //Setup imu middleware port
-    MWI::Port imuPort("/inertial");
+  /*  MWI::Port imuPort("/inertial");
     std::stringstream dataIndices, imudata;
 
     // i = 0,1,2 --> euler angles (deg)
@@ -98,7 +98,7 @@ int main()
     gdata.open ("gdata.csv", std::fstream::out);
 
 
-    //control
+ */   //control
 /*
     //time_t t;
     double target = 45;
@@ -137,12 +137,18 @@ int main()
     rightArm.SetJointVel(jointNumber,signal);
 */
 
-    rightArm.DefaultPosition();
-    yarp::os::Time::delay(7);
+    //rightArm.DefaultPosition();
+    //yarp::os::Time::delay(7);
 
-    velocityCurve(0.01, 20, 3, rightArm);
+    //velocityCurve(0.01, 20, 3, rightArm);
 
 
+    std::vector<double> x,y;
+
+    LibraryInterface li;
+
+
+    li.Plot(x,y);
 
     return 0;
 }

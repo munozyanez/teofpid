@@ -15,6 +15,10 @@ project(LibraryInterface)
 #endif()
 
 #INCLUDE_DIRECTORIES(${fpid_INCLUDE_DIR})
+#find_package(MathGL)
+
+#/usr/lib/x86_64-linux-gnu/libplotter.a
+
 
 # source files
 aux_source_directory(. SOURCE_FILES)
@@ -24,9 +28,14 @@ ADD_LIBRARY(${PROJECT_NAME} STATIC ${SOURCE_FILES} ${INCLUDE_LIST})
 #teoMWI library
 add_subdirectory(./teoMWI)
 
+#add_subdirectory(./mathgl)
+find_library(PLOTUTILS_LIBRARIES libplotter.so
+    PATH /usr/lib/x86_64-linux-gnu/)
+
 
 set(SUBDIR_INCLUDE_DIRECTORIES ${SUBDIR_INCLUDE_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR} PARENT_SCOPE)
 
+#set(SUBDIR_INCLUDE_DIRECTORIES ${SUBDIR_INCLUDE_DIRECTORIES} ${MathGL_INCLUDE_DIRS} PARENT_SCOPE)
 
 
 #set(teoMWI_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/lib/teoMWI ${teoMWI_INCLUDE_DIR})
@@ -38,7 +47,7 @@ set(SUBDIR_INCLUDE_DIRECTORIES ${SUBDIR_INCLUDE_DIRECTORIES} ${CMAKE_CURRENT_SOU
 #add_executable(${PROJECT_NAME} ${SRC_LIST})
 
 ##link with libs
-#target_link_libraries( ${PROJECT_NAME} fpid teoMWI ${YARP_LIBRARIES})
+target_link_libraries( ${PROJECT_NAME} fpid teoMWI ${PLOTUTILS_LIBRARIES})
 ##echo_all_cmake_variable_values()
 
 
