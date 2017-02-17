@@ -9,6 +9,7 @@
 #include <ctime>
 
 #include "MiddlewareInterface.h"
+#include "LibaryInterface.h"
 #include "fpid.h"
 
 //local functions
