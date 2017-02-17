@@ -44,6 +44,6 @@ add_executable(${PROJECT_NAME} ${SRC_LIST})
 
 #link with libs
 target_link_libraries( ${PROJECT_NAME} LibraryInterface fpid teoMWI ${YARP_LIBRARIES})
-echo_all_cmake_variable_values()
+#echo_all_cmake_variable_values()
 
 

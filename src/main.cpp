@@ -148,6 +148,12 @@ int main()
     LibraryInterface li;
 
 
+    for (int i=0; i<20; i++)
+    {
+        x.push_back(i);
+        y.push_back(i);
+    }
+
     li.Plot(x,y);
 
     return 0;
