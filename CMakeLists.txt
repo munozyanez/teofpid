@@ -27,18 +27,20 @@ endif()
 INCLUDE_DIRECTORIES(${fpid_INCLUDE_DIR})
 
 #teoMWI library
-add_subdirectory(${PROJECT_SOURCE_DIR}/lib/teoMWI)
-set(teoMWI_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/lib/teoMWI ${teoMWI_INCLUDE_DIR})
-INCLUDE_DIRECTORIES(${teoMWI_INCLUDE_DIR})
+#add_subdirectory(${PROJECT_SOURCE_DIR}/lib/teoMWI)
+#set(teoMWI_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/lib/teoMWI ${teoMWI_INCLUDE_DIR})
 
 
-find_package(YARP REQUIRED)
+#find_package(YARP REQUIRED)
+
+add_subdirectory(./lib)
+INCLUDE_DIRECTORIES(${SUBDIR_INCLUDE_DIRECTORIES})
 
 
 add_executable(${PROJECT_NAME} ${SRC_LIST})
 
 #link with libs
 target_link_libraries( ${PROJECT_NAME} fpid teoMWI ${YARP_LIBRARIES})
-#echo_all_cmake_variable_values()
+echo_all_cmake_variable_values()
 
 

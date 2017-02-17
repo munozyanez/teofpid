@@ -1,34 +1,44 @@
-##cmake code start
-project(teofpid)
+###cmake code start
+project(LibraryInterface)
 
-cmake_minimum_required(VERSION 2.8)
-aux_source_directory(./src SRC_LIST)
+#cmake_minimum_required(VERSION 2.8)
+#aux_source_directory(./src SRC_LIST)
 
-#cmake lines for libfpid
-find_package(fpid QUIET)
-if(fpid_FOUND)
-  set(fpid_INCLUDE_DIR ${fpid_INCLUDE_DIRS})
-else()
-  message(STATUS "compiling fpid from sources")
-  add_subdirectory(${PROJECT_SOURCE_DIR}/lib/fpid)
-  set(fpid_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/lib/fpid/src ${fpid_INCLUDE_DIR})
-endif()
+##cmake lines for libfpid
+#find_package(fpid QUIET)
+#if(fpid_FOUND)
+#  set(fpid_INCLUDE_DIR ${fpid_INCLUDE_DIRS})
+#else()
+#  message(STATUS "compiling fpid from sources")
+#  add_subdirectory(${PROJECT_SOURCE_DIR}/lib/fpid)
+#  set(fpid_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/lib/fpid/src ${fpid_INCLUDE_DIR})
+#endif()
 
-INCLUDE_DIRECTORIES(${fpid_INCLUDE_DIR})
+#INCLUDE_DIRECTORIES(${fpid_INCLUDE_DIR})
+
+# source files
+aux_source_directory(. SOURCE_FILES)
+FILE(GLOB_RECURSE INCLUDE_LIST *.h *.hpp)
+ADD_LIBRARY(${PROJECT_NAME} STATIC ${SOURCE_FILES} ${INCLUDE_LIST})
 
 #teoMWI library
-add_subdirectory(${PROJECT_SOURCE_DIR}/lib/teoMWI)
-set(teoMWI_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/lib/teoMWI ${teoMWI_INCLUDE_DIR})
-INCLUDE_DIRECTORIES(${teoMWI_INCLUDE_DIR})
+add_subdirectory(./teoMWI)
 
 
-find_package(YARP REQUIRED)
+set(SUBDIR_INCLUDE_DIRECTORIES ${SUBDIR_INCLUDE_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR} PARENT_SCOPE)
 
 
-add_executable(${PROJECT_NAME} ${SRC_LIST})
 
-#link with libs
-target_link_libraries( ${PROJECT_NAME} fpid teoMWI ${YARP_LIBRARIES})
-#echo_all_cmake_variable_values()
+#set(teoMWI_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/lib/teoMWI ${teoMWI_INCLUDE_DIR})
+
+
+#find_package(YARP REQUIRED)
+
+
+#add_executable(${PROJECT_NAME} ${SRC_LIST})
+
+##link with libs
+#target_link_libraries( ${PROJECT_NAME} fpid teoMWI ${YARP_LIBRARIES})
+##echo_all_cmake_variable_values()
 
 
