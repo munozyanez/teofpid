@@ -5,6 +5,8 @@
 
 
 #include <plotter.h>
+#include <plot.h>
+
 //#include "mgl2/mgl.h"
 
 

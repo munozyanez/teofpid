@@ -31,7 +31,8 @@ add_subdirectory(./teoMWI)
 #add_subdirectory(./mathgl)
 find_library(PLOTUTILS_LIBRARIES libplotter.so
     PATH /usr/lib/x86_64-linux-gnu/)
-
+find_package(PLplot)
+set(SUBDIR_INCLUDE_DIRECTORIES ${SUBDIR_INCLUDE_DIRECTORIES} ${PLPLOT_INCLUDE_DIRECTORIES} PARENT_SCOPE)
 
 set(SUBDIR_INCLUDE_DIRECTORIES ${SUBDIR_INCLUDE_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR} PARENT_SCOPE)
 
@@ -47,7 +48,7 @@ set(SUBDIR_INCLUDE_DIRECTORIES ${SUBDIR_INCLUDE_DIRECTORIES} ${CMAKE_CURRENT_SOU
 #add_executable(${PROJECT_NAME} ${SRC_LIST})
 
 ##link with libs
-target_link_libraries( ${PROJECT_NAME} fpid teoMWI ${PLOTUTILS_LIBRARIES})
+target_link_libraries( ${PROJECT_NAME} fpid teoMWI ${PLOTUTILS_LIBRARIES} ${PLplot_LIBRARY} ${PLplot_cxx_LIBRARY})
 ##echo_all_cmake_variable_values()
 
 

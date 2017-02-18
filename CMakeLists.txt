@@ -13,7 +13,7 @@ project(teofpid)
 
 cmake_minimum_required(VERSION 2.8)
 
-#set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake )
+set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake )
 
 aux_source_directory(./src SRC_LIST)
 
@@ -44,6 +44,6 @@ add_executable(${PROJECT_NAME} ${SRC_LIST})
 
 #link with libs
 target_link_libraries( ${PROJECT_NAME} LibraryInterface fpid teoMWI ${YARP_LIBRARIES})
-#echo_all_cmake_variable_values()
+echo_all_cmake_variable_values()
 
 
