@@ -154,7 +154,7 @@ int main()
         y.push_back(i);
     }
 
-    li.Plot(x,y);
+    li.Plot(x,y,50,50);
 
     return 0;
 }

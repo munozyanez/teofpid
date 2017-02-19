@@ -18,7 +18,7 @@ public:
 
 
     LibraryInterface();
-    int Plot(std::vector<double> datax, std::vector<double> datay);
+    int Plot(std::vector<double> datax, std::vector<double> datay, double scalex, double scaley);
 
 
 private:
