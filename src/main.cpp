@@ -11,9 +11,10 @@
 #include "MiddlewareInterface.h"
 #include "LibraryInterface.h"
 #include "fpid.h"
+#include "fcontrol.h"
 
 //local functions
-int velocityCurve(double Ts, double vel, int jointNumber, MWI::Robot& robot);
+int velocityCurve(double Ts, double vel, int jointNumber, MWI::Robot& robot, std::vector<double> &pos);
 
 
 //MWI::Robot rightArm(robConfig);
@@ -26,7 +27,7 @@ using namespace std;
 int main()
 {
     //INITIALISE AND CHECK YARP
-  /*  yarp::os::Network yarpNet;
+    yarp::os::Network yarpNet;
 
     if ( !yarpNet.checkNetwork(2) )
     {
@@ -38,7 +39,7 @@ int main()
         std::cout << "[success] YARP network found." << std::endl;
     }
 
-*/
+
 
     //Setup imu middleware port
   /*  MWI::Port imuPort("/inertial");
@@ -70,15 +71,7 @@ int main()
 
     std::cout << "vector" << imuAccel[0] << imuAccel[1] << imuAccel[2] <<std::endl;
 
-    //Robot teo right arm
-    std::stringstream robConfig;
-    //YARP device
-    robConfig << "device remote_controlboard" << " ";
-    //To what will be connected
-    robConfig << "remote /teo/rightArm" << " ";
-    //How will be called on YARP network
-    robConfig << "local /local/rightArm/" << " ";
-    MWI::Robot rightArm(robConfig);
+
 
 
     double jointPos;
@@ -97,24 +90,45 @@ int main()
     std::fstream gdata;
     gdata.open ("gdata.csv", std::fstream::out);
 
+*/
+    //control
 
- */   //control
-/*
-    //time_t t;
-    double target = 45;
-    double error;
-    int jointNumber = 3;
-   //control loop
-    control.SetTarget(target);
+    //Robot teo right arm
+    std::stringstream robConfig;
+    //YARP device
+    robConfig << "device remote_controlboard" << " ";
+    //To what will be connected
+    robConfig << "remote /teo/rightArm" << " ";
+    //How will be called on YARP network
+    robConfig << "local /local/rightArm/" << " ";
+    MWI::Robot rightArm(robConfig);
+
+
+    double signal,jointPos;
+
 
     rightArm.DefaultPosition();
     yarp::os::Time::delay(5);
 
-    while(control.Finished()==false)
+    //time_t t;
+    double Ts = 0.01;
+    double target = 45;
+    double error;
+    int jointNumber = 3;
+    long loops = 100;
+    std::vector<double> positions(0,0), times(0,0);
+
+    SystemBlock control(1,0,1,0);
+
+    //control loop
+    for (ulong i=0; i<loops; i++)
     {
         jointPos = rightArm.GetJoint(jointNumber);
+        positions.push_back(jointPos);
+        times.push_back(Ts*i);
+
         error=target-jointPos;
-        signal = control.ControlSignal(error);
+        signal = control.OutputUpdate(error);
 
         std::cout << time(NULL) << ","
                   << target << ","
@@ -124,23 +138,20 @@ int main()
         //std::cout << command << "" << std::endl;
         //command=double(std::min(signal,1.0));
         rightArm.SetJointVel(jointNumber,signal);
-        yarp::os::Time::delay(0.01);
-
-        gdata << target << ","
-              << error << ","
-              << jointPos << ","
-              << std::endl;
+        yarp::os::Time::delay(Ts);
 
     }
 
     signal=0;
     rightArm.SetJointVel(jointNumber,signal);
-*/
+
 
     //rightArm.DefaultPosition();
     //yarp::os::Time::delay(7);
+/*
+    std::vector curvePositions;
+    velocityCurve(0.01, 20, 3, rightArm, curvePositions);*/
 
-    //velocityCurve(0.01, 20, 3, rightArm);
 
 
     std::vector<double> x,y;
@@ -148,7 +159,7 @@ int main()
     LibraryInterface li;
 
 
-    for (int i=0; i<20; i++)
+    for (int i=0; i<loops; i++)
     {
         x.push_back(i);
         y.push_back(i);
@@ -160,11 +171,13 @@ int main()
 }
 
 
-int velocityCurve(double Ts, double vel, int jointNumber, MWI::Robot& robot)
+int velocityCurve(double Ts, double vel, int jointNumber, MWI::Robot& robot, std::vector<double> &pos)
 {
     int loops = 6/Ts;
     double totalTime=0;
     double actualTime,lastTime, elapsedTime;
+    pos.clear();
+
 
     std::fstream gdata;
     gdata.open ("/home/buyus/Escritorio/velocityProfile.csv", std::fstream::out);
@@ -186,6 +199,7 @@ int velocityCurve(double Ts, double vel, int jointNumber, MWI::Robot& robot)
     {
         jointPos=robot.GetJoint(jointNumber);
 
+        pos.push_back(jointPos);
 
         if (jointPos==lastJointPos)
         {

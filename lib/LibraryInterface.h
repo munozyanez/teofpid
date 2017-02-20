@@ -2,7 +2,7 @@
 #define LIBRARYINTERFACE_H
 
 #include <vector>
-
+#include "fcontrol/src/fcontrol.h"
 
 #include <plotter.h>
 #include <plot.h>
