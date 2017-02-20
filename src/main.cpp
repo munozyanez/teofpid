@@ -103,35 +103,54 @@ int main()
     robConfig << "local /local/rightArm/" << " ";
     MWI::Robot rightArm(robConfig);
 
+    double Ts = 0.01;
+    long loops = 1000;
 
-    double signal,jointPos;
+
+    std::vector<double> motorNum(3,0);
+    motorNum[0]=Ts*Ts;
+    motorNum[1]=2*Ts*Ts;
+    motorNum[2]=Ts*Ts;
+    std::vector<double> motorDen(3,0);
+    motorDen[0]=-2*Ts+4;
+    motorDen[1]=-8;
+    motorDen[2]=2*Ts+4;
+    SystemBlock model(motorNum,motorDen);
+
+
+    double signal,jointPos,modelpos;
 
 
     rightArm.DefaultPosition();
     yarp::os::Time::delay(5);
 
     //time_t t;
-    double Ts = 0.01;
-    double target = 45;
-    double error;
+    double target = 30;
+    double error, modelError;
     int jointNumber = 3;
-    long loops = 100;
-    std::vector<double> positions(0,0), times(0,0);
+    std::vector<double> realPos(0,0), times(0,0);
+    std::vector<double> modelPos(1,0);
 
-    SystemBlock control(1,0,1,0);
+
+    SystemBlock control(std::vector<double>(1,1.1),std::vector<double>(1,1));
 
     //control loop
     for (ulong i=0; i<loops; i++)
     {
         jointPos = rightArm.GetJoint(jointNumber);
-        positions.push_back(jointPos);
+        realPos.push_back(jointPos);
         times.push_back(Ts*i);
 
         error=target-jointPos;
         signal = control.OutputUpdate(error);
 
-        std::cout << time(NULL) << ","
-                  << target << ","
+        modelError = target-modelPos[i];
+        modelPos.push_back( model.OutputUpdate(modelError) );
+
+        //modelPos.push_back(model.OutputUpdate(error)*(0.5));
+
+        std::cout << "modelPos[i]"
+                  << modelPos[i] << ","
                   << jointPos << ","
                   << signal << ","
                   << std::endl;
@@ -153,19 +172,11 @@ int main()
     velocityCurve(0.01, 20, 3, rightArm, curvePositions);*/
 
 
-
-    std::vector<double> x,y;
-
     LibraryInterface li;
 
 
-    for (int i=0; i<loops; i++)
-    {
-        x.push_back(i);
-        y.push_back(i);
-    }
-
-    li.Plot(x,y,50,50);
+    li.Plot(times,realPos,loops*Ts,target*1.5);
+    li.Plot(times,modelPos,loops*Ts,target*1.5);
 
     return 0;
 }
