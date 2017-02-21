@@ -100,8 +100,9 @@ int main()
     //To what will be connected
     robConfig << "remote /teo/rightArm" << " ";
     //How will be called on YARP network
-    robConfig << "local /local/rightArm/" << " ";
+    robConfig << "local /local/rightArm" << " ";
     MWI::Robot rightArm(robConfig);
+    rightArm.SetControlMode(2);
 
     double Ts = 0.01;
     long loops = 1000;
@@ -118,7 +119,7 @@ int main()
     SystemBlock model(motorNum,motorDen);
 
 
-    double signal,jointPos,modelpos;
+    double signal,modelSignal,jointPos,modelpos;
 
 
     rightArm.DefaultPosition();
@@ -131,8 +132,33 @@ int main()
     std::vector<double> realPos(0,0), times(0,0);
     std::vector<double> modelPos(1,0);
 
+/*
+    std::vector<double> controlNum(1,0);
+    controlNum[0]=1;
+    std::vector<double> controlDen(1,0);
+    controlDen[0]=1;
+*/
+    std::vector<double> controlNum(3,0);
+    controlNum[0]=Ts*Ts-5*Ts+4;
+    controlNum[1]=2*Ts*Ts-8;
+    controlNum[2]=Ts*Ts+5*Ts+4;
+    std::vector<double> controlDen(3,0);
+    controlDen[0]=-Ts;
+    controlDen[1]=0;
+    controlDen[2]=Ts;
+/*
+    std::vector<double> controlNum(2,0);
+    controlNum[0]=+1;
+    controlNum[1]=1;
+    std::vector<double> controlDen(2,0);
+    controlDen[0]=-1;
+    controlDen[1]=1;
+    SystemBlock control(controlNum,controlDen);
+*/
 
-    SystemBlock control(std::vector<double>(1,1.1),std::vector<double>(1,1));
+    SystemBlock control(controlNum,controlDen);
+    SystemBlock controlModel(control);
+
 
     //control loop
     for (ulong i=0; i<loops; i++)
@@ -143,20 +169,22 @@ int main()
 
         error=target-jointPos;
         signal = control.OutputUpdate(error);
+        rightArm.SetJointVel(jointNumber,signal);
+
 
         modelError = target-modelPos[i];
-        modelPos.push_back( model.OutputUpdate(modelError) );
+        modelSignal =controlModel.OutputUpdate(modelError);
+        modelPos.push_back( model.OutputUpdate(modelSignal) );
 
         //modelPos.push_back(model.OutputUpdate(error)*(0.5));
 
-        std::cout << "modelPos[i]"
-                  << modelPos[i] << ","
-                  << jointPos << ","
-                  << signal << ","
+        std::cout << "modelPos[i]: " << modelPos[i]
+                     << " ,jointPos: " << jointPos
+                     << " ,real signal: " << signal
+                     << ",modelSignal: " << modelSignal
                   << std::endl;
         //std::cout << command << "" << std::endl;
         //command=double(std::min(signal,1.0));
-        rightArm.SetJointVel(jointNumber,signal);
         yarp::os::Time::delay(Ts);
 
     }
