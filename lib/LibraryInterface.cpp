@@ -19,7 +19,7 @@ int LibraryInterface::Plot(std::vector<double> datax, std::vector<double> datay,
     newParams.setplparam("BITMAPSIZE", (char *)"600x600");
 
     XPlotter plt(newParams);
-    plt.space(10, 10, 600, 600);
+    plt.fspace(-100, 100, -600, 600);
     //plt.fscale(2,2);
     plt.openpl();
     plt.pencolorname("blue");

@@ -93,19 +93,13 @@ int main()
 */
     //control
 
-    //Robot teo right arm
-    std::stringstream robConfig;
-    //YARP device
-    robConfig << "device remote_controlboard" << " ";
-    //To what will be connected
-    robConfig << "remote /teo/rightArm" << " ";
-    //How will be called on YARP network
-    robConfig << "local /local/rightArm" << " ";
-    MWI::Robot rightArm(robConfig);
+
+
+    MWI::Robot rightArm("teo","rightArm");
     rightArm.SetControlMode(2);
 
     double Ts = 0.01;
-    long loops = 500;
+    long loops = 1000;
 
 
     std::vector<double> motorNum(3,0);
@@ -132,12 +126,14 @@ int main()
     std::vector<double> realPos(0,0), times(0,0);
     std::vector<double> modelPos(1,0);
 
-/*
+    /*//P control
+
     std::vector<double> controlNum(1,0);
     controlNum[0]=1;
     std::vector<double> controlDen(1,0);
     controlDen[0]=1;
 */
+     //PID control 5,2,2
     std::vector<double> controlNum(3,0);
     controlNum[0]=Ts*Ts-5*Ts+4;
     controlNum[1]=2*Ts*Ts-8;
@@ -146,6 +142,7 @@ int main()
     controlDen[0]=-Ts;
     controlDen[1]=0;
     controlDen[2]=Ts;
+
 /*
     std::vector<double> controlNum(2,0);
     controlNum[0]=+1;
@@ -159,7 +156,7 @@ int main()
     SystemBlock control(controlNum,controlDen);
     SystemBlock controlModel(control);
 
-
+    rightArm.SetControlMode(2);
     //control loop
     for (ulong i=0; i<loops; i++)
     {
@@ -178,10 +175,12 @@ int main()
 
         //modelPos.push_back(model.OutputUpdate(error)*(0.5));
 
-        std::cout << "modelPos[i]: " << modelPos[i]
-                     << " ,jointPos: " << jointPos
-                     << " ,real signal: " << signal
-                     << ",modelSignal: " << modelSignal
+        std::cout
+                << " ,real signal: " << signal
+                << " ,jointPos: " << jointPos
+
+                << ",modelSignal: " << modelSignal
+                << "modelPos[i]: " << modelPos[i]
                   << std::endl;
         //std::cout << command << "" << std::endl;
         //command=double(std::min(signal,1.0));
@@ -189,12 +188,8 @@ int main()
 
     }
 
-    rightArm.SetJointVel(jointNumber,5);
 
-    yarp::os::Time::delay(5);
-
-    signal=0;
-    rightArm.SetJointVel(jointNumber,signal);
+    rightArm.SetJointVel(jointNumber,0.);
 
     //rightArm.DefaultPosition();
     //yarp::os::Time::delay(7);
