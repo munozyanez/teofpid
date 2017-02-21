@@ -105,7 +105,7 @@ int main()
     rightArm.SetControlMode(2);
 
     double Ts = 0.01;
-    long loops = 1000;
+    long loops = 500;
 
 
     std::vector<double> motorNum(3,0);
@@ -189,9 +189,12 @@ int main()
 
     }
 
+    rightArm.SetJointVel(jointNumber,5);
+
+    yarp::os::Time::delay(5);
+
     signal=0;
     rightArm.SetJointVel(jointNumber,signal);
-
 
     //rightArm.DefaultPosition();
     //yarp::os::Time::delay(7);
