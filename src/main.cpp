@@ -99,7 +99,6 @@ int main()
     rightArm.SetControlMode(2);
 
     double Ts = 0.01;
-    long loops = 1000;
 
 
     std::vector<double> motorNum(3,0);
@@ -151,13 +150,21 @@ int main()
     controlDen[0]=-1;
     controlDen[1]=1;
     SystemBlock control(controlNum,controlDen);
-*/
+
 
     SystemBlock control(controlNum,controlDen);
     SystemBlock controlModel(control);
+ */
+    PIDBlock control(2,0,1,Ts);
+    PIDBlock controlModel(control);
+
 
     rightArm.SetControlMode(2);
+
+
     //control loop
+    long loops = 1000;
+
     for (ulong i=0; i<loops; i++)
     {
         jointPos = rightArm.GetJoint(jointNumber);
@@ -165,7 +172,8 @@ int main()
         times.push_back(Ts*i);
 
         error=target-jointPos;
-        signal = control.OutputUpdate(error);
+        //signal = control.OutputUpdate(error);
+        signal = control.UpdateControl(error);
         rightArm.SetJointVel(jointNumber,signal);
 
 
