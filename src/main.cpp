@@ -112,7 +112,7 @@ int main()
     SystemBlock model(motorNum,motorDen);
 
 
-    double signal,modelSignal,jointPos,modelpos;
+    double signal,modelSignal,jointPos;
 
 
     rightArm.DefaultPosition();
@@ -132,7 +132,7 @@ int main()
     std::vector<double> controlDen(1,0);
     controlDen[0]=1;
 */
-     //PID control 5,2,2
+/*     //PID control 5,2,2
     std::vector<double> controlNum(3,0);
     controlNum[0]=Ts*Ts-5*Ts+4;
     controlNum[1]=2*Ts*Ts-8;
@@ -142,21 +142,21 @@ int main()
     controlDen[1]=0;
     controlDen[2]=Ts;
 
-/*
+*/
     std::vector<double> controlNum(2,0);
-    controlNum[0]=+1;
+    controlNum[0]=-0.5;
     controlNum[1]=1;
     std::vector<double> controlDen(2,0);
-    controlDen[0]=-1;
+    controlDen[0]=+0.5;
     controlDen[1]=1;
-    SystemBlock control(controlNum,controlDen);
 
 
     SystemBlock control(controlNum,controlDen);
+    control.SetSaturation(-100,100);
     SystemBlock controlModel(control);
- */
-    PIDBlock control(2,0,1,Ts);
-    PIDBlock controlModel(control);
+
+   // PIDBlock control(2,0,1,Ts);
+   // PIDBlock controlModel(control);
 
 
     rightArm.SetControlMode(2);
@@ -172,8 +172,7 @@ int main()
         times.push_back(Ts*i);
 
         error=target-jointPos;
-        //signal = control.OutputUpdate(error);
-        signal = control.UpdateControl(error);
+        signal = control.OutputUpdate(error);
         rightArm.SetJointVel(jointNumber,signal);
 
 
