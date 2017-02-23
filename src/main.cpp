@@ -119,9 +119,9 @@ int main()
     yarp::os::Time::delay(5);
 
     //time_t t;
-    double target = -30;
+    double target = 30;
     double error, modelError;
-    int jointNumber = 2;
+    int jointNumber = 3;
     std::vector<double> realPos(0,0), times(0,0);
     std::vector<double> modelPos(1,0);
 
@@ -164,7 +164,7 @@ int main()
 
     //control loop
     long loops = 15/Ts;
-
+/*
     for (ulong i=0; i<loops; i++)
     {
         jointPos = rightArm.GetJoint(jointNumber);
@@ -196,7 +196,7 @@ int main()
 
     }
 
-
+*/
     rightArm.SetJointVel(jointNumber,0.);
 
     //rightArm.DefaultPosition();
