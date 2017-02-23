@@ -98,7 +98,7 @@ int main()
     MWI::Robot rightArm("teo","rightArm");
     rightArm.SetControlMode(2);
 
-    double Ts = 0.01;
+    double Ts = 0.1;
 
 
     std::vector<double> motorNum(3,0);
@@ -119,9 +119,9 @@ int main()
     yarp::os::Time::delay(5);
 
     //time_t t;
-    double target = 30;
+    double target = -30;
     double error, modelError;
-    int jointNumber = 3;
+    int jointNumber = 2;
     std::vector<double> realPos(0,0), times(0,0);
     std::vector<double> modelPos(1,0);
 
@@ -142,7 +142,7 @@ int main()
     controlDen[1]=0;
     controlDen[2]=Ts;
 
-*/
+
     std::vector<double> controlNum(2,0);
     controlNum[0]=-0.5;
     controlNum[1]=1;
@@ -154,20 +154,29 @@ int main()
     SystemBlock control(controlNum,controlDen);
     control.SetSaturation(-100,100);
     SystemBlock controlModel(control);
-
-   // PIDBlock control(2,0,1,Ts);
-   // PIDBlock controlModel(control);
+*/
+    PIDBlock control(2,0.1,1,Ts);
+    PIDBlock controlModel(control);
 
 
     rightArm.SetControlMode(2);
 
 
     //control loop
-    long loops = 1000;
+    long loops = 150;
 
     for (ulong i=0; i<loops; i++)
     {
         jointPos = rightArm.GetJoint(jointNumber);
+        jointPos = rightArm.GetJoint(jointNumber);
+
+        jointPos = rightArm.GetJoint(jointNumber);
+
+        jointPos = rightArm.GetJoint(jointNumber);
+
+        jointPos = rightArm.GetJoint(jointNumber);
+        jointPos = rightArm.GetJoint(jointNumber);
+
         realPos.push_back(jointPos);
         times.push_back(Ts*i);
 
