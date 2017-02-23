@@ -8,6 +8,8 @@ function(echo_all_cmake_variable_values)
   message(STATUS "")
 endfunction()
 
+add_definitions(-std=c++0x -DYARP_NO_DEPRECATED_WARNINGS=ON)
+
 ##cmake code start
 project(teofpid)
 

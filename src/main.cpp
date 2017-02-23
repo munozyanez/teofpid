@@ -98,7 +98,7 @@ int main()
     MWI::Robot rightArm("teo","rightArm");
     rightArm.SetControlMode(2);
 
-    double Ts = 0.1;
+    double Ts = 0.01;
 
 
     std::vector<double> motorNum(3,0);
@@ -163,18 +163,10 @@ int main()
 
 
     //control loop
-    long loops = 150;
+    long loops = 15/Ts;
 
     for (ulong i=0; i<loops; i++)
     {
-        jointPos = rightArm.GetJoint(jointNumber);
-        jointPos = rightArm.GetJoint(jointNumber);
-
-        jointPos = rightArm.GetJoint(jointNumber);
-
-        jointPos = rightArm.GetJoint(jointNumber);
-
-        jointPos = rightArm.GetJoint(jointNumber);
         jointPos = rightArm.GetJoint(jointNumber);
 
         realPos.push_back(jointPos);
@@ -192,7 +184,7 @@ int main()
         //modelPos.push_back(model.OutputUpdate(error)*(0.5));
 
         std::cout
-                << " ,real signal: " << signal
+                << " ,real signal: " << control.OutputUpdate(error)
                 << " ,jointPos: " << jointPos
 
                 << ",modelSignal: " << modelSignal
