@@ -115,8 +115,6 @@ int main()
     double signal,modelSignal,jointPos;
 
 
-    rightArm.DefaultPosition();
-    yarp::os::Time::delay(5);
 
     //time_t t;
     double target = 30;
@@ -159,12 +157,16 @@ int main()
     PIDBlock controlModel(control);
 
 
+
+    rightArm.DefaultPosition();
+    yarp::os::Time::delay(5);
+
     rightArm.SetControlMode(2);
 
 
     //control loop
     long loops = 15/Ts;
-/*
+
     for (ulong i=0; i<loops; i++)
     {
         jointPos = rightArm.GetJoint(jointNumber);
@@ -196,7 +198,7 @@ int main()
 
     }
 
-*/
+
     rightArm.SetJointVel(jointNumber,0.);
 
     //rightArm.DefaultPosition();
