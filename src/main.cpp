@@ -95,7 +95,7 @@ int main()
 
 
 
-    MWI::Robot rightArm("teo","rightArm");
+    MWI::Robot rightArm("teoSim","rightArm");
     rightArm.SetControlMode(2);
 
     double Ts = 0.02;
@@ -153,7 +153,7 @@ int main()
     control.SetSaturation(-100,100);
     SystemBlock controlModel(control);
 */
-    PIDBlock control(2,0.3,1,Ts);
+    PIDBlock control(10,0,0,Ts);
     PIDBlock controlModel(control);
 
 
