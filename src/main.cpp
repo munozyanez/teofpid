@@ -98,7 +98,7 @@ int main()
     MWI::Robot rightArm("teoSim","rightArm");
     rightArm.SetControlMode(2);
 
-    double Ts = 0.01;
+    double Ts = 0.02;
 
 
     std::vector<double> motorNum(3,0);
@@ -153,7 +153,7 @@ int main()
     control.SetSaturation(-100,100);
     SystemBlock controlModel(control);
 */
-    PIDBlock control(2,0.1,1,Ts);
+    PIDBlock control(2,0,0,Ts);
     PIDBlock controlModel(control);
 
 
