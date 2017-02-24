@@ -95,7 +95,7 @@ int main()
 
 
 
-    MWI::Robot rightArm("teo","rightArm");
+    MWI::Robot rightArm("teoSim","rightArm");
     rightArm.SetControlMode(2);
 
     double Ts = 0.01;
@@ -165,7 +165,7 @@ int main()
 
 
     //control loop
-    long loops = 15/Ts;
+    long loops = 10/Ts;
 
     for (ulong i=0; i<loops; i++)
     {
@@ -185,8 +185,8 @@ int main()
 
         //modelPos.push_back(model.OutputUpdate(error)*(0.5));
 
-        std::cout
-                << " ,real signal: " << control.OutputUpdate(error)
+        std::cout << times[i]
+                << " ,real signal: " << signal
                 << " ,jointPos: " << jointPos
 
                 << ",modelSignal: " << modelSignal
