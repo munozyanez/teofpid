@@ -95,7 +95,7 @@ int main()
 
 
 
-    MWI::Robot rightArm("teoSim","rightArm");
+    MWI::Robot rightArm("teo","rightArm");
     rightArm.SetControlMode(2);
 
     double Ts = 0.02;
@@ -153,7 +153,7 @@ int main()
     control.SetSaturation(-100,100);
     SystemBlock controlModel(control);
 */
-    PIDBlock control(2,0,0,Ts);
+    PIDBlock control(2,0.3,1,Ts);
     PIDBlock controlModel(control);
 
 
@@ -165,7 +165,7 @@ int main()
 
 
     //control loop
-    long loops = 10/Ts;
+    long loops = 12/Ts;
 
     for (ulong i=0; i<loops; i++)
     {
@@ -180,18 +180,18 @@ int main()
 
 
         modelError = target-modelPos[i];
-        modelSignal =controlModel.OutputUpdate(modelError);
+        modelSignal = controlModel.OutputUpdate(modelError);
         modelPos.push_back( model.OutputUpdate(modelSignal) );
 
         //modelPos.push_back(model.OutputUpdate(error)*(0.5));
 
         std::cout << times[i]
-                << " ,real signal: " << signal
-                << " ,jointPos: " << jointPos
+                     << " ,real signal: " << signal
+                     << " ,jointPos: " << jointPos
 
-                << ",modelSignal: " << modelSignal
-                << "modelPos[i]: " << modelPos[i]
-                  << std::endl;
+                     << ",modelSignal: " << modelSignal
+                     << "modelPos[i]: " << modelPos[i]
+                        << std::endl;
         //std::cout << command << "" << std::endl;
         //command=double(std::min(signal,1.0));
         yarp::os::Time::delay(Ts);
@@ -229,10 +229,6 @@ int velocityCurve(double Ts, double vel, int jointNumber, MWI::Robot& robot, std
     std::fstream gdata;
     gdata.open ("/home/buyus/Escritorio/velocityProfile.csv", std::fstream::out);
 
-    //double Ts=0.05;
-    //int loops = 6/Ts;
-    //double vel = 5;
-    //int jointNumber = 3;
 
     double lastJointPos,jointPos;
     int repeat=1;
