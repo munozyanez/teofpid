@@ -95,7 +95,7 @@ int main()
 
 
 
-    MWI::Robot rightArm("teoSim","rightArm");
+    MWI::Robot rightArm("teo","rightArm");
     rightArm.SetControlMode(2);
 
     double Ts = 0.01;
@@ -211,8 +211,8 @@ int main()
     LibraryInterface li;
 
 
-    li.Plot(times,realPos,loops*Ts,target*1.5);
-    li.Plot(times,modelPos,loops*Ts,target*1.5);
+    li.PlotAndSave(times,realPos,loops*Ts,target*1.5,"realPos.csv");
+    li.PlotAndSave(times,modelPos,loops*Ts,target*1.5,"modelPos.csv");
 
     return 0;
 }
@@ -282,3 +282,4 @@ int velocityCurve(double Ts, double vel, int jointNumber, MWI::Robot& robot, std
 
     gdata.close();
 }
+

@@ -7,6 +7,9 @@
 #include <plotter.h>
 #include <plot.h>
 
+#include <fstream>      // std::fstream
+
+
 //#include "mgl2/mgl.h"
 
 
@@ -21,6 +24,7 @@ public:
     int Plot(std::vector<double> datax, std::vector<double> datay, double scalex, double scaley);
 
 
+    long PlotAndSave(std::vector<double> datax, std::vector<double> datay, double scalex, double scaley, std::string filename);
 private:
     //PlotterParams puPlotParams;
 };
