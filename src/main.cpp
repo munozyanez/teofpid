@@ -95,20 +95,35 @@ int main()
 
 
 
-    MWI::Robot rightArm("teo","rightArm");
+    MWI::Robot rightArm("teoSim","rightArm");
     rightArm.SetControlMode(2);
 
     double Ts = 0.01;
 
 
+    double kt=1.09;
+    //standard model
     std::vector<double> motorNum(3,0);
-    motorNum[0]=Ts*Ts;
-    motorNum[1]=2*Ts*Ts;
     motorNum[2]=Ts*Ts;
+    motorNum[1]=2*Ts*Ts;
+    motorNum[0]=Ts*Ts;
     std::vector<double> motorDen(3,0);
-    motorDen[0]=-2*Ts+4;
+    motorDen[2]=2*Ts+4*kt;
+    motorDen[1]=-8*kt;
+    motorDen[0]=-2*Ts+4*kt;
+
+    //constant acceleration model
+/*    double km=5;//acceleration
+    std::vector<double> motorNum(3,0);
+    motorNum[0]=km*Ts*Ts;
+    motorNum[1]=km*2*Ts*Ts;
+    motorNum[2]=km*Ts*Ts;
+    std::vector<double> motorDen(3,0);
+    motorDen[0]=4;
     motorDen[1]=-8;
-    motorDen[2]=2*Ts+4;
+    motorDen[2]=4;
+*/
+
     SystemBlock model(motorNum,motorDen);
 
 
@@ -165,7 +180,7 @@ int main()
 
 
     //control loop
-    long loops = 12/Ts;
+    long loops = 10/Ts;
 
     for (ulong i=0; i<loops; i++)
     {
