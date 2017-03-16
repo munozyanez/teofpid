@@ -114,7 +114,7 @@ int main()
     motorDen[0]=-2*Ts+4*kt;
 
 */    //constant acceleration model
-    double km=2;//acceleration
+    double km=3;//acceleration
     std::vector<double> motorNum(3,0);
     motorNum[0]=km*Ts*Ts;
     motorNum[1]=km*2*Ts*Ts;
