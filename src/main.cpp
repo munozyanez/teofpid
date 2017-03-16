@@ -101,9 +101,10 @@ int main()
     double Ts = 0.01;
 
 
-    double kt=1.09;
     //standard model
-/*    std::vector<double> motorNum(3,0);
+/*
+    double kt=1.09;
+    std::vector<double> motorNum(3,0);
     motorNum[2]=Ts*Ts;
     motorNum[1]=2*Ts*Ts;
     motorNum[0]=Ts*Ts;
@@ -112,8 +113,8 @@ int main()
     motorDen[1]=-8*kt;
     motorDen[0]=-2*Ts+4*kt;
 
-    //constant acceleration model
-    double km=5;//acceleration
+*/    //constant acceleration model
+    double km=2;//acceleration
     std::vector<double> motorNum(3,0);
     motorNum[0]=km*Ts*Ts;
     motorNum[1]=km*2*Ts*Ts;
@@ -122,18 +123,18 @@ int main()
     motorDen[0]=4;
     motorDen[1]=-8;
     motorDen[2]=4;
-*/
+
     //3rd order model sistem id matlab Ts=0.01
-    std::vector<double> motorNum(4,0);
-    motorNum[3]=0;
-    motorNum[2]=0.05005;
-    motorNum[1]=-0.09862;
-    motorNum[0]=0.04857;
-    std::vector<double> motorDen(4,0);
-    motorDen[3]=1.;
-    motorDen[2]=-2.83;
-    motorDen[1]=2.662;
-    motorDen[0]=-0.8317;
+//    std::vector<double> motorNum(4,0);
+//    motorNum[3]=0;
+//    motorNum[2]=0.05005;
+//    motorNum[1]=-0.09862;
+//    motorNum[0]=0.04857;
+//    std::vector<double> motorDen(4,0);
+//    motorDen[3]=1.;
+//    motorDen[2]=-2.83;
+//    motorDen[1]=2.662;
+//    motorDen[0]=-0.8317;
 
     SystemBlock model(motorNum,motorDen);
 
