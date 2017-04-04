@@ -95,7 +95,7 @@ int main()
 
 
 
-    MWI::Robot rightArm("teoSim","rightArm");
+    MWI::Robot rightArm("teo","rightArm");
     rightArm.SetControlMode(2);
 
     double Ts = 0.01;
@@ -144,9 +144,9 @@ int main()
 
 
     //time_t t;
-    double target = 30;
+    double target = -30;
     double error, modelError;
-    int jointNumber = 3;
+    int jointNumber = 2;
     std::vector<double> realPos(0,0), times(0,0);
     std::vector<double> modelPos(1,0);
 
