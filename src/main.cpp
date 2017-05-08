@@ -12,6 +12,7 @@
 #include "LibraryInterface.h"
 #include "fpid.h"
 #include "fcontrol.h"
+#include "IPlot.h"
 
 //local functions
 int velocityCurve(double Ts, double vel, int jointNumber, MWI::Robot& robot, std::vector<double> &pos);
@@ -41,61 +42,11 @@ int main()
 
 
 
-    //Setup imu middleware port
-  /*  MWI::Port imuPort("/inertial");
-    std::stringstream dataIndices, imudata;
-
-    // i = 0,1,2 --> euler angles (deg)
-     // i = 3,4,5 --> linear acceleration (m/s²)
-     // i = 6,7,8 --> angular speed (deg/s)
-     // i = 9,10,11 --> magnetic field (arbitrary units)
-    dataIndices << 3 << " " <<  "4 5" ;// X Y Z [m/s^2]
-
-    int indices [] = {3, 4, 5};
-    std::vector<double> imuAccel (3);
-
-
-
-    //READ SENSOR
-    double a_x,a_y,a_z;
-
-    imuPort.Read(dataIndices, imudata);
-    //imuPort.ShowAllData();
-    imudata >> a_x;
-    imudata >> a_y;
-    imudata >> a_z;
-
-    std::cout << a_x << a_y << a_z <<std::endl;
-
-    imuPort.Read(indices,imuAccel);
-
-    std::cout << "vector" << imuAccel[0] << imuAccel[1] << imuAccel[2] <<std::endl;
-
-
-
-
-    double jointPos;
-    jointPos=rightArm.GetJoint(3);
-    std::cout << "raj4: " << jointPos  <<std::endl;
-
-
-
-
-    //controller
-
-    fpid::Controller control;
-    double signal,command;
-
-
-    std::fstream gdata;
-    gdata.open ("gdata.csv", std::fstream::out);
-
-*/
     //control
 
 
 
-    MWI::Robot rightArm("teo","rightArm");
+    MWI::Robot rightArm("teoSim","rightArm");
     rightArm.SetControlMode(2);
 
     double Ts = 0.01;
@@ -137,16 +88,42 @@ int main()
 //    motorDen[0]=-0.8317;
 
     SystemBlock model(motorNum,motorDen);
+    //plotters
+    IPlot pt(Ts),vt(Ts),at(Ts);
+    IPlot ptTeo(Ts),vtTeo(Ts),atTeo(Ts);
 
+
+    double ka=10.09;//acceleration
+    //instantiate object motor
+    SystemBlock acc(
+                std::vector<double> {ka},
+                std::vector<double> {1}
+                );
+    acc.SetSaturation(-40,40);
+
+
+    //instantiate object motor
+    SystemBlock vel(
+                std::vector<double> {Ts,Ts},//{ka*Ts,ka*Ts},
+                std::vector<double> {-2,+2}//{Ts-2,Ts+2}
+                );
+
+    vel.SetSaturation(-80,80);
+
+    //instantiate object encoder
+    SystemBlock encoder(
+                std::vector<double> {Ts,Ts},
+                std::vector<double> {-2,+2}
+                );
 
     double signal,modelSignal,jointPos;
 
 
 
     //time_t t;
-    double target = -30;
+    double target = 30;
     double error, modelError;
-    int jointNumber = 2;
+    int jointNumber = 3;
     std::vector<double> realPos(0,0), times(0,0);
     std::vector<double> modelPos(1,0);
 
@@ -201,14 +178,22 @@ int main()
         realPos.push_back(jointPos);
         times.push_back(Ts*i);
 
+        ptTeo.pushBack(jointPos);
+
         error=target-jointPos;
         signal = control.OutputUpdate(error);
         rightArm.SetJointVel(jointNumber,signal);
 
+        modelError = target-encoder.GetState();
 
-        modelError = target-modelPos[i];
-        modelSignal = controlModel.OutputUpdate(modelError);
-        modelPos.push_back( model.OutputUpdate(modelSignal) );
+        //THE BLOCK DIAGRAM
+        modelError > controlModel > acc > vel >  encoder;
+
+
+//        modelSignal = controlModel.OutputUpdate(modelError);
+        modelPos.push_back( encoder.GetState() );
+        pt.pushBack(encoder.GetState());
+        at.pushBack(acc.GetState());
 
         //modelPos.push_back(model.OutputUpdate(error)*(0.5));
 
@@ -216,8 +201,8 @@ int main()
                      << " ,real signal: " << signal
                      << " ,jointPos: " << jointPos
 
-                     << ",modelSignal: " << modelSignal
-                     << "modelPos[i]: " << modelPos[i]
+                     //<< ",modelSignal: " << modelSignal
+                     //<< "modelPos[i]: " << modelPos[i]
                         << std::endl;
         //std::cout << command << "" << std::endl;
         //command=double(std::min(signal,1.0));
@@ -225,6 +210,11 @@ int main()
 
     }
 
+    pt.Plot();
+    ptTeo.Plot();
+
+    pt.Save("pVt.txt");
+    ptTeo.Save("pVtTeo.txt");
 
     rightArm.SetJointVel(jointNumber,0.);
 
@@ -238,8 +228,8 @@ int main()
     LibraryInterface li;
 
 
-    li.PlotAndSave(times,realPos,loops*Ts,target*1.5,"realPos.csv");
-    li.PlotAndSave(times,modelPos,loops*Ts,target*1.5,"modelPos.csv");
+//    li.PlotAndSave(times,realPos,loops*Ts,target*1.5,"realPos.csv");
+//    li.PlotAndSave(times,modelPos,loops*Ts,target*1.5,"modelPos.csv");
 
     return 0;
 }
