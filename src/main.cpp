@@ -46,7 +46,7 @@ int main()
 
 
 
-    MWI::Robot rightArm("teoSim","rightArm");
+    MWI::Robot rightArm("teo","rightArm");
     rightArm.SetControlMode(2);
 
     double Ts = 0.01;
@@ -201,8 +201,9 @@ int main()
                      << " ,real signal: " << signal
                      << " ,jointPos: " << jointPos
 
-                     //<< ",modelSignal: " << modelSignal
-                     //<< "modelPos[i]: " << modelPos[i]
+                        << ",modelError: " << modelError
+                     << ",modelSignal: " << controlModel.GetState()
+                     << "modelPos: " << encoder.GetState()
                         << std::endl;
         //std::cout << command << "" << std::endl;
         //command=double(std::min(signal,1.0));
