@@ -46,7 +46,7 @@ int main()
 
 
 
-    MWI::Robot rightArm("teo","rightArm");
+    MWI::Robot rightArm("teoSim","rightArm");
     rightArm.SetControlMode(2);
 
     double Ts = 0.01;
