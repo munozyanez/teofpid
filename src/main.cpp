@@ -169,7 +169,7 @@ int main()
 
 
     //control loop
-    long loops = 10/Ts;
+    long loops = 20/Ts;
 
     for (ulong i=0; i<loops; i++)
     {
