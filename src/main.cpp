@@ -169,7 +169,7 @@ int main()
 
 
     //control loop
-    long loops = 20/Ts;
+    long loops = 5/Ts;
 
     for (ulong i=0; i<loops; i++)
     {
@@ -207,7 +207,7 @@ int main()
                         << std::endl;
         //std::cout << command << "" << std::endl;
         //command=double(std::min(signal,1.0));
-        yarp::os::Time::delay(Ts);
+        //yarp::os::Time::delay(Ts);
 
     }
 
