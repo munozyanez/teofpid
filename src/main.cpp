@@ -93,13 +93,13 @@ int main()
     IPlot ptTeo(Ts),vtTeo(Ts),atTeo(Ts);
 
 
-    double ka=10.09;//acceleration
+    double ka=1.09;//acceleration
     //instantiate object motor
     SystemBlock acc(
                 std::vector<double> {ka},
                 std::vector<double> {1}
                 );
-    acc.SetSaturation(-40,40);
+    acc.SetSaturation(-15,15);
 
 
     //instantiate object motor
@@ -108,7 +108,7 @@ int main()
                 std::vector<double> {-2,+2}//{Ts-2,Ts+2}
                 );
 
-    vel.SetSaturation(-80,80);
+    vel.SetSaturation(-20,20);
 
     //instantiate object encoder
     SystemBlock encoder(
@@ -157,6 +157,7 @@ int main()
     control.SetSaturation(-100,100);
     SystemBlock controlModel(control);
 */
+    //PIDBlock control(2,0.5,1,Ts);
     PIDBlock control(2,0.5,1,Ts);
     PIDBlock controlModel(control);
 
@@ -169,7 +170,7 @@ int main()
 
 
     //control loop
-    long loops = 5/Ts;
+    long loops = 10/Ts;
 
     for (ulong i=0; i<loops; i++)
     {
@@ -190,12 +191,11 @@ int main()
         modelError > controlModel > acc > vel >  encoder;
 
 
-//        modelSignal = controlModel.OutputUpdate(modelError);
+        //plots
         modelPos.push_back( encoder.GetState() );
         pt.pushBack(encoder.GetState());
         at.pushBack(acc.GetState());
 
-        //modelPos.push_back(model.OutputUpdate(error)*(0.5));
 
         std::cout << times[i]
                      << " ,real signal: " << signal
@@ -206,7 +206,6 @@ int main()
                      << "modelPos: " << encoder.GetState()
                         << std::endl;
         //std::cout << command << "" << std::endl;
-        //command=double(std::min(signal,1.0));
         //yarp::os::Time::delay(Ts);
 
     }
