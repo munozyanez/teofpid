@@ -10,7 +10,7 @@ endfunction()
 
 add_definitions(-std=c++0x -DYARP_NO_DEPRECATED_WARNINGS=ON)
 
-##cmake code start
+##project code
 project(teofpid)
 
 cmake_minimum_required(VERSION 2.8)
@@ -46,6 +46,7 @@ add_executable(${PROJECT_NAME} ${SRC_LIST})
 
 #link with libs
 target_link_libraries( ${PROJECT_NAME} LibraryInterface fpid teoMWI ${YARP_LIBRARIES})
-echo_all_cmake_variable_values()
+
+#echo_all_cmake_variable_values()
 
 
