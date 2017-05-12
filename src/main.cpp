@@ -72,16 +72,16 @@ int main()
 
 
     //instantiate object motor
-    SystemBlock vel(
+    SystemBlock modelVel(
                 std::vector<double> {Ts,Ts},//{ka*Ts,ka*Ts},
                 std::vector<double> {-2,+2}//{Ts-2,Ts+2}
                 );
 
 //    vel.SetSaturation(-5,18);
-    vel.SetSaturation(-5,10);
+    modelVel.SetSaturation(-10,10);
 
     //instantiate object encoder
-    SystemBlock encoder(
+    SystemBlock modelEncoder(
                 std::vector<double> {Ts,Ts},
                 std::vector<double> {-2,+2}
                 );
@@ -91,7 +91,7 @@ int main()
 
     //old PIDBlock control(2,0.5,1,Ts);
     PIDBlock control(1,0,0,Ts);
-    PIDBlock controlModel(control);
+    PIDBlock modelControl(control);
 
 
 
@@ -123,15 +123,32 @@ int main()
         signal = control.OutputUpdate(error);
         rightArm.SetJointVel(jointNumber,signal);
 
-        modelError = target-encoder.GetState();
+        modelError = target-modelEncoder.GetState();
 
         //THE BLOCK DIAGRAM
-        modelError > controlModel > acc > vel >  encoder;
+        modelError > modelControl;
 
+        if (std::fabs(modelControl.GetState()) < 3)
+        {
+            0 > modelVel >  modelEncoder;
+        }
+        else
+        {
+            if ( modelControl.GetState() < modelVel.GetState() )
+            {
+
+                -10  > modelVel >  modelEncoder;
+            }
+            else
+            {
+                +10  > modelVel >  modelEncoder;
+
+            }
+        }
 
         //plot data
         //modelPos.push_back( encoder.GetState() );
-        pt.pushBack(encoder.GetState());
+        pt.pushBack(modelEncoder.GetState());
         at.pushBack(acc.GetState());
 
 
@@ -140,12 +157,12 @@ int main()
                      << " , jointPos: " << jointPos
 
                         << " , modelError: " << modelError
-                        << " , modelVel: " << vel.GetState()
+                        << " , modelVel: " << modelVel.GetState()
 
-                     << " , modelSignal: " << controlModel.GetState()
-                     << " , modelPos: " << encoder.GetState()
+                     << " , modelSignal: " << modelControl.GetState()
+                     << " , modelPos: " << modelEncoder.GetState()
                         << std::endl;
-        yarp::os::Time::delay(Ts);
+        //yarp::os::Time::delay(Ts);
 
     }
 
