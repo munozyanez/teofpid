@@ -55,6 +55,11 @@ int main()
     IPlot pt(Ts),vt(Ts),at(Ts);
     IPlot ptTeo(Ts),vtTeo(Ts),atTeo(Ts);
 
+    //instantiate object motor
+    SystemBlock der(
+                std::vector<double> {-1,+1},
+                std::vector<double> {0,+Ts}
+                );
 
     double ka=10.09;//acceleration
     //instantiate object motor
@@ -63,7 +68,7 @@ int main()
                 std::vector<double> {1}
                 );
     //graph: acc.SetSaturation(-24,24);
-    acc.SetSaturation(-15,15);
+    acc.SetSaturation(-5,5);
 
 
     //instantiate object motor
@@ -73,7 +78,7 @@ int main()
                 );
 
 //    vel.SetSaturation(-5,18);
-    vel.SetSaturation(-5,18);
+    vel.SetSaturation(-5,10);
 
     //instantiate object encoder
     SystemBlock encoder(
@@ -125,20 +130,21 @@ int main()
 
 
         //plot data
-        modelPos.push_back( encoder.GetState() );
+        //modelPos.push_back( encoder.GetState() );
         pt.pushBack(encoder.GetState());
         at.pushBack(acc.GetState());
 
 
-//        std::cout << times[i]
-//                     << " ,real signal: " << signal
-//                     << " ,jointPos: " << jointPos
+        std::cout << times[i]
+                     << " , real signal: " << signal
+                     << " , jointPos: " << jointPos
 
-//                        << ",modelError: " << modelError
-//                     << ",modelSignal: " << controlModel.GetState()
-//                     << "modelPos: " << encoder.GetState()
-//                        << std::endl;
-        //std::cout << command << "" << std::endl;
+                        << " , modelError: " << modelError
+                        << " , modelVel: " << vel.GetState()
+
+                     << " , modelSignal: " << controlModel.GetState()
+                     << " , modelPos: " << encoder.GetState()
+                        << std::endl;
         yarp::os::Time::delay(Ts);
 
     }
