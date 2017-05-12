@@ -85,7 +85,7 @@ int main()
 
 
     //old PIDBlock control(2,0.5,1,Ts);
-    PIDBlock control(2,0.5,1,Ts);
+    PIDBlock control(1,0,0,Ts);
     PIDBlock controlModel(control);
 
 
@@ -139,7 +139,7 @@ int main()
 //                     << "modelPos: " << encoder.GetState()
 //                        << std::endl;
         //std::cout << command << "" << std::endl;
-        //yarp::os::Time::delay(Ts);
+        yarp::os::Time::delay(Ts);
 
     }
 
