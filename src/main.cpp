@@ -55,14 +55,6 @@ int main()
     IPlot pt(Ts),vt(Ts),at(Ts);
     IPlot ptTeo(Ts),vtTeo(Ts),atTeo(Ts);
 
-    //instantiate object motor
-    SystemBlock minVel(
-                std::vector<double> {1},
-                std::vector<double> {1}
-                );
-    minVel.SetSaturation(3,-3);
-
-
     double ka=10.09;//acceleration
     //instantiate object motor
     SystemBlock acc(
@@ -80,6 +72,7 @@ int main()
                 );
 
 //    vel.SetSaturation(-5,18);
+    //TODO: Update <maxvel>10</maxvel> and <maxaccel>5</maxaccel> in openrave joints
     modelVel.SetSaturation(-10,10);
 
     //instantiate object encoder
@@ -128,28 +121,11 @@ int main()
         modelError = target-modelEncoder.GetState();
         modelError = modelError/(Ts*Ts);
 
-        modelError > modelControl > acc > modelVel  >  modelEncoder;
 
         //THE BLOCK DIAGRAM
-//        modelError > modelControl;
+        modelError > modelControl > acc > modelVel  >  modelEncoder;
 
-//        if (std::fabs(modelControl.GetState()) < 3)
-//        {
-//            0 > modelVel >  modelEncoder;
-//        }
-//        else
-//        {
-//            if ( modelControl.GetState() < modelVel.GetState() )
-//            {
 
-//                -10  > modelVel >  modelEncoder;
-//            }
-//            else
-//            {
-//                +10  > modelVel >  modelEncoder;
-
-//            }
-//        }
 
         //plot data
         //modelPos.push_back( encoder.GetState() );
@@ -163,7 +139,6 @@ int main()
 
                         << " , modelError: " << modelError
                         << " , modelVel: " << modelVel.GetState()
-                        << " , minVel: " << minVel.GetState()
 
                      << " , modelSignal: " << modelControl.GetState()
                      << " , modelPos: " << modelEncoder.GetState()
