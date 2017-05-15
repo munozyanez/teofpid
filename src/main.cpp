@@ -97,7 +97,7 @@ int main()
 
 //    vel.SetSaturation(-5,18);
     //TODO: Update <maxvel>10</maxvel> and <maxaccel>5</maxaccel> in openrave joints
-    controlLimit.SetSaturation(-100,100);
+    controlLimit.SetSaturation(-1000,1000);
 
 
     rightArm.DefaultPosition();
@@ -113,7 +113,7 @@ int main()
     std::vector<double> modelPos(1,0);
 
     //control loop
-    long loops = 10/Ts;
+    long loops = 30/Ts;
 
     for (ulong i=0; i<loops; i++)
     {
