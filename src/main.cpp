@@ -35,11 +35,11 @@ int main()
             return -1;
 
         }
-        rightArm.SetControlMode(2);
-        rightArm.SetJointVel(3,1);
-        yarp::os::Time::delay(2);
-        rightArm.DefaultPosition();
+        rightArm.SetControlMode(1);
+        rightArm.SetJointPositions(std::vector<double>{0,0,0,90,0,0});
         yarp::os::Time::delay(5);
+        //rightArm.DefaultPosition();
+        //yarp::os::Time::delay(5);
         rightArm.SetControlMode(2);
 
 
@@ -114,7 +114,7 @@ int main()
 
 
     //time_t t;
-    double target = +30;
+    double target = 30;
     double error, modelError;
     int jointNumber = 3;
 
@@ -154,15 +154,16 @@ int main()
 
 
         std::cout << i*Ts
-                     << " , real signal: " << signal
-                     << " , jointPos: " << jointPos
+                     //                     << " , real signal: " << signal
+                     //                     << " , jointPos: " << jointPos
 
-                        << " , GetJointVel: " << rightArm.GetJointVel(jointNumber)
-//                        << " , modelVel: " << modelVel.GetState()
+                     //                        << " , GetJointVel: " << rightArm.GetJointVel(jointNumber)
 
-//                     << " , modelSignal: " << modelControl.GetState()
-//                     << " , modelPos: " << modelEncoder.GetState()
-                        << std::endl;
+                  << " , modelError: " << modelError
+                  << " , modelVel: " << modelVel.GetState()
+                  << " , modelSignal: " << modelControl.GetState()
+                  << " , modelPos: " << modelEncoder.GetState()
+                  << std::endl;
 
     }
 
@@ -177,19 +178,6 @@ int main()
 
     }
 
-    for (int i=0; i<40;i++)
-    {
-
-        rightArm.SetControlMode(2);
-        rightArm.SetJointVel(jointNumber,(double)i/10);
-        yarp::os::Time::delay(0.3);
-        std::cout << i*0.1
-                  << " , real signal: " << (double)i/10
-                  << " , jointPos: " << rightArm.GetJoint(jointNumber)
-                  << " , GetJointVel: " << rightArm.GetJointVel(jointNumber)
-                  << std::endl;
-
-    }
     rightArm.SetJointVel(jointNumber,0.);
 
 

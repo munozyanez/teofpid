@@ -24,9 +24,11 @@ long IPlot::Plot()
 {
 
     double scx,scy;
-    scx = *max_element(x.begin(),x.end());
-    scy = *max_element(y.begin(),y.end());
+    scx = *max_element(x.begin(),x.end())-*min_element(x.begin(),x.end());
+    scy = *max_element(y.begin(),y.end())-*min_element(y.begin(),y.end());
+    std::cout << "scales: " << scx << ", " << scy;
     Plot(x,y,1.0*scx,1.5*scy);
+    return 0;
 }
 
 long IPlot::Save(std::string filename)
@@ -61,11 +63,18 @@ long IPlot::Plot(std::vector<double> datax, std::vector<double> datay, double sc
 
 
 
+
     for (ulong i=1; i<datax.size(); i++)
     {
         //plt.fpoint(datax[i]/scalex,datay[i]/scaley);
-        plt.fmove(datax[i]/scalex,datay[i]/scaley);
-        plt.fline(datax[i-1]/scalex,datay[i-1]/scaley,datax[i]/scalex,datay[i]/scaley);
+
+        px=0.5+datax[i-1]/(2*scalex);
+        py=0.5+datay[i-1]/(2*scaley);
+        qx=0.5+datax[i]/(2*scalex);
+        qy=0.5+datay[i]/(2*scaley);
+        //plt.fmove(px,py);
+
+        plt.fline(px,py,qx,qy);
         //plt.fcircle(datax[i]/scalex,datay[i]/scaley,std::max(scalex,scaley)/10000.);
 
         //plt.endpath();
