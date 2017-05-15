@@ -23,16 +23,25 @@ using namespace std;
 int main()
 {
 
-
-
+    bool useRobot = false;
     MWI::Robot rightArm("teo","rightArm");
-    if (rightArm.GetError()!=0)
+
+    if (useRobot)
     {
-        std::cout << "MWI::Robot rightArm(\"teoSim\",\"rightArm\") not available. ERROR: " << rightArm.GetError() << std::endl;
-        return -1;
+       // rightArm = MWI::Robot("teo","rightArm");
+        if (rightArm.GetError()!=0)
+        {
+            std::cout << "MWI::Robot rightArm(\"teoSim\",\"rightArm\") not available. ERROR: " << rightArm.GetError() << std::endl;
+            return -1;
+
+        }
+        rightArm.SetControlMode(2);
+
+        rightArm.DefaultPosition();
+        yarp::os::Time::delay(5);
+        rightArm.SetControlMode(2);
 
     }
-    rightArm.SetControlMode(2);
 
     double Ts = 0.01;
 
@@ -55,14 +64,14 @@ int main()
     IPlot pt(Ts),vt(Ts),at(Ts);
     IPlot ptTeo(Ts),vtTeo(Ts),atTeo(Ts);
 
-    double ka=1.09;//acceleration
+    double ka=10.09;//acceleration
     //instantiate object motor
     SystemBlock acc(
                 std::vector<double> {ka},
                 std::vector<double> {1}
                 );
     //graph: acc.SetSaturation(-24,24);
-    acc.SetSaturation(-5,5);
+    acc.SetSaturation(-10,10);
 
 
     //instantiate object motor
@@ -73,7 +82,7 @@ int main()
 
 //    vel.SetSaturation(-5,18);
     //TODO: Update <maxvel>10</maxvel> and <maxaccel>5</maxaccel> in openrave joints
-    modelVel.SetSaturation(-5,5);
+    modelVel.SetSaturation(-15,15);
 
     //instantiate object encoder
     SystemBlock modelEncoder(
@@ -100,74 +109,70 @@ int main()
     controlLimit.SetSaturation(-1000,1000);
 
 
-    rightArm.DefaultPosition();
-    yarp::os::Time::delay(5);
-
-    rightArm.SetControlMode(2);
 
     //time_t t;
-    double target = +40;
+    double target = +30;
     double error, modelError;
     int jointNumber = 3;
-    std::vector<double> realPos(0,0), times(0,0);
-    std::vector<double> modelPos(1,0);
+
 
     //control loop
     long loops = 10/Ts;
 
     for (ulong i=0; i<loops; i++)
     {
-        jointPos = rightArm.GetJoint(jointNumber);
 
-        realPos.push_back(jointPos);
-        times.push_back(Ts*i);
 
-        ptTeo.pushBack(jointPos);
-
-        error=target-jointPos;
-        //error = error/(Ts*Ts);
-
-        //signal = control.OutputUpdate(error);
-        signal = error > control > controlLimit;
-        rightArm.SetJointVel(jointNumber,signal);
-
+        //MODEL BLOCK DIAGRAM
         modelError = target-modelEncoder.GetState();
-        //modelError = modelError/(Ts*Ts);
+        //modelError = modelError/(Ts);
+
+        modelError > modelControl;
+        ( modelControl.GetState()-modelVel.GetState() ) > acc > modelVel  >  modelEncoder;
 
 
-        //THE BLOCK DIAGRAM
-        modelError > modelControl > acc > modelVel  >  modelEncoder;
+        //ROBOT BLOCK DIAGRAM
+        if (useRobot)
+        {
+            jointPos = rightArm.GetJoint(jointNumber);
+            error=target-jointPos;
+            //error = error/(Ts*Ts);
+            signal = error > control > controlLimit;
+            rightArm.SetJointVel(jointNumber,signal);
+            yarp::os::Time::delay(Ts);
+        }
 
 
-
-        //plot data
+        //plot data store
         //modelPos.push_back( encoder.GetState() );
         pt.pushBack(modelEncoder.GetState());
         at.pushBack(acc.GetState());
+        ptTeo.pushBack(jointPos);
 
 
-        std::cout << times[i]
+        std::cout << i*Ts
                      << " , real signal: " << signal
-                     << " , jointPos: " << jointPos
+//                     << " , jointPos: " << jointPos
 
-                        << " , modelError: " << modelError
-                        << " , modelVel: " << modelVel.GetState()
+//                        << " , modelError: " << modelError
+//                        << " , modelVel: " << modelVel.GetState()
 
-                     << " , modelSignal: " << modelControl.GetState()
-                     << " , modelPos: " << modelEncoder.GetState()
+//                     << " , modelSignal: " << modelControl.GetState()
+//                     << " , modelPos: " << modelEncoder.GetState()
                         << std::endl;
-        yarp::os::Time::delay(Ts);
 
     }
 
     pt.Plot();
-    ptTeo.Plot();
-
     pt.Save("pVt.txt");
-    ptTeo.Save("pVtTeo.txt");
 
-    rightArm.SetJointVel(jointNumber,0.);
+    if (useRobot)
+    {
+        ptTeo.Plot();
+        ptTeo.Save("pVtTeo.txt");
+        rightArm.SetJointVel(jointNumber,0.);
 
+    }
 
 
     return 0;
