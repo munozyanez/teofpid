@@ -31,7 +31,7 @@ int main()
        // rightArm = MWI::Robot("teo","rightArm");
         if (rightArm.GetError()!=0)
         {
-            std::cout << "MWI::Robot rightArm(\"teoSim\",\"rightArm\") not available. ERROR: " << rightArm.GetError() << std::endl;
+            std::cout << "MWI::Robot rightArm(\"rightArm\") not available. ERROR: " << rightArm.GetError() << std::endl;
             return -1;
 
         }
@@ -154,7 +154,7 @@ int main()
                      << " , real signal: " << signal
                      << " , jointPos: " << jointPos
 
-//                        << " , modelError: " << modelError
+                        << " , GetJointVel: " << rightArm.GetJointVel(jointNumber)
 //                        << " , modelVel: " << modelVel.GetState()
 
 //                     << " , modelSignal: " << modelControl.GetState()
