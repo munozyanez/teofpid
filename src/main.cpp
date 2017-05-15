@@ -25,7 +25,7 @@ int main()
 
 
 
-    MWI::Robot rightArm("teoSim","rightArm");
+    MWI::Robot rightArm("teo","rightArm");
     if (rightArm.GetError()!=0)
     {
         std::cout << "MWI::Robot rightArm(\"teoSim\",\"rightArm\") not available. ERROR: " << rightArm.GetError() << std::endl;
@@ -86,8 +86,18 @@ int main()
 
     //old PIDBlock control(2,0.5,1,Ts);
     PIDBlock control(1,0,0,Ts);
+
     PIDBlock modelControl(control);
 
+    //instantiate object motor
+    SystemBlock controlLimit(
+                std::vector<double> {1},//{ka*Ts,ka*Ts},
+                std::vector<double> {1}//{Ts-2,Ts+2}
+                );
+
+//    vel.SetSaturation(-5,18);
+    //TODO: Update <maxvel>10</maxvel> and <maxaccel>5</maxaccel> in openrave joints
+    controlLimit.SetSaturation(-100,100);
 
 
     rightArm.DefaultPosition();
@@ -96,7 +106,7 @@ int main()
     rightArm.SetControlMode(2);
 
     //time_t t;
-    double target = 30;
+    double target = +30;
     double error, modelError;
     int jointNumber = 3;
     std::vector<double> realPos(0,0), times(0,0);
@@ -115,11 +125,14 @@ int main()
         ptTeo.pushBack(jointPos);
 
         error=target-jointPos;
-        signal = control.OutputUpdate(error);
+        error = error/(Ts*Ts);
+
+        //signal = control.OutputUpdate(error);
+        signal = error > control > controlLimit;
         rightArm.SetJointVel(jointNumber,signal);
 
         modelError = target-modelEncoder.GetState();
-        modelError = modelError/(Ts*Ts);
+        //modelError = modelError/(Ts*Ts);
 
 
         //THE BLOCK DIAGRAM
