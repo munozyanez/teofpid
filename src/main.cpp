@@ -4,8 +4,8 @@
 #include <fstream>      // std::fstream
 
 
-#include <chrono>
-#include <ctime>
+//#include <chrono>
+//#include <ctime>
 
 #include "MiddlewareInterface.h"
 #include "LibraryInterface.h"
@@ -173,6 +173,21 @@ int main()
         rightArm.SetJointVel(jointNumber,0.);
 
     }
+
+    for (int i=0; i<40;i++)
+    {
+
+        rightArm.SetControlMode(2);
+        rightArm.SetJointVel(jointNumber,(double)i/10);
+        yarp::os::Time::delay(0.3);
+        std::cout << i*0.1
+                  << " , real signal: " << (double)i/10
+                  << " , jointPos: " << rightArm.GetJoint(jointNumber)
+                  << " , GetJointVel: " << rightArm.GetJointVel(jointNumber)
+                  << std::endl;
+
+    }
+    rightArm.SetJointVel(jointNumber,0.);
 
 
     return 0;
