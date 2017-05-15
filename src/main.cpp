@@ -36,10 +36,13 @@ int main()
 
         }
         rightArm.SetControlMode(2);
-
+        rightArm.SetJointVel(3,1);
+        yarp::os::Time::delay(2);
         rightArm.DefaultPosition();
         yarp::os::Time::delay(5);
         rightArm.SetControlMode(2);
+
+
 
     }
 
