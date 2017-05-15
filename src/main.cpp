@@ -55,7 +55,7 @@ int main()
     IPlot pt(Ts),vt(Ts),at(Ts);
     IPlot ptTeo(Ts),vtTeo(Ts),atTeo(Ts);
 
-    double ka=10.09;//acceleration
+    double ka=1.09;//acceleration
     //instantiate object motor
     SystemBlock acc(
                 std::vector<double> {ka},
@@ -73,7 +73,7 @@ int main()
 
 //    vel.SetSaturation(-5,18);
     //TODO: Update <maxvel>10</maxvel> and <maxaccel>5</maxaccel> in openrave joints
-    modelVel.SetSaturation(-10,10);
+    modelVel.SetSaturation(-5,5);
 
     //instantiate object encoder
     SystemBlock modelEncoder(
@@ -106,14 +106,14 @@ int main()
     rightArm.SetControlMode(2);
 
     //time_t t;
-    double target = +30;
+    double target = +40;
     double error, modelError;
     int jointNumber = 3;
     std::vector<double> realPos(0,0), times(0,0);
     std::vector<double> modelPos(1,0);
 
     //control loop
-    long loops = 30/Ts;
+    long loops = 10/Ts;
 
     for (ulong i=0; i<loops; i++)
     {
@@ -125,7 +125,7 @@ int main()
         ptTeo.pushBack(jointPos);
 
         error=target-jointPos;
-        error = error/(Ts*Ts);
+        //error = error/(Ts*Ts);
 
         //signal = control.OutputUpdate(error);
         signal = error > control > controlLimit;
