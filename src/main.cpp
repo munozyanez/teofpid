@@ -23,7 +23,7 @@ using namespace std;
 int main()
 {
 
-    bool useRobot = false;
+    bool useRobot = true;
     MWI::Robot rightArm("teo","rightArm");
 
     if (useRobot)
@@ -152,7 +152,7 @@ int main()
 
         std::cout << i*Ts
                      << " , real signal: " << signal
-//                     << " , jointPos: " << jointPos
+                     << " , jointPos: " << jointPos
 
 //                        << " , modelError: " << modelError
 //                        << " , modelVel: " << modelVel.GetState()
