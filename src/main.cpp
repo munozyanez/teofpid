@@ -18,7 +18,7 @@
 
 using namespace std;
 
-#define ROBOT "teo"
+#define ROBOT "teoSim"
 
 int main()
 {
