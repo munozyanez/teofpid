@@ -14,29 +14,29 @@
 #include "IPlot.h"
 
 //local functions
-//int velocityCurve(double Ts, double vel, int jointNumber, MWI::Robot& robot, std::vector<double> &pos);
+//int velocityCurve(double Ts, double vel, int jointNumber, MWI::Limb& robot, std::vector<double> &pos);
 
 using namespace std;
 
-
+#define ROBOT "teo"
 
 int main()
 {
 
     bool useRobot = true;
-    MWI::Robot rightArm("teo","rightArm");
+    MWI::Limb rightArm(ROBOT,"rightArm");
 
     if (useRobot)
     {
-       // rightArm = MWI::Robot("teo","rightArm");
+       // rightArm = MWI::Limb(ROBOT,"rightArm");
         if (rightArm.GetError()!=0)
         {
-            std::cout << "MWI::Robot rightArm(\"rightArm\") not available. ERROR: " << rightArm.GetError() << std::endl;
+            std::cout << "MWI::Limb rightArm(\"rightArm\") not available. ERROR: " << rightArm.GetError() << std::endl;
             return -1;
 
         }
         rightArm.SetControlMode(1);
-        rightArm.SetJointPositions(std::vector<double>{0,0,0,90,0,0});
+        rightArm.SetJointPositions(std::vector<double>{0,0,0,45,0,0});
         yarp::os::Time::delay(5);
         //rightArm.DefaultPosition();
         //yarp::os::Time::delay(5);
@@ -118,9 +118,11 @@ int main()
     double error, modelError;
     int jointNumber = 3;
 
+    rightArm.SetControlMode(3);
+    rightArm.SetJointPositions(std::vector<double> {0,0,target,0,0,0});
 
     //control loop
-    long loops = 10/Ts;
+    long loops = 00/Ts;
 
     for (ulong i=0; i<loops; i++)
     {
@@ -185,7 +187,7 @@ int main()
 }
 
 
-//int velocityCurve(double Ts, double vel, int jointNumber, MWI::Robot& robot, std::vector<double> &pos)
+//int velocityCurve(double Ts, double vel, int jointNumber, MWI::Limb& robot, std::vector<double> &pos)
 //{
 //    int loops = 6/Ts;
 //    double totalTime=0;
