@@ -18,7 +18,7 @@
 
 using namespace std;
 
-#define ROBOT "teoSim"
+#define ROBOT "teo"
 
 int main()
 {
@@ -114,12 +114,14 @@ int main()
 
 
     //time_t t;
-    double target = 30;
+    double target = 30.0;
     double error, modelError;
     int jointNumber = 3;
 
     rightArm.SetControlMode(3);
-    rightArm.SetJointPositions(std::vector<double> {0,0,target,0,0,0});
+    rightArm.ShowControlModes();
+    rightArm.SetJointPositions(std::vector<double> {0,0,0,target,0,0});
+    rightArm.SetControlMode(1);
 
     //control loop
     long loops = 00/Ts;
@@ -169,12 +171,12 @@ int main()
 
     }
 
-    pt.Plot();
+    //pt.Plot();
     pt.Save("pVt.txt");
 
     if (useRobot)
     {
-        ptTeo.Plot();
+        //ptTeo.Plot();
         ptTeo.Save("pVtTeo.txt");
         rightArm.SetJointVel(jointNumber,0.);
 
