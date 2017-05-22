@@ -23,7 +23,7 @@ using namespace std;
 int main()
 {
 
-    bool useRobot = true;
+    bool useRobot = false;
     MWI::Limb rightArm(ROBOT,"rightArm");
 
     if (useRobot)
@@ -79,8 +79,10 @@ int main()
 
     //instantiate object motor
     SystemBlock modelVel(
-                std::vector<double> {Ts,Ts},//{ka*Ts,ka*Ts},
-                std::vector<double> {-2,+2}//{Ts-2,Ts+2}
+                std::vector<double> {Ts,Ts},
+                std::vector<double> {-2,+2}
+//                std::vector<double> {0,1},
+//                std::vector<double> {-1,0}
                 );
 
 //    vel.SetSaturation(-5,18);
@@ -96,8 +98,9 @@ int main()
     double signal,modelSignal,jointPos;
 
 
+    double kp=43.2;
     //old PIDBlock control(2,0.5,1,Ts);
-    PIDBlock control(1,0,0,Ts);
+    PIDBlock control(2.381,0.468,0.077,Ts);
 
     PIDBlock modelControl(control);
 
@@ -118,13 +121,13 @@ int main()
     double error, modelError;
     int jointNumber = 3;
 
-    rightArm.SetControlMode(3);
-    rightArm.ShowControlModes();
-    rightArm.SetJointPositions(std::vector<double> {0,0,0,target,0,0});
-    rightArm.SetControlMode(1);
+//    rightArm.SetControlMode(3);
+//    rightArm.ShowControlModes();
+//    rightArm.SetJointPositions(std::vector<double> {0,0,0,target,0,0});
+//    rightArm.SetControlMode(1);
 
     //control loop
-    long loops = 00/Ts;
+    long loops = 20/Ts;
 
     for (ulong i=0; i<loops; i++)
     {
@@ -171,12 +174,12 @@ int main()
 
     }
 
-    //pt.Plot();
+    pt.Plot();
     pt.Save("pVt.txt");
 
     if (useRobot)
     {
-        //ptTeo.Plot();
+        ptTeo.Plot();
         ptTeo.Save("pVtTeo.txt");
         rightArm.SetJointVel(jointNumber,0.);
 
