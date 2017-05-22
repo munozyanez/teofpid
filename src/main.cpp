@@ -18,12 +18,12 @@
 
 using namespace std;
 
-#define ROBOT "teoSim"
+#define ROBOT "teo"
+bool useRobot = true;
 
 int main()
 {
 
-    bool useRobot = false;
     MWI::Limb rightArm(ROBOT,"rightArm");
 
     if (useRobot)
@@ -36,8 +36,8 @@ int main()
 
         }
         rightArm.SetControlMode(1);
-        rightArm.SetJointPositions(std::vector<double>{0,0,0,45,0,0});
-        yarp::os::Time::delay(5);
+        rightArm.SetJointPositions(std::vector<double>{0,0,0,0,0,0});
+        yarp::os::Time::delay(10);
         //rightArm.DefaultPosition();
         //yarp::os::Time::delay(5);
         rightArm.SetControlMode(2);
@@ -126,8 +126,10 @@ int main()
 //    rightArm.SetJointPositions(std::vector<double> {0,0,0,target,0,0});
 //    rightArm.SetControlMode(1);
 
+
+
     //control loop
-    long loops = 20/Ts;
+    long loops = 10/Ts;
 
     for (ulong i=0; i<loops; i++)
     {
@@ -144,6 +146,8 @@ int main()
         //ROBOT BLOCK DIAGRAM
         if (useRobot)
         {
+            vtTeo.pushBack( (rightArm.GetJoint(jointNumber)-jointPos)/Ts );
+
             jointPos = rightArm.GetJoint(jointNumber);
             error=target-jointPos;
             //error = error/(Ts*Ts);
@@ -156,6 +160,7 @@ int main()
         //plot data store
         //modelPos.push_back( encoder.GetState() );
         pt.pushBack(modelEncoder.GetState());
+        vt.pushBack(modelVel.GetState());
         at.pushBack(acc.GetState());
         ptTeo.pushBack(jointPos);
 
@@ -181,6 +186,9 @@ int main()
     {
         ptTeo.Plot();
         ptTeo.Save("pVtTeo.txt");
+        //vtTeo.Plot();
+        //vtTeo.Save("vVtTeo.txt");
+
         rightArm.SetJointVel(jointNumber,0.);
 
     }
