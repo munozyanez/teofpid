@@ -19,7 +19,7 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = true;
+bool useRobot = false;
 
 int main()
 {
