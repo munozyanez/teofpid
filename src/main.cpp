@@ -67,7 +67,7 @@ int main()
     IPlot pt(Ts),vt(Ts),at(Ts);
     IPlot ptTeo(Ts),vtTeo(Ts),atTeo(Ts);
 
-    double ka=10.09;//acceleration
+    double ka=1;//10.09;//acceleration
     //instantiate object motor
     SystemBlock acc(
                 std::vector<double> {ka},
@@ -81,8 +81,8 @@ int main()
     SystemBlock modelVel(
                 std::vector<double> {Ts,Ts},
                 std::vector<double> {-2,+2}
-//                std::vector<double> {0,1},
-//                std::vector<double> {-1,0}
+//                std::vector<double> {0,Ts*1},
+//                std::vector<double> {-1,1}
                 );
 
 //    vel.SetSaturation(-5,18);
@@ -93,6 +93,8 @@ int main()
     SystemBlock modelEncoder(
                 std::vector<double> {Ts,Ts},
                 std::vector<double> {-2,+2}
+//                std::vector<double> {0,Ts*1},
+//                std::vector<double> {-1,1}
                 );
 
     double signal,modelSignal,jointPos;
@@ -101,6 +103,8 @@ int main()
     double kp=43.2;
     //old PIDBlock control(2,0.5,1,Ts);
     PIDBlock control(2.381,0.468,0.077,Ts);
+
+    //PIDBlock control(1,0,0,Ts);
 
     PIDBlock modelControl(control);
 
@@ -131,6 +135,7 @@ int main()
     //control loop
     long loops = 10/Ts;
 
+    double velError;
     for (ulong i=0; i<loops; i++)
     {
 
@@ -140,7 +145,15 @@ int main()
         //modelError = modelError/(Ts);
 
         modelError > modelControl;
-        ( modelControl.GetState()-modelVel.GetState() ) > acc > modelVel  >  modelEncoder;
+        if ( modelControl.GetState()-modelVel.GetState() < 0 )
+        {
+            -10 > acc > modelVel  >  modelEncoder;
+        }
+        else
+        {
+            10 > acc > modelVel  >  modelEncoder;
+
+        }
 
 
         //ROBOT BLOCK DIAGRAM
