@@ -102,9 +102,9 @@ int main()
 
     double kp=43.2;
     //old PIDBlock control(2,0.5,1,Ts);
-    PIDBlock control(2.381,0.468,0.077,Ts);
+    //PIDBlock control(2.381,0.468,0.077,Ts);
 
-    //PIDBlock control(1,0,0,Ts);
+    PIDBlock control(0.02533028219401002,0,0,Ts);
 
     PIDBlock modelControl(control);
 
@@ -144,13 +144,22 @@ int main()
         modelError = target-modelEncoder.GetState();
         //modelError = modelError/(Ts);
 
-        modelError > modelControl;
-        if ( modelControl.GetState()-modelVel.GetState() < 0 )
+        //signal out from controller
+        modelSignal = modelError > modelControl;
+
+
+        //( modelControl.GetState()-modelVel.GetState() ) > acc > modelVel  >  modelEncoder;
+
+        //next lines simulates model set jointVel
+
+        if (  modelVel.GetState() > modelSignal )
         {
+            //constant deceleration of model
             -10 > acc > modelVel  >  modelEncoder;
         }
         else
         {
+            //constant acceleration of model
             10 > acc > modelVel  >  modelEncoder;
 
         }
@@ -159,7 +168,7 @@ int main()
         //ROBOT BLOCK DIAGRAM
         if (useRobot)
         {
-            vtTeo.pushBack( (rightArm.GetJoint(jointNumber)-jointPos)/Ts );
+            //vtTeo.pushBack( (rightArm.GetJoint(jointNumber)-jointPos)/Ts );
 
             jointPos = rightArm.GetJoint(jointNumber);
             error=target-jointPos;
