@@ -19,7 +19,7 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = false;
+bool useRobot = true;
 
 int main()
 {
@@ -134,6 +134,7 @@ int main()
 
     //control loop
     long loops = 10/Ts;
+    //rightArm.SetJointPos(jointNumber,target);
 
     double velError;
     for (ulong i=0; i<loops; i++)
