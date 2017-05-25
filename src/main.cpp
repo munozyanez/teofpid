@@ -19,7 +19,7 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = true;
+bool useRobot = false;
 
 int main()
 {
@@ -49,7 +49,7 @@ int main()
     double Ts = 0.01;
 
 
-    //3rd order model sistem id matlab Ts=0.01
+//    //3rd order model sistem id matlab Ts=0.01
 //    std::vector<double> motorNum(4,0);
 //    motorNum[3]=0;
 //    motorNum[2]=0.05005;
@@ -60,8 +60,7 @@ int main()
 //    motorDen[2]=-2.83;
 //    motorDen[1]=2.662;
 //    motorDen[0]=-0.8317;
-
-   // SystemBlock model(motorNum,motorDen);
+//    SystemBlock model(motorNum,motorDen);
 
     //plotters
     IPlot pt(Ts),vt(Ts),at(Ts);
@@ -104,7 +103,11 @@ int main()
     //old PIDBlock control(2,0.5,1,Ts);
     //PIDBlock control(2.381,0.468,0.077,Ts);
 
-    PIDBlock control(1.266514109700501,0,1.378321865367721,Ts);
+//    PIDBlock control(1.266514109700501,0,1.378321865367721,Ts);
+//    PIDBlock control(0.4608251339122038,0,2.2376655644385313,Ts);
+    PIDBlock control(4,0,2,Ts);
+
+
 
     PIDBlock modelControl(control);
 
@@ -151,7 +154,7 @@ int main()
 
         //( modelControl.GetState()-modelVel.GetState() ) > acc > modelVel  >  modelEncoder;
 
-        //next lines simulates model set jointVel
+        //next lines simulates model setjointVel
 
         if (  modelVel.GetState() > modelSignal )
         {
