@@ -104,7 +104,7 @@ int main()
     //old PIDBlock control(2,0.5,1,Ts);
     //PIDBlock control(2.381,0.468,0.077,Ts);
 
-    PIDBlock control(0.02533028219401002,0,0,Ts);
+    PIDBlock control(1.266514109700501,0,1.378321865367721,Ts);
 
     PIDBlock modelControl(control);
 
