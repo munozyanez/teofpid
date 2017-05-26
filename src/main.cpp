@@ -105,7 +105,7 @@ int main()
 
 //    PIDBlock control(1.266514109700501,0,1.378321865367721,Ts);
 //    PIDBlock control(0.4608251339122038,0,2.2376655644385313,Ts);
-    PIDBlock control(9.81,0,1.61,Ts);
+    PIDBlock control(11.1,0,2.36,Ts);
 
 
 
