@@ -64,6 +64,7 @@ int main()
 
     //plotters
     IPlot pt(Ts),vt(Ts),at(Ts);
+    IPlot mpt(Ts),mvt(Ts),mat(Ts);
     IPlot ptTeo(Ts),vtTeo(Ts),atTeo(Ts);
 
     double ka=1;//10.09;//acceleration
@@ -86,7 +87,7 @@ int main()
 
 //    vel.SetSaturation(-5,18);
     //TODO: Update <maxvel>10</maxvel> and <maxaccel>5</maxaccel> in openrave joints
-    modelVel.SetSaturation(-15,15);
+    modelVel.SetSaturation(-24,24);
 
     //instantiate object encoder
     SystemBlock modelEncoder(
@@ -100,16 +101,37 @@ int main()
 
 
     double kp=43.2;
-    //old PIDBlock control(2,0.5,1,Ts);
-    //PIDBlock control(2.381,0.468,0.077,Ts);
+    //old PIDBlock control(2,0.5,1,Ts); //handmade
+    //PIDBlock control(2.381,0.468,0.077,Ts); //zieger nichols
 
-//    PIDBlock control(1.266514109700501,0,1.378321865367721,Ts);
-//    PIDBlock control(0.4608251339122038,0,2.2376655644385313,Ts);
-    PIDBlock control(11.1,0,2.36,Ts);
+    PIDBlock control(
+//                1,0,0
 
+
+//                11.1,0,2.36 //root locus Mp=0.1 Tp=0.7
+//                15.6,0,2.36 //root locus Mp=0.1 Tp=0.5
+//                7.79,0,2.36 //root locus Mp=0.1 Tp=1
+//                7.34,0,2.07 //root locus Mp=0.15 Tp=1
+//                8.68,0,2.76 //root locus Mp=0.05 Tp=1
+
+
+//                20.15621063240111,0,5.498573992282151 //freq wc=6349206349206349, pm = 86.2
+//                0.2015621063240111,0,0.5498573992282151 //freq wc=0.6349206349206349, pm = pi/3
+                0.4031242126480222,0,0.2629927380146635 //freq wc=0.6349206349206349, pm = pi/8
+
+//                5.959,11.286,0.787 //zieger nichols open loop
+//                43.200,8.981,51.984 //zieger nichols closed loop
+//                2.435,3.156,0.303 //Aström y Hägglund (2005): AMIGO open loop
+//                2.435,3.156,0.303 //Aström y Hägglund (2005): AMIGO open loop
+
+
+            //(0.4608251339122038,0,2.2376655644385313,Ts); //frequency phase margin
+            //(11.1,0,2.36,Ts); //root locus
+            ,Ts);
 
 
     PIDBlock modelControl(control);
+    PIDBlock mC(control);
 
     //instantiate object motor
     SystemBlock controlLimit(
@@ -136,10 +158,9 @@ int main()
 
 
     //control loop
-    long loops = 10/Ts;
+    long loops = 20/Ts;
     //rightArm.SetJointPos(jointNumber,target);
 
-    double velError;
     for (ulong i=0; i<loops; i++)
     {
 
@@ -159,7 +180,8 @@ int main()
         if (  modelVel.GetState() > modelSignal )
         {
             //constant deceleration of model
-            -10 > acc > modelVel  >  modelEncoder;
+            -10 > acc > modelVel  >  modelEncoder;            
+
         }
         else
         {
@@ -182,7 +204,6 @@ int main()
             yarp::os::Time::delay(Ts);
         }
 
-
         //plot data store
         //modelPos.push_back( encoder.GetState() );
         pt.pushBack(modelEncoder.GetState());
@@ -197,9 +218,9 @@ int main()
 
                      //                        << " , GetJointVel: " << rightArm.GetJointVel(jointNumber)
 
-                  << " , modelError: " << modelError
+//                  << " , modelVel: " << modelVel.GetState()
+//                  << " , modelPos: " << modelEncoder.GetState()
                   << " , modelVel: " << modelVel.GetState()
-                  << " , modelSignal: " << modelControl.GetState()
                   << " , modelPos: " << modelEncoder.GetState()
                   << std::endl;
 
@@ -219,7 +240,6 @@ int main()
 
     }
 
-    rightArm.SetJointVel(jointNumber,0.);
 
 
     return 0;
@@ -291,3 +311,21 @@ int main()
 //    gdata.close();
 //}
 
+
+//        double mV,mP;
+//        if (  mV > mC.OutputUpdate(target-mP) )
+//        {
+//            //constant deceleration of model
+//            mV=std::max(-15.,mV-10*Ts);
+
+
+//        }
+//        else
+//        {
+//            //constant acceleration of model
+//            mV=std::min(15.,mV+10*Ts);
+
+//        }
+//        mP=mP+mV*Ts;
+//        mvt.pushBack(mV);
+//        mpt.pushBack(mP);
