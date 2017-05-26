@@ -19,7 +19,7 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = false;
+bool useRobot = true;
 
 int main()
 {
@@ -37,7 +37,7 @@ int main()
         }
         rightArm.SetControlMode(1);
         rightArm.SetJointPositions(std::vector<double>{0,0,0,0,0,0});
-        yarp::os::Time::delay(10);
+        yarp::os::Time::delay(5);
         //rightArm.DefaultPosition();
         //yarp::os::Time::delay(5);
         rightArm.SetControlMode(2);
@@ -79,15 +79,15 @@ int main()
 
     //instantiate object motor
     SystemBlock modelVel(
-                std::vector<double> {Ts,Ts},
-                std::vector<double> {-2,+2}
-//                std::vector<double> {0,Ts*1},
-//                std::vector<double> {-1,1}
+//                std::vector<double> {Ts,Ts},
+//                std::vector<double> {-2,+2}
+                std::vector<double> {0,Ts*1},
+                std::vector<double> {-1,1}
                 );
 
 //    vel.SetSaturation(-5,18);
     //TODO: Update <maxvel>10</maxvel> and <maxaccel>5</maxaccel> in openrave joints
-    modelVel.SetSaturation(-24,24);
+    modelVel.SetSaturation(-24.4,24.4);
 
     //instantiate object encoder
     SystemBlock modelEncoder(
@@ -105,8 +105,8 @@ int main()
     //PIDBlock control(2.381,0.468,0.077,Ts); //zieger nichols
 
     PIDBlock control(
-//                1,0,0
-
+                1,0,0
+//                3*0.4031242126480222,0,0.2629927380146635 //handmade
 
 //                11.1,0,2.36 //root locus Mp=0.1 Tp=0.7
 //                15.6,0,2.36 //root locus Mp=0.1 Tp=0.5
@@ -117,11 +117,10 @@ int main()
 
 //                20.15621063240111,0,5.498573992282151 //freq wc=6349206349206349, pm = 86.2
 //                0.2015621063240111,0,0.5498573992282151 //freq wc=0.6349206349206349, pm = pi/3
-                0.4031242126480222,0,0.2629927380146635 //freq wc=0.6349206349206349, pm = pi/8
+//                0.4031242126480222,0,0.2629927380146635 //freq wc=0.6349206349206349, pm = pi/8
 
 //                5.959,11.286,0.787 //zieger nichols open loop
 //                43.200,8.981,51.984 //zieger nichols closed loop
-//                2.435,3.156,0.303 //Aström y Hägglund (2005): AMIGO open loop
 //                2.435,3.156,0.303 //Aström y Hägglund (2005): AMIGO open loop
 
 
@@ -158,7 +157,7 @@ int main()
 
 
     //control loop
-    long loops = 20/Ts;
+    long loops = 15/Ts;
     //rightArm.SetJointPos(jointNumber,target);
 
     for (ulong i=0; i<loops; i++)
@@ -180,13 +179,13 @@ int main()
         if (  modelVel.GetState() > modelSignal )
         {
             //constant deceleration of model
-            -10 > acc > modelVel  >  modelEncoder;            
+            -15 > acc > modelVel  >  modelEncoder;
 
         }
         else
         {
             //constant acceleration of model
-            10 > acc > modelVel  >  modelEncoder;
+            15 > acc > modelVel  >  modelEncoder;
 
         }
 
@@ -200,6 +199,7 @@ int main()
             error=target-jointPos;
             //error = error/(Ts*Ts);
             signal = error > control > controlLimit;
+            signal = signal*15/24.4; //correct signal as 15 value for vel equals to 24.4 deg/sec
             rightArm.SetJointVel(jointNumber,signal);
             yarp::os::Time::delay(Ts);
         }
@@ -213,13 +213,13 @@ int main()
 
 
         std::cout << i*Ts
-                     //                     << " , real signal: " << signal
-                     //                     << " , jointPos: " << jointPos
+                                          << " , real signal: " << signal
+                                          << " , jointPos: " << jointPos
 
                      //                        << " , GetJointVel: " << rightArm.GetJointVel(jointNumber)
 
 //                  << " , modelVel: " << modelVel.GetState()
-//                  << " , modelPos: " << modelEncoder.GetState()
+                  << " , modelSignal: " << modelSignal
                   << " , modelVel: " << modelVel.GetState()
                   << " , modelPos: " << modelEncoder.GetState()
                   << std::endl;
