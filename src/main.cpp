@@ -19,7 +19,7 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = true;
+bool useRobot = false;
 
 int main()
 {
@@ -105,7 +105,7 @@ int main()
     //PIDBlock control(2.381,0.468,0.077,Ts); //zieger nichols
 
     PIDBlock control(
-                1,0,0
+//                1,0,0
 //                3*0.4031242126480222,0,0.2629927380146635 //handmade
 
 //                11.1,0,2.36 //root locus Mp=0.1 Tp=0.7
@@ -118,6 +118,7 @@ int main()
 //                20.15621063240111,0,5.498573992282151 //freq wc=6349206349206349, pm = 86.2
 //                0.2015621063240111,0,0.5498573992282151 //freq wc=0.6349206349206349, pm = pi/3
 //                0.4031242126480222,0,0.2629927380146635 //freq wc=0.6349206349206349, pm = pi/8
+                0.0178763665351771,0,0.112429978208661 //freq wc=2*0.6349206349206349, pm = pi/8
 
 //                5.959,11.286,0.787 //zieger nichols open loop
 //                43.200,8.981,51.984 //zieger nichols closed loop
