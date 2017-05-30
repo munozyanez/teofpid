@@ -79,13 +79,13 @@ int main()
 
     //instantiate object motor
     SystemBlock modelVel(
-//                std::vector<double> {Ts,Ts},
-//                std::vector<double> {-2,+2}
-                std::vector<double> {0,Ts*1},
-                std::vector<double> {-1,1}
+                std::vector<double> {Ts,Ts},
+                std::vector<double> {-2,+2}
+//                std::vector<double> {0,Ts*1},
+//                std::vector<double> {-1,1}
+//                std::vector<double> {Ts*Ts*ka,2*Ts*Ts*ka,Ts*Ts*ka},
+//                std::vector<double> {Ts*Ts*ka+4,(2*Ts*Ts*ka-8),(Ts*Ts*ka+4)}
                 );
-
-//    vel.SetSaturation(-5,18);
     //TODO: Update <maxvel>10</maxvel> and <maxaccel>5</maxaccel> in openrave joints
     modelVel.SetSaturation(-24.4,24.4);
 
@@ -105,7 +105,7 @@ int main()
     //PIDBlock control(2.381,0.468,0.077,Ts); //zieger nichols
 
     PIDBlock control(
-//                1,0,0
+                1,0,10
 //                3*0.4031242126480222,0,0.2629927380146635 //handmade
 
 //                11.1,0,2.36 //root locus Mp=0.1 Tp=0.7
@@ -115,11 +115,18 @@ int main()
 //                8.68,0,2.76 //root locus Mp=0.05 Tp=1
 
 
+                //new
+//                108.1314878892733,0,12.73566770271233 //freq wc=14.70588235294117, pm = pi/3
+
+                //old
 //                20.15621063240111,0,5.498573992282151 //freq wc=6349206349206349, pm = 86.2
 //                0.2015621063240111,0,0.5498573992282151 //freq wc=0.6349206349206349, pm = pi/3
 //                0.4031242126480222,0,0.2629927380146635 //freq wc=0.6349206349206349, pm = pi/8
-                0.0178763665351771,0,0.112429978208661 //freq wc=2*0.6349206349206349, pm = pi/8
 
+                //new
+//                5.79,0,0.031 //zieger nichols open loop PD only
+
+                //old
 //                5.959,11.286,0.787 //zieger nichols open loop
 //                43.200,8.981,51.984 //zieger nichols closed loop
 //                2.435,3.156,0.303 //Aström y Hägglund (2005): AMIGO open loop
@@ -146,7 +153,7 @@ int main()
 
 
     //time_t t;
-    double target = 30.0;
+    double target = 30;
     double error, modelError;
     int jointNumber = 3;
 
