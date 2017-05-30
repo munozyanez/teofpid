@@ -17,19 +17,9 @@ cmake_minimum_required(VERSION 2.8)
 
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake )
 
-aux_source_directory(./src SRC_LIST)
+aux_source_directory(src SRC_LIST)
 
-#cmake lines for libfpid
-find_package(fpid QUIET)
-if(fpid_FOUND)
-  set(fpid_INCLUDE_DIR ${fpid_INCLUDE_DIRS})
-else()
-  message(STATUS "compiling fpid from sources")
-  add_subdirectory(${PROJECT_SOURCE_DIR}/lib/fpid)
-  set(fpid_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/lib/fpid/src ${fpid_INCLUDE_DIR})
-endif()
 
-INCLUDE_DIRECTORIES(${fpid_INCLUDE_DIR})
 
 #teoMWI library
 #add_subdirectory(${PROJECT_SOURCE_DIR}/lib/teoMWI)
@@ -38,10 +28,10 @@ INCLUDE_DIRECTORIES(${fpid_INCLUDE_DIR})
 
 #find_package(YARP REQUIRED)
 
-add_subdirectory(./lib)
+add_subdirectory(lib)
 INCLUDE_DIRECTORIES(${SUBDIR_INCLUDE_DIRECTORIES})
 
-aux_source_directory(src SRC_LIST)
+#aux_source_directory(src SRC_LIST)
 
 foreach( sourcefile ${SRC_LIST} )
     # I used a simple string replace, to cut off .cpp.
@@ -50,7 +40,7 @@ foreach( sourcefile ${SRC_LIST} )
 
     add_executable( ${name} ${sourcefile} )
     message ("Including executable: " ${name})
-    # Make sure YourLib is linked to each app
+    # Make sure lib are linked to each app
     target_link_libraries( ${name} ${SUBDIR_LINK_NAMES} )
 endforeach( sourcefile ${SRC_LIST} )
 
