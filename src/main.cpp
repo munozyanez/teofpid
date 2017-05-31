@@ -105,7 +105,7 @@ int main()
     //PIDBlock control(2.381,0.468,0.077,Ts); //zieger nichols
 
     PIDBlock control(
-                1,0,10
+//                1,0,0
 //                3*0.4031242126480222,0,0.2629927380146635 //handmade
 
 //                11.1,0,2.36 //root locus Mp=0.1 Tp=0.7
@@ -116,7 +116,8 @@ int main()
 
 
                 //new
-//                108.1314878892733,0,12.73566770271233 //freq wc=14.70588235294117, pm = pi/3
+//                9.4178,0,3.758550252424463 //freq wc=4.34, pm = pi/3 Yei!was wrong!
+                1,0,-0.5//it works???
 
                 //old
 //                20.15621063240111,0,5.498573992282151 //freq wc=6349206349206349, pm = 86.2
@@ -172,6 +173,7 @@ int main()
     {
 
 
+        //if (i<=1/Ts) target=1; else target=0;
         //MODEL BLOCK DIAGRAM
         modelError = target-modelEncoder.GetState();
         //modelError = modelError/(Ts);

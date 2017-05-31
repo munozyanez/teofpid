@@ -57,7 +57,7 @@ int main()
 
 
     //time_t t;
-    double target = 30.0;
+    double target = 1.0;
     double error, modelError;
     int jointNumber = 3;
 
@@ -81,10 +81,8 @@ int main()
         //modelError = modelError/(Ts);
 
         //signal out from controller
-        //modelSignal = modelError > modelControl;
         modelSignal=1;
 
-        //( modelControl.GetState()-modelVel.GetState() ) > acc > modelVel  >  modelEncoder;
 
         //next lines simulates model setjointVel
 
