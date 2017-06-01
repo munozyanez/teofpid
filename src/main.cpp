@@ -19,7 +19,7 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = true;
+bool useRobot = false;
 
 int main()
 {
@@ -117,7 +117,7 @@ int main()
 
                 //new
 //                9.4178,0,3.758550252424463 //freq wc=4.34, pm = pi/3 Yei!was wrong!
-                0.9999831907657302,0,-0.4971930582234168//it works??? wc=0.998 pm=pi/3
+                0.9999831907657302,0.0001,0.5971930582234168//it works??? wc=0.998 pm=pi/3
 //                0.999,0,-0.3
 
                 //old
