@@ -19,7 +19,7 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = false;
+bool useRobot = true;
 
 int main()
 {
@@ -118,6 +118,7 @@ int main()
                 //new
 //                9.4178,0,3.758550252424463 //freq wc=4.34, pm = pi/3 Yei!was wrong!
                 0.9999831907657302,0,-0.4971930582234168//it works??? wc=0.998 pm=pi/3
+//                0.999,0,-0.3
 
                 //old
 //                20.15621063240111,0,5.498573992282151 //freq wc=6349206349206349, pm = 86.2
@@ -209,7 +210,7 @@ int main()
             error=target-jointPos;
             //error = error/(Ts*Ts);
             signal = error > control > controlLimit;
-            signal = signal*15/24.4; //correct signal as 15 value for vel equals to 24.4 deg/sec
+            //signal = signal*15/24.4; //correct signal as 15 value for vel equals to 24.4 deg/sec
             rightArm.SetJointVel(jointNumber,signal);
             yarp::os::Time::delay(Ts);
         }
