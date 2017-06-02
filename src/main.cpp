@@ -118,7 +118,7 @@ int main()
                 //new
 //                9.4178,0,3.758550252424463 //freq wc=4.34, pm = pi/3 Yei!was wrong!
 //                0.9999831907657302,0.0001,0.5971930582234168//it works??? wc=0.998 pm=pi/3
-                1,0,0
+                1024,0,511
 
                 //old
 //                20.15621063240111,0,5.498573992282151 //freq wc=6349206349206349, pm = 86.2
@@ -155,7 +155,7 @@ int main()
 
 
     //time_t t;
-    double target = 30;
+    double target = 0;
     double error, modelError;
     int jointNumber = 3;
 
@@ -167,13 +167,14 @@ int main()
 
 
     //control loop
-    long loops = 15/Ts;
+    long loops = 30/Ts;
     //rightArm.SetJointPos(jointNumber,target);
 
     for (ulong i=0; i<loops; i++)
     {
 
 
+        //target=10*i*Ts;
         //if (i<=1/Ts) target=1; else target=0;
         //MODEL BLOCK DIAGRAM
         modelError = target-modelEncoder.GetState();
