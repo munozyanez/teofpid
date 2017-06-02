@@ -155,7 +155,7 @@ int main()
 
 
     //time_t t;
-    double target = 0;
+    double target = 30;
     double error, modelError;
     int jointNumber = 3;
 
