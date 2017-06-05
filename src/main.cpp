@@ -100,7 +100,7 @@ int main()
     double signal,modelSignal,jointPos;
 
 
-    double kp=43.2;
+    double kp=3;
     //old PIDBlock control(2,0.5,1,Ts); //handmade
     //PIDBlock control(2.381,0.468,0.077,Ts); //zieger nichols
 
@@ -118,7 +118,8 @@ int main()
                 //new
 //                9.4178,0,3.758550252424463 //freq wc=4.34, pm = pi/3 Yei!was wrong!
 //                0.9999831907657302,0.0001,0.5971930582234168//it works??? wc=0.998 pm=pi/3
-                0.99,0.45,2
+//                kp,0,-1+kp/2
+                0.9898573551457927,0.8323620166831529,1.7
 
                 //old
 //                20.15621063240111,0,5.498573992282151 //freq wc=6349206349206349, pm = 86.2
