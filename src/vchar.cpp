@@ -33,7 +33,7 @@ int main()
 
 //    vel.SetSaturation(-5,18);
     //TODO: Update <maxvel>10</maxvel> and <maxaccel>5</maxaccel> in openrave joints
-    modelVel.SetSaturation(-24.4,24.4);
+   // modelVel.SetSaturation(-24.4,24.4);
 
     //instantiate object encoder
     SystemBlock modelEncoder(
@@ -57,7 +57,7 @@ int main()
 
 
     //time_t t;
-    double target = 1.0;
+    double target = 180.0/M_PI;
     double error, modelError;
     int jointNumber = 3;
 
@@ -81,7 +81,7 @@ int main()
         //modelError = modelError/(Ts);
 
         //signal out from controller
-        modelSignal=1;
+        modelSignal=target;
 
 
         //next lines simulates model setjointVel
