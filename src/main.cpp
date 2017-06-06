@@ -19,7 +19,7 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = false;
+bool useRobot = true;
 
 int main()
 {
@@ -157,7 +157,7 @@ int main()
 
 
     //time_t t;
-    double target = 10;
+    double target = 30;
     double error, modelError;
     int jointNumber = 3;
 
