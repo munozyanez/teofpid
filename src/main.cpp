@@ -19,7 +19,7 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = true;
+bool useRobot = false;
 
 int main()
 {
@@ -120,8 +120,8 @@ int main()
 //                0.9999831907657302,0.0001,0.5971930582234168//it works??? wc=0.998 pm=pi/3
 //                kp,0,-1+kp/2
 
-                //Karimi, Garcia and Longchamp
-                0.9501498985531297,0.8503454627872256,1.773101692407807
+                //Karimi, Garcia and Longchamp 120 phim
+                0.81,0.6,1.29
                 //old
 //                20.15621063240111,0,5.498573992282151 //freq wc=6349206349206349, pm = 86.2
 //                0.2015621063240111,0,0.5498573992282151 //freq wc=0.6349206349206349, pm = pi/3
