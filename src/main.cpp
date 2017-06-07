@@ -100,7 +100,7 @@ int main()
     double signal,modelSignal,jointPos;
 
 
-    double kp=10;
+    double kp=5;
     //old PIDBlock control(2,0.5,1,Ts); //handmade
     //PIDBlock control(2.381,0.468,0.077,Ts); //zieger nichols
 
@@ -121,7 +121,9 @@ int main()
 //                kp,0,-1+kp/2
 
                 //Karimi, Garcia and Longchamp 120 phim
-                0.81,0.6,1.29
+//                0.81,0.6,1.29
+                0.9,1.1,0.7
+
                 //old
 //                20.15621063240111,0,5.498573992282151 //freq wc=6349206349206349, pm = 86.2
 //                0.2015621063240111,0,0.5498573992282151 //freq wc=0.6349206349206349, pm = pi/3
