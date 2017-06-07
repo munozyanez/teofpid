@@ -19,7 +19,7 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = false;
+bool useRobot = true;
 
 int main()
 {
@@ -212,6 +212,7 @@ int main()
         }
 
 
+
         //ROBOT BLOCK DIAGRAM
         if (useRobot)
         {
@@ -221,9 +222,14 @@ int main()
             error=target-jointPos;
             //error = error/(Ts*Ts);
             signal = error > control > controlLimit;
+            if (fabs(signal)>24.4)
+            {
             signal = signal*15/24.4; //correct signal as 15 value for vel equals to 24.4 deg/sec
+            }
+
             rightArm.SetJointVel(jointNumber,signal);
             yarp::os::Time::delay(Ts);
+            signal = signal*24.4/15;
         }
 
         //plot data store
@@ -235,7 +241,7 @@ int main()
 
 
         std::cout << i*Ts
-                                          << " , real signal: " << signal
+                                          << " , real signal: " << signal*24.4/15
                                           << " , jointPos: " << jointPos
 
                      //                        << " , GetJointVel: " << rightArm.GetJointVel(jointNumber)
