@@ -122,7 +122,12 @@ int main()
 
                 //Karimi, Garcia and Longchamp 120 phim
 //                0.81,0.6,1.29
-                0.9,1.1,0.7
+
+                //final
+//                0.962692110537679,0,0.2716365490916453 //pm100 w0.995
+//                8.079676771524456,0,1.153531891914077//pm100 w9.95
+//                13.56707776765517,0,0.3616952767655167//pm60 w9.95
+                1.891001013656414,0,0.3696249205163607//pm100 w2*0.995
 
                 //old
 //                20.15621063240111,0,5.498573992282151 //freq wc=6349206349206349, pm = 86.2
@@ -215,7 +220,7 @@ int main()
             error=target-jointPos;
             //error = error/(Ts*Ts);
             signal = error > control > controlLimit;
-            //signal = signal*15/24.4; //correct signal as 15 value for vel equals to 24.4 deg/sec
+            signal = signal*15/24.4; //correct signal as 15 value for vel equals to 24.4 deg/sec
             rightArm.SetJointVel(jointNumber,signal);
             yarp::os::Time::delay(Ts);
         }
