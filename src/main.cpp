@@ -16,6 +16,8 @@
 //local functions
 //int velocityCurve(double Ts, double vel, int jointNumber, MWI::Limb& robot, std::vector<double> &pos);
 double linFilter(double sensorValue, double time);
+double sqFilter(double sensorValue, double time);
+
 
 
 using namespace std;
@@ -99,7 +101,9 @@ int main()
 //                std::vector<double> {-1,1}
                 );
 
-    double signal,modelSignal,jointPos;
+    double signal;
+    double modelSignal;
+    double jointPos, jointLastPos, jointVel;
 
 
     double kp=5;
@@ -129,8 +133,8 @@ int main()
 //                0.962692110537679,0,0.2716365490916453 //pm100 w0.995
 //                8.079676771524456,0,1.153531891914077//pm100 w9.95
 //                13.56707776765517,0,0.3616952767655167//pm60 w9.95
-//                1.891001013656414,0,0.3696249205163607//pm100 w1.99
-                1.431144463024411,0,0.3206307348040021//pm100 w1.49
+                1.891001013656414,0,0.3696249205163607//pm100 w1.99
+//                1.431144463024411,0,0.3206307348040021//pm100 w1.49
 
                 //old
 //                20.15621063240111,0,5.498573992282151 //freq wc=6349206349206349, pm = 86.2
@@ -218,16 +222,22 @@ int main()
         //ROBOT BLOCK DIAGRAM
         if (useRobot)
         {
-            //vtTeo.pushBack( (rightArm.GetJoint(jointNumber)-jointPos)/Ts );
 
-            jointPos = linFilter(rightArm.GetJoint(jointNumber),i*Ts);
+            jointVel = (jointLastPos-jointPos)/Ts;
+            vtTeo.pushBack(jointVel);
+
+            jointLastPos = jointPos;
+//            jointPos = linFilter(rightArm.GetJoint(jointNumber),i*Ts);
+
+            jointPos = rightArm.GetJoint(jointNumber);
+
             error=target-jointPos;
             //error = error/(Ts*Ts);
             signal = error > control > controlLimit;
-            if (fabs(signal)>24.4)
-            {
-            signal = signal*15/24.4; //correct signal as 15 value for vel equals to 24.4 deg/sec
-            }
+//            if (fabs(jointVel)>14.4)
+//            {
+//            signal = signal*15/24.4; //correct signal as 15 value for vel equals to 24.4 deg/sec
+//            }
 
             rightArm.SetJointVel(jointNumber,signal);
             yarp::os::Time::delay(Ts);
@@ -243,10 +253,9 @@ int main()
 
 
         std::cout << i*Ts
-                                          << " , real signal: " << signal*24.4/15
+                                          << " , real signal: " << signal
                                           << " , jointPos: " << jointPos
-
-                     //                        << " , GetJointVel: " << rightArm.GetJointVel(jointNumber)
+                                          << " , jointVel: " << jointVel
 
 //                  << " , modelVel: " << modelVel.GetState()
                   << " , modelSignal: " << modelSignal
@@ -276,8 +285,8 @@ int main()
 }
 
 double x0_linFilter=0,x1_linFilter=0;
-double t0_linFilter=0,t1_linFilter=0;
-
+double t0_linFilter=0,t1_linFilter=1;
+double slope_linFilter=0,oldsl_linFilter=0;
 double linFilter(double sensorValue, double time)
 {
 
@@ -287,12 +296,49 @@ double linFilter(double sensorValue, double time)
         t0_linFilter=t1_linFilter;
         x1_linFilter=sensorValue;
         t1_linFilter=time;
+        oldsl_linFilter=slope_linFilter;
+        slope_linFilter = (x1_linFilter-x0_linFilter) / (t1_linFilter-t0_linFilter);
     }
-    return x1_linFilter+( (time-t1_linFilter) * (x1_linFilter-x0_linFilter) / (t1_linFilter-t0_linFilter) );
 
+    //x_linFilter = x1_linFilter + ( (time-t1_linFilter) * (x1_linFilter-x0_linFilter) / (t1_linFilter-t0_linFilter) );
+
+    //if (fabs(slope_linFilter/oldsl_linFilter)>0.1)
+    {
+        return x1_linFilter + (time-t1_linFilter) * slope_linFilter ;
+    }
+    return sensorValue;
 }
 
+double x0_sqFilter=3,x1_sqFilter=2,x2_sqFilter=1;
+double t0_sqFilter=-3,t1_sqFilter=-2,t2_sqFilter=-1;
+double a_sqFilter=0,b_sqFilter=0,c_sqFilter=0;
+double sqFilter(double sensorValue, double time)
+{
 
+    if (x2_sqFilter!=sensorValue)
+    {
+
+        x0_sqFilter=x1_sqFilter;
+        t0_sqFilter=t1_sqFilter;
+        x1_sqFilter=x2_sqFilter;
+        t1_sqFilter=t2_sqFilter;
+        x2_sqFilter=sensorValue;
+        t2_sqFilter=time;
+
+
+        c_sqFilter = x2_sqFilter;
+        a_sqFilter = ( 1/(t0_sqFilter-t1_sqFilter) ) * ( (x0_sqFilter-x2_sqFilter)/t0_sqFilter - (x1_sqFilter-x2_sqFilter)/t1_sqFilter  );
+        b_sqFilter = (x1_sqFilter-x2_sqFilter)/t1_sqFilter - a_sqFilter*t1_sqFilter;
+        std::cout << a_sqFilter << ", "<< b_sqFilter << ", "<< c_sqFilter << std::endl;
+
+    }
+
+    double dt = time - t2_sqFilter;
+
+
+    return a_sqFilter*dt*dt+b_sqFilter*dt+c_sqFilter;
+
+}
 //int velocityCurve(double Ts, double vel, int jointNumber, MWI::Limb& robot, std::vector<double> &pos)
 //{
 //    int loops = 6/Ts;
