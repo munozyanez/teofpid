@@ -15,6 +15,8 @@
 
 //local functions
 //int velocityCurve(double Ts, double vel, int jointNumber, MWI::Limb& robot, std::vector<double> &pos);
+double linFilter(double sensorValue, double time);
+
 
 using namespace std;
 
@@ -218,7 +220,7 @@ int main()
         {
             //vtTeo.pushBack( (rightArm.GetJoint(jointNumber)-jointPos)/Ts );
 
-            jointPos = rightArm.GetJoint(jointNumber);
+            jointPos = linFilter(rightArm.GetJoint(jointNumber),i*Ts);
             error=target-jointPos;
             //error = error/(Ts*Ts);
             signal = error > control > controlLimit;
@@ -271,6 +273,23 @@ int main()
 
 
     return 0;
+}
+
+double x0_linFilter=0,x1_linFilter=0;
+double t0_linFilter=0,t1_linFilter=0;
+
+double linFilter(double sensorValue, double time)
+{
+
+    if (x1_linFilter!=sensorValue)
+    {
+        x0_linFilter=x1_linFilter;
+        t0_linFilter=t1_linFilter;
+        x1_linFilter=sensorValue;
+        t1_linFilter=time;
+    }
+    return x1_linFilter+( (time-t1_linFilter) * (x1_linFilter-x0_linFilter) / (t1_linFilter-t0_linFilter) );
+
 }
 
 
