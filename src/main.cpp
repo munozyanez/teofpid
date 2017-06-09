@@ -23,7 +23,7 @@ double sqFilter(double sensorValue, double time);
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = false;
+bool useRobot = true;
 
 int main()
 {
@@ -226,21 +226,21 @@ int main()
         if (useRobot)
         {
 
-            jointVel = (jointLastPos-jointPos)/Ts;
+            jointVel = (jointPos-jointLastPos)/Ts;
             vtTeo.pushBack(jointVel);
 
             jointLastPos = jointPos;
-//            jointPos = linFilter(rightArm.GetJoint(jointNumber),i*Ts);
+            jointPos = linFilter(rightArm.GetJoint(jointNumber),i*Ts);
 
-            jointPos = rightArm.GetJoint(jointNumber);
+//            jointPos = rightArm.GetJoint(jointNumber);
 
             error=target-jointPos;
             //error = error/(Ts*Ts);
             signal = error > control > controlLimit;
-//            if (fabs(jointVel)>14.4)
-//            {
-//            signal = signal*15/24.4; //correct signal as 15 value for vel equals to 24.4 deg/sec
-//            }
+            if (fabs(jointVel)>14.4)
+            {
+            signal = signal*15/24.4; //correct signal as 15 value for vel equals to 24.4 deg/sec
+            }
 
             rightArm.SetJointVel(jointNumber,signal);
             yarp::os::Time::delay(Ts);
@@ -295,12 +295,29 @@ double linFilter(double sensorValue, double time)
 
     if (x1_linFilter!=sensorValue)
     {
+        //remove sensor precission failures
+        if(x0_linFilter==sensorValue
+                | (x0_linFilter==6*0.0879+sensorValue) | (x0_linFilter==6*0.0879-sensorValue)
+                | (x0_linFilter==5*0.0879+sensorValue) | (x0_linFilter==5*0.0879-sensorValue)
+                | (x0_linFilter==4*0.0879+sensorValue) | (x0_linFilter==4*0.0879-sensorValue)
+
+                | (x0_linFilter==3*0.0879+sensorValue) | (x0_linFilter==3*0.0879-sensorValue)
+                | (x0_linFilter==2*0.0879+sensorValue) | (x0_linFilter==2*0.0879-sensorValue)
+                | (x0_linFilter==0.0879+sensorValue) | (x0_linFilter==0.0879-sensorValue) )
+        {
+            slope_linFilter=0;
+            x1_linFilter=0.5*x1_linFilter+0.5*x0_linFilter;
+
+        }
+        else
+        {
         x0_linFilter=x1_linFilter;
         t0_linFilter=t1_linFilter;
         x1_linFilter=sensorValue;
         t1_linFilter=time;
         oldsl_linFilter=slope_linFilter;
         slope_linFilter = (x1_linFilter-x0_linFilter) / (t1_linFilter-t0_linFilter);
+        }
     }
 
     //x_linFilter = x1_linFilter + ( (time-t1_linFilter) * (x1_linFilter-x0_linFilter) / (t1_linFilter-t0_linFilter) );
