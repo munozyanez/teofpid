@@ -61,7 +61,7 @@ int main()
 //                1 //fod gain
 //                );
     //scilab fod ts=0.01
-    SystemBlock fod(
+    FSystemBlock fod(
                 std::vector<double> {264.28273, - 1135.2014, + 1823.6329, - 1298.8201, + 346.10585},
                 std::vector<double> {0, - 0.7674134, + 2.5244259, - 2.7569404, + 1},
                 1 //fod gain
