@@ -18,7 +18,7 @@ bool useRobot = false;
 int main()
 {
 
-    double Ts = 0.01;
+    double dts = 0.01;
 
 
 
@@ -32,7 +32,7 @@ int main()
     acc.SetSaturation(-10,10);
     //instantiate object motor
     SystemBlock modelVel(
-                std::vector<double> {Ts,Ts},
+                std::vector<double> {dts,dts},
                 std::vector<double> {-2,+2}
 //                std::vector<double> {0,Ts*1},
 //                std::vector<double> {-1,1}
@@ -43,7 +43,7 @@ int main()
     modelVel.SetSaturation(-24.4,24.4);
     //instantiate object encoder
     SystemBlock modelEncoder(
-                std::vector<double> {Ts,Ts},
+                std::vector<double> {dts,dts},
                 std::vector<double> {-2,+2}
 //                std::vector<double> {0,Ts*1},
 //                std::vector<double> {-1,1}
@@ -61,11 +61,8 @@ int main()
 //                1 //fod gain
 //                );
     //scilab fod ts=0.01
-    FSystemBlock fod(
-                std::vector<double> {264.28273, - 1135.2014, + 1823.6329, - 1298.8201, + 346.10585},
-                std::vector<double> {0, - 0.7674134, + 2.5244259, - 2.7569404, + 1},
-                1 //fod gain
-                );
+    TimeSignal fodResponse(std::valarray<double>{1,1}, dts);
+    FSystemBlock fod(fodResponse);
 
 
     double signal;
@@ -78,11 +75,11 @@ int main()
     double error, modelError;
     int jointNumber = 3;
 
-    IPlot pt(Ts),vt(Ts),at(Ts);
+    IPlot pt(dts),vt(dts),at(dts);
 
 
     //control loop
-    long loops = 20/Ts;
+    long loops = 20/dts;
     //rightArm.SetJointPos(jointNumber,target);
 
     for (ulong i=0; i<loops; i++)
@@ -117,7 +114,7 @@ int main()
         at.pushBack(acc.GetState());
 
 
-        std::cout << i*Ts
+        std::cout << i*dts
 
                   << " , modelSignal: " << modelSignal
                   << " , modelVel: " << modelVel.GetState()
