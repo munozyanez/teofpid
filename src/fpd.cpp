@@ -13,14 +13,34 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = false;
+bool useRobot = true;
 
 int main()
 {
 
     double dts = 0.01;
 
+    MWI::Limb rightArm(ROBOT,"rightArm");
 
+    if (useRobot)
+    {
+       // rightArm = MWI::Limb(ROBOT,"rightArm");
+        if (rightArm.GetError()!=0)
+        {
+            std::cout << "MWI::Limb rightArm(\"rightArm\") not available. ERROR: " << rightArm.GetError() << std::endl;
+            return -1;
+
+        }
+        rightArm.SetControlMode(1);
+        rightArm.SetJointPositions(std::vector<double>{0,0,0,0,0,0});
+        yarp::os::Time::delay(5);
+        //rightArm.DefaultPosition();
+        //yarp::os::Time::delay(5);
+        rightArm.SetControlMode(2);
+
+
+
+    }
 
     //instantiate object motor
     double ka=1;//10.09;//acceleration
@@ -65,6 +85,8 @@ int main()
                            }, dts);
     FSystemBlock foc(fodResponse);
 
+    FSystemBlock control(fodResponse);
+
 
     double signal;
     double modelSignal;
@@ -77,10 +99,11 @@ int main()
     int jointNumber = 3;
 
     IPlot pt(dts),vt(dts),at(dts);
+    IPlot ptTeo(dts),vtTeo(dts),atTeo(dts);
 
 
     //control loop
-    long loops = 20/dts;
+    long loops = 10/dts;
     //rightArm.SetJointPos(jointNumber,target);
 
     for (ulong i=0; i<loops; i++)
@@ -107,6 +130,44 @@ int main()
         }
 
 
+        //ROBOT BLOCK DIAGRAM
+        if (useRobot)
+        {
+
+            jointVel = (jointPos-jointLastPos)/dts;
+            vtTeo.pushBack(jointVel);
+
+            jointLastPos = jointPos;
+//            jointPos = linFilter(rightArm.GetJoint(jointNumber),i*Ts);
+
+            jointPos = rightArm.GetJoint(jointNumber);
+
+            error=target-jointPos;
+            //error = error/(Ts*Ts);
+            signal = error > control;
+
+            if (fabs(jointVel)>14.4)
+            {
+            //signal = signal*15/24.4; //correct signal as 15 value for vel equals to 24.4 deg/sec
+            }
+
+            rightArm.SetJointVel(jointNumber,signal);
+            yarp::os::Time::delay(dts);
+            signal = signal*24.4/15;
+
+            //plot data store
+            ptTeo.pushBack(jointPos);
+            vtTeo.pushBack(jointVel);
+
+            std::cout << i*dts
+
+                      << " , signal: " << signal
+                      << " , jointVel: " << jointVel
+                      << " , jointPos: " << jointPos
+                      << std::endl;
+
+        }
+
         //plot data store
         pt.pushBack(modelEncoder.GetState());
         vt.pushBack(modelVel.GetState());
@@ -123,8 +184,19 @@ int main()
     }
 
     pt.Plot();
+    pt.Save("ptSim.txt");
+
+    if (useRobot)
+    {
+        ptTeo.Plot();
+        ptTeo.Save("ptTeo.txt");
+        //vtTeo.Plot();
+        //vtTeo.Save("vtTeo.txt");
 
 
+        rightArm.SetJointVel(jointNumber,0.);
+
+    }
 
 
     return 0;

@@ -13,12 +13,12 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = false;
+bool useRobot = true;
 
 int main()
 {
 
-    double Ts = 0.01;
+    double dts = 0.01;
 
     MWI::Limb rightArm(ROBOT,"rightArm");
 
@@ -52,7 +52,7 @@ int main()
     acc.SetSaturation(-10,10);
     //instantiate object motor
     SystemBlock modelVel(
-                std::vector<double> {Ts,Ts},
+                std::vector<double> {dts,dts},
                 std::vector<double> {-2,+2}
 //                std::vector<double> {0,Ts*1},
 //                std::vector<double> {-1,1}
@@ -63,7 +63,7 @@ int main()
     modelVel.SetSaturation(-24.4,24.4);
     //instantiate object encoder
     SystemBlock modelEncoder(
-                std::vector<double> {Ts,Ts},
+                std::vector<double> {dts,dts},
                 std::vector<double> {-2,+2}
 //                std::vector<double> {0,Ts*1},
 //                std::vector<double> {-1,1}
@@ -73,22 +73,22 @@ int main()
     //instantiate object control
     double kp=1.73;
     double kd=0.53;
-    double N = 20;    // LPFfilter N
+    double N = 10;    // LPFfilter N
     SystemBlock fod(
-                //matlab fod ts=0.01
-//                std::vector<double> {1.7963096, - 14.815094, + 35.195846, - 33.176969, + 11},
-//                std::vector<double> {0.5187250, - 2.3022224, + 4.0225029, - 3.2386161, + 1},
+                //matlab fod ts=0.01 m=0.669
+                std::vector<double> {1.7963096, - 14.815094, + 35.195846, - 33.176969, + 11},
+                std::vector<double> {0.5187250, - 2.3022224, + 4.0225029, - 3.2386161, + 1},
 
 
-                //scilab fod ts=0.01
-                std::vector<double> {264.28273, - 1135.2014, + 1823.6329, - 1298.8201, + 346.10585},
-                std::vector<double> {0, - 0.7674134, + 2.5244259, - 2.7569404, + 1},
+                //scilab fod ts=0.01 m=0.669
+//                std::vector<double> {264.28273, - 1135.2014, + 1823.6329, - 1298.8201, + 346.10585},
+//                std::vector<double> {0, - 0.7674134, + 2.5244259, - 2.7569404, + 1},
 
 
                 1 //fod gain
                 );
 
-    fod.SetSaturation(-1000,1000);
+    //fod.SetSaturation(-1000,1000);
 
     SystemBlock control(fod);
     //control.SetSaturation(-1000,1000);
@@ -103,12 +103,12 @@ int main()
     double error, modelError;
     int jointNumber = 3;
 
-    IPlot pt(Ts),vt(Ts),at(Ts);
-    IPlot ptTeo(Ts),vtTeo(Ts),atTeo(Ts);
+    IPlot pt(dts),vt(dts),at(dts);
+    IPlot ptTeo(dts),vtTeo(dts),atTeo(dts);
 
 
     //control loop
-    long loops = 20/Ts;
+    long loops = 10/dts;
     //rightArm.SetJointPos(jointNumber,target);
 
     for (ulong i=0; i<loops; i++)
@@ -140,13 +140,12 @@ int main()
         if (useRobot)
         {
 
-            jointVel = (jointPos-jointLastPos)/Ts;
-            vtTeo.pushBack(jointVel);
+            jointVel = (jointPos-jointLastPos)/dts;
 
             jointLastPos = jointPos;
 //            jointPos = linFilter(rightArm.GetJoint(jointNumber),i*Ts);
 
-//            jointPos = rightArm.GetJoint(jointNumber);
+            jointPos = rightArm.GetJoint(jointNumber);
 
             error=target-jointPos;
             //error = error/(Ts*Ts);
@@ -156,12 +155,24 @@ int main()
 
             if (fabs(jointVel)>14.4)
             {
-            signal = signal*15/24.4; //correct signal as 15 value for vel equals to 24.4 deg/sec
+            //signal = signal*15/24.4; //correct signal as 15 value for vel equals to 24.4 deg/sec
             }
 
             rightArm.SetJointVel(jointNumber,signal);
-            yarp::os::Time::delay(Ts);
+            yarp::os::Time::delay(dts);
             signal = signal*24.4/15;
+
+            //plot data store
+            ptTeo.pushBack(jointPos);
+            vtTeo.pushBack(jointVel);
+
+            std::cout << i*dts
+
+                      << " , signal: " << signal
+                      << " , jointVel: " << jointVel
+                      << " , jointPos: " << jointPos
+                      << std::endl;
+
         }
 
         //plot data store
@@ -170,7 +181,7 @@ int main()
         at.pushBack(acc.GetState());
 
 
-        std::cout << i*Ts
+        std::cout << i*dts
 
                   << " , modelSignal: " << modelSignal
                   << " , modelVel: " << modelVel.GetState()
@@ -180,7 +191,7 @@ int main()
     }
 
     pt.Plot();
-
+    pt.Save("ptSim.txt");
     if (useRobot)
     {
         ptTeo.Plot();
