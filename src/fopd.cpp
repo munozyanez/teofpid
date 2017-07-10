@@ -20,7 +20,27 @@ int main()
 
     double Ts = 0.01;
 
+    MWI::Limb rightArm(ROBOT,"rightArm");
 
+    if (useRobot)
+    {
+       // rightArm = MWI::Limb(ROBOT,"rightArm");
+        if (rightArm.GetError()!=0)
+        {
+            std::cout << "MWI::Limb rightArm(\"rightArm\") not available. ERROR: " << rightArm.GetError() << std::endl;
+            return -1;
+
+        }
+        rightArm.SetControlMode(1);
+        rightArm.SetJointPositions(std::vector<double>{0,0,0,0,0,0});
+        yarp::os::Time::delay(5);
+        //rightArm.DefaultPosition();
+        //yarp::os::Time::delay(5);
+        rightArm.SetControlMode(2);
+
+
+
+    }
 
     //instantiate object motor
     double ka=1;//10.09;//acceleration
@@ -56,18 +76,22 @@ int main()
     double N = 20;    // LPFfilter N
     SystemBlock fod(
                 //matlab fod ts=0.01
-                std::vector<double> {1.7963096, - 14.815094, + 35.195846, - 33.176969, + 11},
-                std::vector<double> {0.5187250, - 2.3022224, + 4.0225029, - 3.2386161, + 1},
+//                std::vector<double> {1.7963096, - 14.815094, + 35.195846, - 33.176969, + 11},
+//                std::vector<double> {0.5187250, - 2.3022224, + 4.0225029, - 3.2386161, + 1},
 
 
                 //scilab fod ts=0.01
-//                                std::vector<double> {264.28273, - 1135.2014, + 1823.6329, - 1298.8201, + 346.10585},
-//                                std::vector<double> {0, - 0.7674134, + 2.5244259, - 2.7569404, + 1},
+                std::vector<double> {264.28273, - 1135.2014, + 1823.6329, - 1298.8201, + 346.10585},
+                std::vector<double> {0, - 0.7674134, + 2.5244259, - 2.7569404, + 1},
 
 
                 1 //fod gain
                 );
 
+    fod.SetSaturation(-1000,1000);
+
+    SystemBlock control(fod);
+    //control.SetSaturation(-1000,1000);
 
     double signal;
     double modelSignal;
@@ -80,6 +104,7 @@ int main()
     int jointNumber = 3;
 
     IPlot pt(Ts),vt(Ts),at(Ts);
+    IPlot ptTeo(Ts),vtTeo(Ts),atTeo(Ts);
 
 
     //control loop
@@ -111,6 +136,33 @@ int main()
 
         }
 
+        //ROBOT BLOCK DIAGRAM
+        if (useRobot)
+        {
+
+            jointVel = (jointPos-jointLastPos)/Ts;
+            vtTeo.pushBack(jointVel);
+
+            jointLastPos = jointPos;
+//            jointPos = linFilter(rightArm.GetJoint(jointNumber),i*Ts);
+
+//            jointPos = rightArm.GetJoint(jointNumber);
+
+            error=target-jointPos;
+            //error = error/(Ts*Ts);
+            signal = error > control;
+            signal *= kd;
+            signal += error*kp;
+
+            if (fabs(jointVel)>14.4)
+            {
+            signal = signal*15/24.4; //correct signal as 15 value for vel equals to 24.4 deg/sec
+            }
+
+            rightArm.SetJointVel(jointNumber,signal);
+            yarp::os::Time::delay(Ts);
+            signal = signal*24.4/15;
+        }
 
         //plot data store
         pt.pushBack(modelEncoder.GetState());
@@ -129,7 +181,16 @@ int main()
 
     pt.Plot();
 
+    if (useRobot)
+    {
+        ptTeo.Plot();
+        ptTeo.Save("ptTeo.txt");
+        //vtTeo.Plot();
+        //vtTeo.Save("vtTeo.txt");
 
+        rightArm.SetJointVel(jointNumber,0.);
+
+    }
 
 
     return 0;
