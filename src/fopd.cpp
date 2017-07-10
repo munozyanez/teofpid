@@ -54,16 +54,17 @@ int main()
     double kp=1.73;
     double kd=0.53;
     double N = 20;    // LPFfilter N
-    //matlab fod ts=0.01
-//    SystemBlock fod(
-//                std::vector<double> {1.7963096, - 14.815094, + 35.195846, - 33.176969, + 11},
-//                std::vector<double> {0.5187250, - 2.3022224, + 4.0225029, - 3.2386161, + 1},
-//                1 //fod gain
-//                );
-    //scilab fod ts=0.01
     SystemBlock fod(
-                std::vector<double> {264.28273, - 1135.2014, + 1823.6329, - 1298.8201, + 346.10585},
-                std::vector<double> {0, - 0.7674134, + 2.5244259, - 2.7569404, + 1},
+                //matlab fod ts=0.01
+                std::vector<double> {1.7963096, - 14.815094, + 35.195846, - 33.176969, + 11},
+                std::vector<double> {0.5187250, - 2.3022224, + 4.0225029, - 3.2386161, + 1},
+
+
+                //scilab fod ts=0.01
+//                                std::vector<double> {264.28273, - 1135.2014, + 1823.6329, - 1298.8201, + 346.10585},
+//                                std::vector<double> {0, - 0.7674134, + 2.5244259, - 2.7569404, + 1},
+
+
                 1 //fod gain
                 );
 
