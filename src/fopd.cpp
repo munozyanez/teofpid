@@ -13,7 +13,7 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = true;
+bool useRobot = 0;
 
 int main()
 {
@@ -49,7 +49,7 @@ int main()
                 std::vector<double> {1}
                 );
     //graph: acc.SetSaturation(-24,24);
-    acc.SetSaturation(-10,10);
+    acc.SetSaturation(-9,9); // Was 10.
     //instantiate object motor
     SystemBlock modelVel(
                 std::vector<double> {dts,dts},
@@ -60,7 +60,7 @@ int main()
 //                std::vector<double> {Ts*Ts*ka+4,(2*Ts*Ts*ka-8),(Ts*Ts*ka+4)}
                 );
     //TODO: Update <maxvel>10</maxvel> and <maxaccel>5</maxaccel> in openrave joints
-    modelVel.SetSaturation(-20,20);
+    modelVel.SetSaturation(-16,16);// Was 24.4.
     //instantiate object encoder
     SystemBlock modelEncoder(
                 std::vector<double> {dts,dts},
@@ -88,10 +88,10 @@ int main()
                 1 //fod gain
                 );
 
-    //fod.SetSaturation(-1000,1000);
+    //fod.SetSaturation(-16,16);
 
     SystemBlock control(fod);
-    //control.SetSaturation(-1000,1000);
+    //control.SetSaturation(-16,16);
 
     double signal;
     double modelSignal;
@@ -160,7 +160,7 @@ int main()
 
             rightArm.SetJointVel(jointNumber,signal);
             yarp::os::Time::delay(dts);
-            signal = signal*24.4/15;
+            //signal = signal*24.4/15;
 
             //plot data store
             ptTeo.pushBack(jointPos);
