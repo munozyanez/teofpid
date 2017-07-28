@@ -32,7 +32,7 @@ int main()
 
         }
         rightArm.SetControlMode(1);
-        rightArm.SetJointPositions(std::vector<double>{0,0,0,0,0,0});
+        rightArm.SetJointPositions(std::vector<double>{0,0,0,60,0,0});
         yarp::os::Time::delay(5);
         //rightArm.DefaultPosition();
         //yarp::os::Time::delay(5);
@@ -60,7 +60,7 @@ int main()
 //                std::vector<double> {Ts*Ts*ka+4,(2*Ts*Ts*ka-8),(Ts*Ts*ka+4)}
                 );
     //TODO: Update <maxvel>10</maxvel> and <maxaccel>5</maxaccel> in openrave joints
-    modelVel.SetSaturation(-24.4,24.4);
+    modelVel.SetSaturation(-20,20);
     //instantiate object encoder
     SystemBlock modelEncoder(
                 std::vector<double> {dts,dts},
@@ -103,8 +103,8 @@ int main()
     double error, modelError;
     int jointNumber = 3;
 
-    IPlot pt(dts),vt(dts),at(dts);
-    IPlot ptTeo(dts),vtTeo(dts),atTeo(dts);
+    IPlot pt(dts),vt(dts),at(dts),con(dts);
+    IPlot ptTeo(dts),vtTeo(dts),atTeo(dts),conTeo(dts);
 
 
     //control loop
@@ -165,6 +165,7 @@ int main()
             //plot data store
             ptTeo.pushBack(jointPos);
             vtTeo.pushBack(jointVel);
+            conTeo.pushBack(signal);
 
             std::cout << i*dts
 
@@ -179,6 +180,7 @@ int main()
         pt.pushBack(modelEncoder.GetState());
         vt.pushBack(modelVel.GetState());
         at.pushBack(acc.GetState());
+        con.pushBack(modelSignal);
 
 
         std::cout << i*dts
@@ -191,11 +193,14 @@ int main()
     }
 
     pt.Plot();
-    pt.Save("ptSim.txt");
+    pt.Save("ptSim.csv");
+    con.Save("conSim.csv");
+
     if (useRobot)
     {
         ptTeo.Plot();
-        ptTeo.Save("ptTeo.txt");
+        ptTeo.Save("ptTeo.csv");
+        conTeo.Save("conTeo.csv");
         //vtTeo.Plot();
         //vtTeo.Save("vtTeo.txt");
 

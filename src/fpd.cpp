@@ -100,8 +100,8 @@ int main()
     double error, modelError;
     int jointNumber = 3;
 
-    IPlot pt(dts),vt(dts),at(dts);
-    IPlot ptTeo(dts),vtTeo(dts),atTeo(dts);
+    IPlot pt(dts),vt(dts),at(dts),con(dts);
+    IPlot ptTeo(dts),vtTeo(dts),atTeo(dts),conTeo(dts);
 
 
     //control loop
@@ -158,11 +158,12 @@ int main()
 
             rightArm.SetJointVel(jointNumber,signal);
             yarp::os::Time::delay(dts);
-            signal = signal*24.4/15;
+            //signal = signal*24.4/15;
 
             //plot data store
             ptTeo.pushBack(jointPos);
             vtTeo.pushBack(jointVel);
+            conTeo.pushBack(signal);
 
             std::cout << i*dts
 
@@ -177,6 +178,7 @@ int main()
         pt.pushBack(modelEncoder.GetState());
         vt.pushBack(modelVel.GetState());
         at.pushBack(acc.GetState());
+        con.pushBack(modelSignal);
 
 
         std::cout << i*dts
@@ -189,12 +191,14 @@ int main()
     }
 
     pt.Plot();
-    pt.Save("ptSim.txt");
+    pt.Save("ptSim.csv");
+    con.Save("conSim.csv");
 
     if (useRobot)
     {
         ptTeo.Plot();
-        ptTeo.Save("ptTeo.txt");
+        ptTeo.Save("ptTeo.csv");
+        conTeo.Save("conTeo.csv");
         //vtTeo.Plot();
         //vtTeo.Save("vtTeo.txt");
 
