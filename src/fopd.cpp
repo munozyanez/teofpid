@@ -74,24 +74,41 @@ int main()
     double kp=1.73;
     double kd=0.53;
     double N = 10;    // LPFfilter N
-    SystemBlock fod(
+    SystemBlock fopd(
                 //matlab fod ts=0.01 m=0.669
-                std::vector<double> {1.7963096, - 14.815094, + 35.195846, - 33.176969, + 11},
-                std::vector<double> {0.5187250, - 2.3022224, + 4.0225029, - 3.2386161, + 1},
+//                std::vector<double> {1.7963096, - 14.815094, + 35.195846, - 33.176969, + 11},
+//                std::vector<double> {0.5187250, - 2.3022224, + 4.0225029, - 3.2386161, + 1},
+//                1 //fod gain
 
 
                 //scilab fod ts=0.01 m=0.669
 //                std::vector<double> {264.28273, - 1135.2014, + 1823.6329, - 1298.8201, + 346.10585},
 //                std::vector<double> {0, - 0.7674134, + 2.5244259, - 2.7569404, + 1},
+//                1 //fod gain
 
 
-                1 //fod gain
+//                //fers1
+//                std::vector<double> {0.0572,   -0.4467,    1.5270,   -2.9823,    3.6398,   -2.8427 ,   1.3874,   -0.3869,    0.0472},
+//                std::vector<double> {0.0572,   -0.4467,    1.5270,   -2.9823,    3.6398,   -2.8427,    1.3874,   -0.3869,    0.0472},
+//                10000 //fopd gain
+
+//                //fers2
+//                std::vector<double> {0.0375,-0.2929, 1.0017,-1.9574, 2.3903,-1.8680, 0.9123,-0.2546, 0.0311},
+//                std::vector<double> {1.0000,-7.7608,26.3466  -51.1018,61.9383  -48.0388,23.2828,-6.4471, 0.7809},
+//                10000 //fopd gain
+
+                //fers2
+                std::vector<double> {1},
+                std::vector<double> {1},
+                1 //fopd gain
+
+
                 );
 
     //fod.SetSaturation(-16,16);
 
-    SystemBlock control(fod);
-    //control.SetSaturation(-16,16);
+    SystemBlock control(fopd);
+    control.SetSaturation(-1000,1000);
 
     double signal;
     double modelSignal;
@@ -108,7 +125,7 @@ int main()
 
 
     //control loop
-    long loops = 10/dts;
+    long loops = 100/dts;
     //rightArm.SetJointPos(jointNumber,target);
 
     for (ulong i=0; i<loops; i++)
@@ -118,7 +135,7 @@ int main()
         modelError = target-modelEncoder.GetState();
 
         //signal out from controller
-        modelSignal = modelError > fod;
+        modelSignal = modelError > fopd;
         modelSignal *= kd;
         modelSignal += modelError*kp;
 
