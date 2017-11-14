@@ -113,7 +113,7 @@ int main()
 
                 std::vector<double> {9.053,  - 36.63,   55.59 , - 37.49,    9.479 },
                 std::vector<double> {0.8659,   - 3.593,    5.589,   - 3.861,    1.0000},
-                1 //fopd gain
+                0.0001 //fopd gain
 
                 );
     kp=0.036;
@@ -130,7 +130,7 @@ int main()
 
 
     //time_t t;
-    double target = 30;
+    double target = 1;
     double error, modelError;
     int jointNumber = 3;
 
@@ -139,7 +139,7 @@ int main()
 
 
     //control loop
-    long loops = 1000/dts;
+    long loops = 200/dts;
     //rightArm.SetJointPos(jointNumber,target);
 
     for (ulong i=0; i<loops; i++)
