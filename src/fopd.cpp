@@ -98,9 +98,9 @@ int main()
 //                10000 //fopd gain
 
 //                //fers8
-                std::vector<double> {9.7423,-38.5257, 57.1283,-37.6485,9.3036},
-                std::vector<double> {1.0000, -3.8614 ,5.5887, -3.5933,0.8659},
-                1 //fopd gain
+                std::vector<double> {1.0000,   -4.0466,    6.1404,   -4.1409,    1.0471},
+                std::vector<double> {0.8659,   -3.5933,    5.5887,   -3.8614,    1.0000},
+                9.3036 //fopd gain
                 );
     kp=0;
     kd=1;
@@ -125,7 +125,7 @@ int main()
 
 
     //control loop
-    long loops = 1000/dts;
+    long loops = 100/dts;
     //rightArm.SetJointPos(jointNumber,target);
 
     for (ulong i=0; i<loops; i++)
@@ -136,8 +136,8 @@ int main()
 
         //signal out from controller
         modelSignal = modelError > fopd;
-        modelSignal *= kd;
-        modelSignal += modelError*kp;
+//        modelSignal *= kd;
+//        modelSignal += modelError*kp;
 
         //next lines simulates model setjointVel
         if (  modelVel.GetState() > modelSignal )
@@ -205,6 +205,8 @@ int main()
                   << " , modelSignal: " << modelSignal
                   << " , modelVel: " << modelVel.GetState()
                   << " , modelPos: " << modelEncoder.GetState()
+                  << " , modelError: " << modelError
+
                   << std::endl;
 
     }
