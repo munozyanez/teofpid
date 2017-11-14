@@ -93,17 +93,17 @@ int main()
 //                10000 //fopd gain
 
                 //fers2
-                std::vector<double> {0.0375,-0.2929, 1.0017,-1.9574, 2.3903,-1.8680, 0.9123,-0.2546, 0.0311},
-                std::vector<double> {1.0000,-7.7608,26.3466  -51.1018,61.9383  -48.0388,23.2828,-6.4471, 0.7809},
-                10000 //fopd gain
+//                std::vector<double> {0.0375,-0.2929, 1.0017,-1.9574, 2.3903,-1.8680, 0.9123,-0.2546, 0.0311},
+//                std::vector<double> {1.0000,-7.7608,26.3466,-51.1018,61.9383,-48.0388,23.2828,-6.4471, 0.7809},
+//                10000 //fopd gain
 
-//                //fers2
-//                std::vector<double> {1},
-//                std::vector<double> {1},
-//                1 //fopd gain
-
-
+//                //fers8
+                std::vector<double> {9.7423,-38.5257, 57.1283,-37.6485,9.3036},
+                std::vector<double> {1.0000, -3.8614 ,5.5887, -3.5933,0.8659},
+                1 //fopd gain
                 );
+    kp=0;
+    kd=1;
 
     //fod.SetSaturation(-16,16);
 
@@ -116,7 +116,7 @@ int main()
 
 
     //time_t t;
-    double target = 30;
+    double target = 1;
     double error, modelError;
     int jointNumber = 3;
 
@@ -125,7 +125,7 @@ int main()
 
 
     //control loop
-    long loops = 100/dts;
+    long loops = 1000/dts;
     //rightArm.SetJointPos(jointNumber,target);
 
     for (ulong i=0; i<loops; i++)
