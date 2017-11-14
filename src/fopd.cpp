@@ -98,14 +98,28 @@ int main()
 //                10000 //fopd gain
 
 //                //fers8
-                std::vector<double> {1.0000,   -4.0466,    6.1404,   -4.1409,    1.0471},
-                std::vector<double> {0.8659,   -3.5933,    5.5887,   -3.8614,    1.0000},
-                9.3036 //fopd gain
-                );
-    kp=0;
-    kd=1;
+//                std::vector<double> {1.0000,   -4.0466,    6.1404,   -4.1409,    1.0471},
+//                std::vector<double> {0.8659,   -3.5933,    5.5887,   -3.8614,    1.0000},
+//                9.3036 //fopd gain
 
-    //fod.SetSaturation(-16,16);
+                //fers10
+//                std::vector<double> {9.0844,  -36.7635,   55.7892 , -37.6252,    9.5152},
+//                std::vector<double> {0.8659,   -3.5933,    5.5887,   -3.8614,    1.0000},
+//                1 //fopd gain
+
+//                9.479 z^4 - 37.49 z^3 + 55.59 z^2 - 36.63 z + 9.053
+//                ---------------------------------------------------
+//                  z^4 - 3.861 z^3 + 5.589 z^2 - 3.593 z + 0.8659
+
+                std::vector<double> {9.053,  - 36.63,   55.59 , - 37.49,    9.479 },
+                std::vector<double> {0.8659,   - 3.593,    5.589,   - 3.861,    1.0000},
+                1 //fopd gain
+
+                );
+    kp=0.036;
+    kd=0.97;
+
+    fopd.SetSaturation(-1000,1000);
 
     SystemBlock control(fopd);
     control.SetSaturation(-1000,1000);
@@ -116,7 +130,7 @@ int main()
 
 
     //time_t t;
-    double target = 1;
+    double target = 30;
     double error, modelError;
     int jointNumber = 3;
 
@@ -125,7 +139,7 @@ int main()
 
 
     //control loop
-    long loops = 100/dts;
+    long loops = 1000/dts;
     //rightArm.SetJointPos(jointNumber,target);
 
     for (ulong i=0; i<loops; i++)
