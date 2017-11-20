@@ -108,7 +108,7 @@ int main()
 
 
     //control loop
-    long loops = 1000/dts;
+    long loops = 500/dts;
     //rightArm.SetJointPos(jointNumber,target);
 
     for (ulong i=0; i<loops; i++)
