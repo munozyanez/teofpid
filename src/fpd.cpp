@@ -159,7 +159,7 @@ int main()
             //signal = signal*15/24.4; //correct signal as 15 value for vel equals to 24.4 deg/sec
             }
 
-            rightArm.SetJointVel(jointNumber,10*signal);
+            rightArm.SetJointVel(jointNumber,1*signal);
             yarp::os::Time::delay(dts);
             //signal = signal*24.4/15;
 
