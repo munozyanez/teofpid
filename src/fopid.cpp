@@ -71,8 +71,9 @@ int main()
 
 
     //instantiate object control
-    double kp=1.73;
-    double kd=0.53;
+    double kp=0.996;
+    double kd=0.01;
+    double ki=0.094;
     double N = 10;    // LPFfilter N
     SystemBlock fopid(
                 //matlab fod ts=0.01 m=0.669
@@ -93,22 +94,58 @@ int main()
 //                10000 //fopd gain
 
                 //fers2
-                std::vector<double> {0.0375,-0.2929, 1.0017,-1.9574, 2.3903,-1.8680, 0.9123,-0.2546, 0.0311},
-                std::vector<double> {1.0000,-7.7608,26.3466  -51.1018,61.9383  -48.0388,23.2828,-6.4471, 0.7809},
-                10000 //fopd gain
+//                std::vector<double> {0.0375,-0.2929, 1.0017,-1.9574, 2.3903,-1.8680, 0.9123,-0.2546, 0.0311},
+//                std::vector<double> {1.0000,-7.7608,26.3466  -51.1018,61.9383  -48.0388,23.2828,-6.4471, 0.7809},
+//                10000 //fopd gain
 
 //                //fers2
 //                std::vector<double> {1},
 //                std::vector<double> {1},
 //                1 //fopd gain
 
-
+                //Gauss newton 4
+                std::vector<double> {1},
+                std::vector<double> {1},
+                1 //fopd gain
                 );
 
     //fod.SetSaturation(-16,16);
 
     SystemBlock control(fopid);
     control.SetSaturation(-1000,1000);
+
+
+//    gndn =
+
+//        2.8774  -13.0555   21.9888  -16.3213    4.5106
+
+
+//    gndd =
+
+//        0.3300   -1.9233    3.8557   -3.2625    1.0000
+
+
+//    gnin =
+
+//        0.0386   -0.1672    0.2701   -0.1930    0.0515
+
+
+//    gnid =
+
+//        0.9875   -3.9624    5.9623   -3.9874    1.0000
+    SystemBlock gnd
+            (
+                std::vector<double> {2.8774,  -13.0555,   21.9888,  -16.3213,    4.5106},
+                std::vector<double> {0.3300,   -1.9233,    3.8557,   -3.2625 ,   1.0000},
+                1 //fopd gain
+                );
+
+    SystemBlock gni
+            (
+                std::vector<double> {0.0386 ,  -0.1672 ,   0.2701 ,  -0.1930  ,  0.0515},
+                std::vector<double> {0.9875 ,  -3.9624  ,  5.9623  , -3.9874 ,   1.0000},
+                1 //fopd gain
+                );
 
     double signal;
     double modelSignal;
@@ -135,7 +172,8 @@ int main()
         modelError = target-modelEncoder.GetState();
 
         //signal out from controller
-        modelSignal = modelError > fopid;
+        //modelSignal = modelError > fopid;
+        modelSignal = modelError*kp + kd*gnd.OutputUpdate(modelError) + ki*gni.OutputUpdate(modelError);
 //        modelSignal *= kd;
 //        modelSignal += modelError*kp;
 
