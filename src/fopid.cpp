@@ -171,6 +171,7 @@ int main()
         //MODEL BLOCK DIAGRAM
         modelError = target-modelEncoder.GetState();
 
+        cout<< kd*gnd.OutputUpdate(modelError) << endl;
         //signal out from controller
         //modelSignal = modelError > fopid;
         modelSignal = modelError*kp + kd*gnd.OutputUpdate(modelError) + ki*gni.OutputUpdate(modelError);
