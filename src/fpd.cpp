@@ -13,7 +13,7 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = 0;
+bool useRobot = 1;
 
 int main()
 {
@@ -100,7 +100,7 @@ int main()
 
 
     //time_t t;
-    double target = 1;
+    double target = 30;
     double error, modelError;
     int jointNumber = 3;
 
