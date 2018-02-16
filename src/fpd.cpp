@@ -128,14 +128,14 @@ int main()
 
     //W=1-2
 
-//    //ABC (3)//HS(11)
-//    kp=0.009;
-//    ki=0;
-//    kd=0.996;
-//    FSystemBlock simFs(s_0_99);
-//    FSystemBlock simF1s(is_0_00);
-//    FSystemBlock teoFs(s_0_99);
-//    FSystemBlock teoF1s(is_0_00);
+    //ABC (3)//HS(11)
+    kp=0.009;
+    ki=0;
+    kd=0.996;
+    FSystemBlock simFs(s_0_99);
+    FSystemBlock simF1s(is_0_00);
+    FSystemBlock teoFs(s_0_99);
+    FSystemBlock teoF1s(is_0_00);
 
 //    //PSO (4) 6?
 //    kp=0.995;
@@ -156,6 +156,15 @@ int main()
 //    FSystemBlock teoFs(s_0_263);
 //    FSystemBlock teoF1s(is_0_792);
 
+//    //isow1
+//    kp=0.541;
+//    ki=0.0;
+//    kd=0.541;
+//    FSystemBlock simFs(s_0_47);
+//    FSystemBlock simF1s(is_0_00);
+//    FSystemBlock teoFs(s_0_47);
+//    FSystemBlock teoF1s(is_0_00);
+
 //    //cmon
 //    kp=1.14;
 //    ki=0.0;
@@ -165,23 +174,16 @@ int main()
 //    FSystemBlock teoFs(s_0_669);
 //    FSystemBlock teoF1s(is_0_00);
 
-    //isow2
-    kp=1.17;
-    ki=0.0;
-    kd=0.64;
-    FSystemBlock simFs(s_0_66);
-    FSystemBlock simF1s(is_0_00);
-    FSystemBlock teoFs(s_0_66);
-    FSystemBlock teoF1s(is_0_00);
-
-//    //isow1
-//    kp=0.541;
+//    //isow2
+//    kp=1.17;
 //    ki=0.0;
-//    kd=0.541;
-//    FSystemBlock simFs(s_0_47);
+//    kd=0.64;
+//    FSystemBlock simFs(s_0_66);
 //    FSystemBlock simF1s(is_0_00);
-//    FSystemBlock teoFs(s_0_47);
+//    FSystemBlock teoFs(s_0_66);
 //    FSystemBlock teoF1s(is_0_00);
+
+
 
     double signal;
     double modelSignal;
@@ -286,14 +288,14 @@ int main()
     }
 
     pt.Plot();
-    pt.Save("../ptSim.csv");
-    con.Save("../conSim.csv");
+    pt.Save("/home/buyus/Escritorio/ptSim.csv");
+    con.Save("/home/buyus/Escritorio/conSim.csv");
 
     if (useRobot)
     {
         ptTeo.Plot();
-        ptTeo.Save("../ptTeo.csv");
-        conTeo.Save("../conTeo.csv");
+        ptTeo.Save("/home/buyus/Escritorio/ptTeo.csv");
+        conTeo.Save("/home/buyus/Escritorio/conTeo.csv");
         //vtTeo.Plot();
         //vtTeo.Save("vtTeo.txt");
 
