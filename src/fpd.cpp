@@ -13,7 +13,7 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = 0;
+bool useRobot = 1;
 
 int main()
 {
@@ -165,23 +165,23 @@ int main()
 //    FSystemBlock teoFs(s_0_669);
 //    FSystemBlock teoF1s(is_0_00);
 
-//    //isow2
-//    kp=1.17;
-//    ki=0.0;
-//    kd=0.64;
-//    FSystemBlock simFs(s_0_66);
-//    FSystemBlock simF1s(is_0_00);
-//    FSystemBlock teoFs(s_0_66);
-//    FSystemBlock teoF1s(is_0_00);
-
-    //isow1
-    kp=0.541;
+    //isow2
+    kp=1.17;
     ki=0.0;
-    kd=0.541;
-    FSystemBlock simFs(s_0_47);
+    kd=0.64;
+    FSystemBlock simFs(s_0_66);
     FSystemBlock simF1s(is_0_00);
-    FSystemBlock teoFs(s_0_47);
+    FSystemBlock teoFs(s_0_66);
     FSystemBlock teoF1s(is_0_00);
+
+//    //isow1
+//    kp=0.541;
+//    ki=0.0;
+//    kd=0.541;
+//    FSystemBlock simFs(s_0_47);
+//    FSystemBlock simF1s(is_0_00);
+//    FSystemBlock teoFs(s_0_47);
+//    FSystemBlock teoF1s(is_0_00);
 
     double signal;
     double modelSignal;
@@ -198,7 +198,7 @@ int main()
 
 
     //control loop
-    long loops = 10/dts;
+    long loops = 20/dts;
     //rightArm.SetJointPos(jointNumber,target);
 
     for (ulong i=0; i<loops; i++)
@@ -286,14 +286,14 @@ int main()
     }
 
     pt.Plot();
-    pt.Save("ptSim.csv");
-    con.Save("conSim.csv");
+    pt.Save("../ptSim.csv");
+    con.Save("../conSim.csv");
 
     if (useRobot)
     {
         ptTeo.Plot();
-        ptTeo.Save("ptTeo.csv");
-        conTeo.Save("conTeo.csv");
+        ptTeo.Save("../ptTeo.csv");
+        conTeo.Save("../conTeo.csv");
         //vtTeo.Plot();
         //vtTeo.Save("vtTeo.txt");
 
