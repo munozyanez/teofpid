@@ -109,7 +109,7 @@ int main()
 
 
     //control loop
-    long loops = 100/dts;
+    long loops = 10/dts;
     //rightArm.SetJointPos(jointNumber,target);
 
     for (ulong i=0; i<loops; i++)
