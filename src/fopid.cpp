@@ -20,7 +20,7 @@ int main()
 
     double dts = 0.01;
 
-    MWI::Limb rightArm(ROBOT,"rightArm");
+   MWI::Limb rightArm(ROBOT,"rightArm");
 
     if (useRobot)
     {
@@ -42,7 +42,7 @@ int main()
 
     }
 
-    //instantiate object motor
+     //instantiate object motor
     double ka=1;//10.09;//acceleration
     SystemBlock acc(
                 std::vector<double> {ka},
@@ -134,7 +134,7 @@ int main()
 
 //        0.9875   -3.9624    5.9623   -3.9874    1.0000
     SystemBlock gnd
-            (
+            (//check coeffs to be from z^0 to z^n
                 std::vector<double> {2.8774,  -13.0555,   21.9888,  -16.3213,    4.5106},
                 std::vector<double> {0.3300,   -1.9233,    3.8557,   -3.2625 ,   1.0000},
                 1 //fopd gain
@@ -178,7 +178,7 @@ int main()
 //        modelSignal *= kd;
 //        modelSignal += modelError*kp;
 
-        //next lines simulates model setjointVel
+/*        //next lines simulates model setjointVel
         if (  modelVel.GetState() > modelSignal )
         {
             //constant deceleration of model
@@ -191,7 +191,7 @@ int main()
             15 > acc > modelVel  >  modelEncoder;
 
         }
-
+*/
         //ROBOT BLOCK DIAGRAM
         if (useRobot)
         {
