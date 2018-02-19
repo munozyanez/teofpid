@@ -13,7 +13,7 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = 0;
+bool useRobot = true;
 
 int main()
 {
@@ -32,7 +32,7 @@ int main()
 
         }
         rightArm.SetControlMode(1);
-        rightArm.SetJointPositions(std::vector<double>{0,0,0,60,0,0});
+        rightArm.SetJointPositions(std::vector<double>{0,0,0,0,0,0});
         yarp::os::Time::delay(5);
         //rightArm.DefaultPosition();
         //yarp::os::Time::delay(5);
@@ -49,7 +49,7 @@ int main()
                 std::vector<double> {1}
                 );
     //graph: acc.SetSaturation(-24,24);
-    acc.SetSaturation(-9,9); // Was 10.
+    acc.SetSaturation(-10,10); // Was 10.
     //instantiate object motor
     SystemBlock modelVel(
                 std::vector<double> {dts,dts},
@@ -60,7 +60,7 @@ int main()
 //                std::vector<double> {Ts*Ts*ka+4,(2*Ts*Ts*ka-8),(Ts*Ts*ka+4)}
                 );
     //TODO: Update <maxvel>10</maxvel> and <maxaccel>5</maxaccel> in openrave joints
-    modelVel.SetSaturation(-16,16);// Was 24.4.
+    modelVel.SetSaturation(-24,24);// Was 24.4.
     //instantiate object encoder
     SystemBlock modelEncoder(
                 std::vector<double> {dts,dts},
@@ -146,7 +146,7 @@ int main()
 
 
     //control loop
-    long loops = 100/dts;
+    long loops = 10/dts;
     //rightArm.SetJointPos(jointNumber,target);
 
     for (ulong i=0; i<loops; i++)
