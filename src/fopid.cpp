@@ -13,7 +13,7 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = 0;
+bool useRobot = 1;
 
 int main()
 {
@@ -33,7 +33,7 @@ int main()
         }
         rightArm.SetControlMode(1);
         rightArm.SetJointPositions(std::vector<double>{0,0,0,0,0,0});
-        yarp::os::Time::delay(5);
+        yarp::os::Time::delay(6);
         //rightArm.DefaultPosition();
         //yarp::os::Time::delay(5);
         rightArm.SetControlMode(2);
@@ -124,14 +124,14 @@ int main()
 
     //W=1-2
 
-//    ABC (3)//HS(11)
-    kp=0.009;
-    ki=0;
-    kd=0.996;
-    SystemBlock gnd(s_0_99);
-    SystemBlock gni(is_0_01);
-    SystemBlock teognd(gnd);
-    SystemBlock teogni(gni);
+////    ABC (3)//HS(11)
+//    kp=0.009;
+//    ki=0;
+//    kd=0.996;
+//    SystemBlock gnd(s_0_99);
+//    SystemBlock gni(is_0_01);
+//    SystemBlock teognd(gnd);
+//    SystemBlock teogni(gni);
 
 //    //PSO (4) 6?
 //    kp=0.995;
@@ -143,14 +143,14 @@ int main()
 //    SystemBlock teogni(gni);
 
 
-//    //HS (8)
-//    kp=0.996;
-//    ki=0.094;
-//    kd=0.01;
-//    SystemBlock gnd(s_0_263);
-//    SystemBlock gni(is_0_792);
-//    SystemBlock teognd(gnd);
-//    SystemBlock teogni(gni);
+    //HS (8)
+    kp=0.996;
+    ki=0.094;
+    kd=0.01;
+    SystemBlock gnd(s_0_263);
+    SystemBlock gni(is_0_792);
+    SystemBlock teognd(gnd);
+    SystemBlock teogni(gni);
 
 //    //isow1
 //    kp=0.541;
