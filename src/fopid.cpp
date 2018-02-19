@@ -13,7 +13,7 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = true;
+bool useRobot = 0;
 
 int main()
 {
@@ -71,64 +71,115 @@ int main()
 
 
     //instantiate object control
-    double kp=0.996;
-    double kd=0.01;
-    double ki=0.094;
-
-
-    //fod.SetSaturation(-16,16);
+    double kp;
+    double kd;
+    double ki;
 
 
 
 
-//    gndn =
-
-//        2.8774  -13.0555   21.9888  -16.3213    4.5106
-
-
-//    gndd =
-
-//        0.3300   -1.9233    3.8557   -3.2625    1.0000
-
-
-//    gnin =
-
-//        0.0386   -0.1672    0.2701   -0.1930    0.0515
-
-
-//    gnid =
-
-//        0.9875   -3.9624    5.9623   -3.9874    1.0000
-//    SystemBlock gnd
-//            (//check coeffs to be from z^0 to z^n
-//                std::vector<double> {2.8774,  -13.0555,   21.9888,  -16.3213,    4.5106},
-//                std::vector<double> {0.3300,   -1.9233,    3.8557,   -3.2625 ,   1.0000},
-//                1 //fopd gain
-//                );
-
-//    SystemBlock gni
-//            (
-//                std::vector<double> {0.0386 ,  -0.1672 ,   0.2701 ,  -0.1930  ,  0.0515},
-//                std::vector<double> {0.9875 ,  -3.9624  ,  5.9623  , -3.9874 ,   1.0000},
-//                1 //fopd gain
-//                );
-
-    SystemBlock gnd
+    SystemBlock s_0_263
             (//ed=0.263
                 std::vector<double> {1.5931,   -9.8105,   21.1481,  -19.3126,    6.3821},
                 std::vector<double> {0.0107,   -0.5207,    1.9530,   -2.4424,    1.0000},
                 1 //fopd gain
                 );
 
-    SystemBlock gni
+    SystemBlock is_0_792
             (//ei=0.792
                 std::vector<double> {-0.0101,    0.0414,   -0.0515,    0.0178,    0.0024},
                 std::vector<double> {0.2901,   -1.7529,    3.6341,   -3.1713,    1.0000},
                 1 //fopd gain
                 );
 
+    SystemBlock s_0_01
+            (
+                std::vector<double> {0.0740,   -0.5111,    1.1659,   -1.0977,    0.3690},
+                std::vector<double> {0.0000,   -0.2005,    1.1848,   -1.9751,    1.0000},
+                1.0e+05 //fopd gain
+                );
+
+    SystemBlock is_0_99
+            (
+                std::vector<double> {0.0323,   -0.6552,    2.1194,   -2.4293,    0.9330},
+                std::vector<double> {0.0479,   -0.7567,    2.3423,   -2.6334,    1.0000},
+                1 //fopd gain
+                );
+
+
+
+    SystemBlock s_0_99
+            (
+                std::vector<double> {0.0611,   -0.8462,    2.5515,   -2.8382,    1.0719},
+                std::vector<double> {0.0441,   -0.7364,    2.3113,   -2.6190,    1.0000},
+                1 //fopd gain
+                );
+
+    SystemBlock is_0_01
+            (
+                std::vector<double> {-0.0039,    0.0174,   -0.0239,    0.0103,    0.0000},
+                std::vector<double> {0.3669,   -2.0217,    3.9423,   -3.2875,    1.0000},
+                1 //fopd gain
+                );
+
+    //W=1-2
+
+//    ABC (3)//HS(11)
+    kp=0.009;
+    ki=0;
+    kd=0.996;
+    SystemBlock gnd(s_0_99);
+    SystemBlock gni(is_0_01);
     SystemBlock teognd(gnd);
     SystemBlock teogni(gni);
+
+//    //PSO (4) 6?
+//    kp=0.995;
+//    ki=0.09;
+//    kd=0.006;
+//    SystemBlock gnd(s_0_01);
+//    SystemBlock gni(is_0_99);
+//    SystemBlock teognd(gnd);
+//    SystemBlock teogni(gni);
+
+
+//    //HS (8)
+//    kp=0.996;
+//    ki=0.094;
+//    kd=0.01;
+//    SystemBlock gnd(s_0_263);
+//    SystemBlock gni(is_0_792);
+//    SystemBlock teognd(gnd);
+//    SystemBlock teogni(gni);
+
+//    //isow1
+//    kp=0.541;
+//    ki=0.0;
+//    kd=0.541;
+//    SystemBlock gnd(s_0_47);
+//    SystemBlock gni(is_0_00);
+//    SystemBlock teognd(gnd);
+//    SystemBlock teogni(gni);
+
+//    //cmon
+//    kp=1.14;
+//    ki=0.0;
+//    kd=0.768;
+//    SystemBlock gnd(s_0_669);
+//        SystemBlock gni(is_0_00);
+//        SystemBlock teognd(gnd);
+//        SystemBlock teogni(gni);
+
+//    //isow2
+//    kp=1.17;
+//    ki=0.0;
+//    kd=0.64;
+//    SystemBlock gnd(s_0_66);
+//        SystemBlock gni(is_0_00);
+//        SystemBlock teognd(gnd);
+//        SystemBlock teogni(gni);
+
+
 
 
     double signal;
