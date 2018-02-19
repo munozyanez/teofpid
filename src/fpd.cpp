@@ -13,7 +13,7 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = 1;
+bool useRobot = 0;
 
 int main()
 {
@@ -52,13 +52,13 @@ int main()
     acc.SetSaturation(-10,10);
     //instantiate object motor
     SystemBlock modelVel(
-                std::vector<double> {dts,dts},
-                std::vector<double> {-2,+2}
+                std::vector<double> {1,1},
+                std::vector<double> {-1,+1},
 //                std::vector<double> {0,dts*1},
 //                std::vector<double> {-1,1}
 //                std::vector<double> {Ts*Ts*ka,2*Ts*Ts*ka,Ts*Ts*ka},
 //                std::vector<double> {Ts*Ts*ka+4,(2*Ts*Ts*ka-8),(Ts*Ts*ka+4)}
-                );
+                dts/2);
     //TODO: Update <maxvel>10</maxvel> and <maxaccel>5</maxaccel> in openrave joints
     modelVel.SetSaturation(-24.4,24.4);
     //instantiate object encoder
@@ -131,13 +131,13 @@ int main()
     //W=1-2
 
     //ABC (3)//HS(11)
-    kp=0.009;
-    ki=0;
-    kd=0.996;
-    FSystemBlock simFs(s_0_99);
-    FSystemBlock simF1s(is_0_00);
-    FSystemBlock teoFs(s_0_99);
-    FSystemBlock teoF1s(is_0_00);
+//    kp=0.009;
+//    ki=0;
+//    kd=0.996;
+//    FSystemBlock simFs(s_0_99);
+//    FSystemBlock simF1s(is_0_00);
+//    FSystemBlock teoFs(s_0_99);
+//    FSystemBlock teoF1s(is_0_00);
 
 //    //PSO (4) 6?
 //    kp=0.995;
@@ -158,14 +158,14 @@ int main()
 //    FSystemBlock teoFs(s_0_263);
 //    FSystemBlock teoF1s(is_0_792);
 
-//    //isow1
-//    kp=0.541;
-//    ki=0.0;
-//    kd=0.541;
-//    FSystemBlock simFs(s_0_47);
-//    FSystemBlock simF1s(is_0_00);
-//    FSystemBlock teoFs(s_0_47);
-//    FSystemBlock teoF1s(is_0_00);
+    //isow1
+    kp=0.541;
+    ki=0.0;
+    kd=0.541;
+    FSystemBlock simFs(s_0_47);
+    FSystemBlock simF1s(is_0_00);
+    FSystemBlock teoFs(s_0_47);
+    FSystemBlock teoF1s(is_0_00);
 
 //    //cmon
 //    kp=1.14;

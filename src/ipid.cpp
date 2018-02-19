@@ -5,7 +5,7 @@
 int main()
 {
 
-    double dts = 0.001;
+    double dts = 0.01;
 
 
     //plotters
@@ -13,7 +13,8 @@ int main()
     IPlot mpt(dts),mvt(dts),mat(dts);
     IPlot ptTeo(dts),vtTeo(dts),atTeo(dts);
 
-    double ka=0.1;//acceleration
+    double ka=1;//acceleration
+    double tau=0.1;//systime
 
 
 
@@ -21,9 +22,9 @@ int main()
     SystemBlock modelVel(
 //                std::vector<double> {Ts,Ts},
 //                std::vector<double> {-2,+2}
-                std::vector<double> {0 , ka*dts*1},
-                std::vector<double> {-1 , 1+ka*dts}
-                );
+                std::vector<double> {1,1},
+                std::vector<double> {1-(2*tau/dts) , 1+(2*tau/dts)},
+                ka);
 
 //    vel.SetSaturation(-5,18);
     //TODO: Update <maxvel>10</maxvel> and <maxaccel>5</maxaccel> in openrave joints
@@ -31,15 +32,15 @@ int main()
 
     //instantiate object encoder
     SystemBlock modelEncoder(
-                std::vector<double> {dts,dts},
-                std::vector<double> {-2,+2}
+                std::vector<double> {1,1},
+                std::vector<double> {-1,+1},
 //                std::vector<double> {0,Ts*1},
 //                std::vector<double> {-1,1}
-                );
+                dts/2);
 
     double signal,modelSignal,jointPos;
 
-    PIDBlock modelControl(1,0,0,dts);
+    PIDBlock modelControl(1,1,1,dts);
 
 
 
@@ -65,6 +66,8 @@ int main()
 
         (target-modelEncoder.GetState()) > modelControl > modelVel > modelEncoder;
 
+        signal=modelControl.GetState();
+        modelVel.OutputUpdate(signal);
         vt.pushBack(modelVel.GetState());
         pt.pushBack(modelEncoder.GetState());
 
@@ -72,6 +75,7 @@ int main()
 
                   << " , signal: " << signal
                   << " , (target-modelEncoder.GetState()): " << (target-modelEncoder.GetState())
+                  << " , vel): " << modelVel.GetState()
                   << " , jointPos: " << jointPos
                   << std::endl;
 

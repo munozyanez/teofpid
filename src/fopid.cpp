@@ -18,7 +18,7 @@ bool useRobot = 0;
 int main()
 {
 
-    double dts = 0.01;
+    double dts = 0.01;//change with care!! z tfs depend on it!!
 
    MWI::Limb rightArm(ROBOT,"rightArm");
 
@@ -74,45 +74,11 @@ int main()
     double kp=0.996;
     double kd=0.01;
     double ki=0.094;
-    double N = 10;    // LPFfilter N
-    SystemBlock fopid(
-                //matlab fod ts=0.01 m=0.669
-//                std::vector<double> {1.7963096, - 14.815094, + 35.195846, - 33.176969, + 11},
-//                std::vector<double> {0.5187250, - 2.3022224, + 4.0225029, - 3.2386161, + 1},
-//                1 //fod gain
 
-
-                //scilab fod ts=0.01 m=0.669
-//                std::vector<double> {264.28273, - 1135.2014, + 1823.6329, - 1298.8201, + 346.10585},
-//                std::vector<double> {0, - 0.7674134, + 2.5244259, - 2.7569404, + 1},
-//                1 //fod gain
-
-
-//                //fers1
-//                std::vector<double> {0.0572,   -0.4467,    1.5270,   -2.9823,    3.6398,   -2.8427 ,   1.3874,   -0.3869,    0.0472},
-//                std::vector<double> {0.0572,   -0.4467,    1.5270,   -2.9823,    3.6398,   -2.8427,    1.3874,   -0.3869,    0.0472},
-//                10000 //fopd gain
-
-                //fers2
-//                std::vector<double> {0.0375,-0.2929, 1.0017,-1.9574, 2.3903,-1.8680, 0.9123,-0.2546, 0.0311},
-//                std::vector<double> {1.0000,-7.7608,26.3466  -51.1018,61.9383  -48.0388,23.2828,-6.4471, 0.7809},
-//                10000 //fopd gain
-
-//                //fers2
-//                std::vector<double> {1},
-//                std::vector<double> {1},
-//                1 //fopd gain
-
-                //Gauss newton 4
-                std::vector<double> {1},
-                std::vector<double> {1},
-                1 //fopd gain
-                );
 
     //fod.SetSaturation(-16,16);
 
-    SystemBlock control(fopid);
-    control.SetSaturation(-1000,1000);
+
 
 
 //    gndn =
@@ -133,19 +99,37 @@ int main()
 //    gnid =
 
 //        0.9875   -3.9624    5.9623   -3.9874    1.0000
+//    SystemBlock gnd
+//            (//check coeffs to be from z^0 to z^n
+//                std::vector<double> {2.8774,  -13.0555,   21.9888,  -16.3213,    4.5106},
+//                std::vector<double> {0.3300,   -1.9233,    3.8557,   -3.2625 ,   1.0000},
+//                1 //fopd gain
+//                );
+
+//    SystemBlock gni
+//            (
+//                std::vector<double> {0.0386 ,  -0.1672 ,   0.2701 ,  -0.1930  ,  0.0515},
+//                std::vector<double> {0.9875 ,  -3.9624  ,  5.9623  , -3.9874 ,   1.0000},
+//                1 //fopd gain
+//                );
+
     SystemBlock gnd
-            (//check coeffs to be from z^0 to z^n
-                std::vector<double> {2.8774,  -13.0555,   21.9888,  -16.3213,    4.5106},
-                std::vector<double> {0.3300,   -1.9233,    3.8557,   -3.2625 ,   1.0000},
+            (//ed=0.263
+                std::vector<double> {1.5931,   -9.8105,   21.1481,  -19.3126,    6.3821},
+                std::vector<double> {0.0107,   -0.5207,    1.9530,   -2.4424,    1.0000},
                 1 //fopd gain
                 );
 
     SystemBlock gni
-            (
-                std::vector<double> {0.0386 ,  -0.1672 ,   0.2701 ,  -0.1930  ,  0.0515},
-                std::vector<double> {0.9875 ,  -3.9624  ,  5.9623  , -3.9874 ,   1.0000},
+            (//ei=0.792
+                std::vector<double> {-0.0101,    0.0414,   -0.0515,    0.0178,    0.0024},
+                std::vector<double> {0.2901,   -1.7529,    3.6341,   -3.1713,    1.0000},
                 1 //fopd gain
                 );
+
+    SystemBlock teognd(gnd);
+    SystemBlock teogni(gni);
+
 
     double signal;
     double modelSignal;
@@ -171,14 +155,14 @@ int main()
         //MODEL BLOCK DIAGRAM
         modelError = target-modelEncoder.GetState();
 
-        cout<< kd*gnd.OutputUpdate(modelError) << endl;
+        //cout<< kd*gnd.OutputUpdate(modelError) << endl;
         //signal out from controller
         //modelSignal = modelError > fopid;
         modelSignal = modelError*kp + kd*gnd.OutputUpdate(modelError) + ki*gni.OutputUpdate(modelError);
 //        modelSignal *= kd;
 //        modelSignal += modelError*kp;
 
-/*        //next lines simulates model setjointVel
+        //next lines simulates model setjointVel
         if (  modelVel.GetState() > modelSignal )
         {
             //constant deceleration of model
@@ -191,7 +175,7 @@ int main()
             15 > acc > modelVel  >  modelEncoder;
 
         }
-*/
+
         //ROBOT BLOCK DIAGRAM
         if (useRobot)
         {
@@ -205,7 +189,8 @@ int main()
 
             error=target-jointPos;
             //error = error/(Ts*Ts);
-            signal = error > control;
+            signal = error*kp + kd*teognd.OutputUpdate(error) + ki*teogni.OutputUpdate(error);
+
 //            signal *= kd;
 //            signal += error*kp;
 
@@ -249,14 +234,14 @@ int main()
     }
 
     pt.Plot();
-    pt.Save("ptSim.csv");
-    con.Save("conSim.csv");
+    pt.Save("/home/buyus/Escritorio/ptSim.csv");
+    con.Save("/home/buyus/Escritorio/conSim.csv");
 
     if (useRobot)
     {
         ptTeo.Plot();
-        ptTeo.Save("ptTeo.csv");
-        conTeo.Save("conTeo.csv");
+        ptTeo.Save("/home/buyus/Escritorio/ptTeo.csv");
+        conTeo.Save("/home/buyus/Escritorio/conTeo.csv");
         //vtTeo.Plot();
         //vtTeo.Save("vtTeo.txt");
 
