@@ -40,7 +40,7 @@ int main()
 
     double signal,modelSignal,jointPos;
 
-    PIDBlock modelControl(1,1,1,dts);
+    PIDBlock modelControl(0.009,0,0.996,dts);
 
 
 

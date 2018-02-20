@@ -187,14 +187,14 @@ int main()
 //    SystemBlock teognd(gnd);
 //    SystemBlock teogni(gni);
 
-//    //HS (8)
-//    kp=0.996;
-//    ki=0.094;
-//    kd=0.01;
-//    SystemBlock gnd(s_0_263);
-//    SystemBlock gni(is_0_792);
-//    SystemBlock teognd(gnd);
-//    SystemBlock teogni(gni);
+    //HS (8)
+    kp=0.996;
+    ki=0.094;
+    kd=0.01;
+    SystemBlock gnd(s_0_263);
+    SystemBlock gni(is_0_792);
+    SystemBlock teognd(gnd);
+    SystemBlock teogni(gni);
 
 //    //HS (11)//PD w=1
 //    kp=0.01;
@@ -240,10 +240,12 @@ int main()
     double jointPos, jointLastPos, jointVel;
 
 
+    //modelEncoder.Reset(0);
     //time_t t;
     double target = 30;
     double error, modelError;
     int jointNumber = 3;
+
 
     IPlot pt(dts),vt(dts),at(dts),con(dts);
     IPlot ptTeo(dts),vtTeo(dts),atTeo(dts),conTeo(dts);
@@ -272,6 +274,7 @@ int main()
                   << " , ki*gni.GetState(): " << ki*gni.GetState()
                   << std::endl;
 
+        modelSignal=min(modelSignal,1000.);
         //next lines simulates model setjointVel
         if (  modelVel.GetState() > modelSignal )
         {
@@ -300,6 +303,7 @@ int main()
             error=target-jointPos;
             //error = error/(Ts*Ts);
             signal = error*kp + kd*teognd.OutputUpdate(error) + ki*teogni.OutputUpdate(error);
+            signal=min(signal,100.);
 
 //            signal *= kd;
 //            signal += error*kp;
