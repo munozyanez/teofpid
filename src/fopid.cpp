@@ -124,7 +124,7 @@ int main()
 
     //W=1-2
 
-////    ABC (3)//HS(11)
+//    //ABC (3)//HS(11) w=1
 //    kp=0.009;
 //    ki=0;
 //    kd=0.996;
@@ -133,7 +133,7 @@ int main()
 //    SystemBlock teognd(gnd);
 //    SystemBlock teogni(gni);
 
-//    //PSO (4) 6?
+//    //PSO (4) 6? w=1
 //    kp=0.995;
 //    ki=0.09;
 //    kd=0.006;
@@ -143,6 +143,15 @@ int main()
 //    SystemBlock teogni(gni);
 
 
+//    //PSO (7)//PD w=1
+//    kp=0.036;
+//    ki=0;
+//    kd=0.97;
+//    SystemBlock gnd(s_0_99);
+//    SystemBlock gni(is_0_01);
+//    SystemBlock teognd(gnd);
+//    SystemBlock teogni(gni);
+
     //HS (8)
     kp=0.996;
     ki=0.094;
@@ -151,6 +160,15 @@ int main()
     SystemBlock gni(is_0_792);
     SystemBlock teognd(gnd);
     SystemBlock teogni(gni);
+
+//    //HS (11)//PD w=1
+//    kp=0.01;
+//    ki=0;
+//    kd=1.001;
+//    SystemBlock gnd(s_0_99);
+//    SystemBlock gni(is_0_99);
+//    SystemBlock teognd(gnd);
+//    SystemBlock teogni(gni);
 
 //    //isow1
 //    kp=0.541;
