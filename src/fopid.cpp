@@ -13,7 +13,7 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = 0;
+bool useRobot = 1;
 
 int main()
 {
@@ -32,7 +32,7 @@ int main()
 
         }
         rightArm.SetControlMode(1);
-        rightArm.SetJointPositions(std::vector<double>{0,0,0,0,0,0});
+        rightArm.SetJointPositions(std::vector<double>{0,0,0,30,0,0});
         yarp::os::Time::delay(6);
         //rightArm.DefaultPosition();
         //yarp::os::Time::delay(5);
@@ -213,7 +213,7 @@ int main()
 
 
     //time_t t;
-    double target = 30;
+    double target = 65;
     double error, modelError;
     int jointNumber = 3;
 
@@ -222,7 +222,7 @@ int main()
 
 
     //control loop
-    long loops = 10/dts;
+    long loops = 20/dts;
     //rightArm.SetJointPos(jointNumber,target);
 
     for (ulong i=0; i<loops; i++)
