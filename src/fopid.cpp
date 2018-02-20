@@ -92,7 +92,7 @@ int main()
                 1 //fopd gain
                 );
 
-    SystemBlock s_0_01
+    SystemBlock s_0_99
             (
                 std::vector<double> {0.0740,   -0.5111,    1.1659,   -1.0977,    0.3690},
                 std::vector<double> {0.0000,   -0.2005,    1.1848,   -1.9751,    1.0000},
@@ -101,26 +101,33 @@ int main()
 
     SystemBlock is_0_99
             (
+                std::vector<double> {-0.0039,    0.0174,   -0.0239,    0.0103,    0.0000},
+                std::vector<double> {0.3669,   -2.0217,    3.9423,   -3.2875,    1.0000},
+                1 //fopd gain
+                );
+
+    SystemBlock is_0_01
+            (
                 std::vector<double> {0.0323,   -0.6552,    2.1194,   -2.4293,    0.9330},
                 std::vector<double> {0.0479,   -0.7567,    2.3423,   -2.6334,    1.0000},
                 1 //fopd gain
                 );
 
-
-
-    SystemBlock s_0_99
+    SystemBlock s_0_01
             (
                 std::vector<double> {0.0611,   -0.8462,    2.5515,   -2.8382,    1.0719},
                 std::vector<double> {0.0441,   -0.7364,    2.3113,   -2.6190,    1.0000},
                 1 //fopd gain
                 );
 
-    SystemBlock is_0_01
+    SystemBlock s_0_47
             (
-                std::vector<double> {-0.0039,    0.0174,   -0.0239,    0.0103,    0.0000},
-                std::vector<double> {0.3669,   -2.0217,    3.9423,   -3.2875,    1.0000},
+                std::vector<double> {9.1117,  -52.6568,  107.7351,  -94.1323,   29.9426},
+                std::vector<double> {0.0013,   -0.4027,    1.7128,   -2.3100,    1.0000},
                 1 //fopd gain
                 );
+
+
 
     //W=1-2
 
@@ -133,7 +140,7 @@ int main()
 //    SystemBlock teognd(gnd);
 //    SystemBlock teogni(gni);
 
-//    //PSO (4) 6? w=1
+//    //PSO (4) 6? w=1 MAL???
 //    kp=0.995;
 //    ki=0.09;
 //    kd=0.006;
@@ -161,23 +168,23 @@ int main()
 //    SystemBlock teognd(gnd);
 //    SystemBlock teogni(gni);
 
-    //HS (11)//PD w=1
-    kp=0.01;
-    ki=0;
-    kd=1.001;
-    SystemBlock gnd(s_0_99);
-    SystemBlock gni(is_0_99);
-    SystemBlock teognd(gnd);
-    SystemBlock teogni(gni);
-
-//    //isow1
-//    kp=0.541;
-//    ki=0.0;
-//    kd=0.541;
-//    SystemBlock gnd(s_0_47);
-//    SystemBlock gni(is_0_00);
+//    //HS (11)//PD w=1
+//    kp=0.01;
+//    ki=0;
+//    kd=1.001;
+//    SystemBlock gnd(s_0_99);
+//    SystemBlock gni(is_0_99);
 //    SystemBlock teognd(gnd);
 //    SystemBlock teogni(gni);
+
+    //isow1
+    kp=0.541;
+    ki=0.0;
+    kd=0.541;
+    SystemBlock gnd(s_0_47);
+    SystemBlock gni(is_0_01);
+    SystemBlock teognd(gnd);
+    SystemBlock teogni(gni);
 
 //    //cmon
 //    kp=1.14;
