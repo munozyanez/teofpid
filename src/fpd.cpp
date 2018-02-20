@@ -155,14 +155,14 @@ int main()
 //    FSystemBlock teoF1s(is_0_99);
 
 
-    //HS (8)
-    kp=0.996;
-    ki=0.094;
-    kd=0.01;
-    FSystemBlock simFs(s_0_263);
-    FSystemBlock simF1s(is_0_792);
-    FSystemBlock teoFs(s_0_263);
-    FSystemBlock teoF1s(is_0_792);
+//    //HS (8)
+//    kp=0.996;
+//    ki=0.094;
+//    kd=0.01;
+//    FSystemBlock simFs(s_0_263);
+//    FSystemBlock simF1s(is_0_792);
+//    FSystemBlock teoFs(s_0_263);
+//    FSystemBlock teoF1s(is_0_792);
 
 //    //isow1
 //    kp=0.541;
@@ -182,14 +182,14 @@ int main()
 //    FSystemBlock teoFs(s_0_669);
 //    FSystemBlock teoF1s(is_0_00);
 
-//    //isow2
-//    kp=1.17;
-//    ki=0.0;
-//    kd=0.64;
-//    FSystemBlock simFs(s_0_66);
-//    FSystemBlock simF1s(is_0_00);
-//    FSystemBlock teoFs(s_0_66);
-//    FSystemBlock teoF1s(is_0_00);
+    //isow2
+    kp=1.17;
+    ki=0.0;
+    kd=0.64;
+    FSystemBlock simFs(s_0_66);
+    FSystemBlock simF1s(is_0_00);
+    FSystemBlock teoFs(s_0_66);
+    FSystemBlock teoF1s(is_0_00);
 
 
 

@@ -13,7 +13,7 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = 1;
+bool useRobot = 0;
 
 int main()
 {
@@ -159,14 +159,14 @@ int main()
 //    SystemBlock teognd(gnd);
 //    SystemBlock teogni(gni);
 
-//    //HS (8)
-//    kp=0.996;
-//    ki=0.094;
-//    kd=0.01;
-//    SystemBlock gnd(s_0_263);
-//    SystemBlock gni(is_0_792);
-//    SystemBlock teognd(gnd);
-//    SystemBlock teogni(gni);
+    //HS (8)
+    kp=0.996;
+    ki=0.094;
+    kd=0.01;
+    SystemBlock gnd(s_0_263);
+    SystemBlock gni(is_0_792);
+    SystemBlock teognd(gnd);
+    SystemBlock teogni(gni);
 
 //    //HS (11)//PD w=1
 //    kp=0.01;
@@ -177,14 +177,14 @@ int main()
 //    SystemBlock teognd(gnd);
 //    SystemBlock teogni(gni);
 
-    //isow1
-    kp=0.541;
-    ki=0.0;
-    kd=0.541;
-    SystemBlock gnd(s_0_47);
-    SystemBlock gni(is_0_01);
-    SystemBlock teognd(gnd);
-    SystemBlock teogni(gni);
+//    //isow1
+//    kp=0.541;
+//    ki=0.0;
+//    kd=0.541;
+//    SystemBlock gnd(s_0_47);
+//    SystemBlock gni(is_0_01);
+//    SystemBlock teognd(gnd);
+//    SystemBlock teogni(gni);
 
 //    //cmon
 //    kp=1.14;
@@ -212,17 +212,19 @@ int main()
     double jointPos, jointLastPos, jointVel;
 
 
+    //modelEncoder.Reset(0);
     //time_t t;
-    double target = 37;
+    double target = 30;
     double error, modelError;
     int jointNumber = 3;
+
 
     IPlot pt(dts),vt(dts),at(dts),con(dts);
     IPlot ptTeo(dts),vtTeo(dts),atTeo(dts),conTeo(dts);
 
 
     //control loop
-    long loops = 20/dts;
+    long loops = 10/dts;
     //rightArm.SetJointPos(jointNumber,target);
 
     for (ulong i=0; i<loops; i++)
@@ -235,10 +237,10 @@ int main()
         //signal out from controller
         //modelSignal = modelError > fopid;
         modelSignal = modelError*kp + kd*gnd.OutputUpdate(modelError) + ki*gni.OutputUpdate(modelError);
-        modelSignal = std::min(modelSignal,double(1000));
 //        modelSignal *= kd;
 //        modelSignal += modelError*kp;
 
+        modelSignal=min(modelSignal,1000.);
         //next lines simulates model setjointVel
         if (  modelVel.GetState() > modelSignal )
         {
@@ -267,8 +269,8 @@ int main()
             error=target-jointPos;
             //error = error/(Ts*Ts);
             signal = error*kp + kd*teognd.OutputUpdate(error) + ki*teogni.OutputUpdate(error);
+            signal=min(signal,100.);
 
-            signal = min(signal,1000.0);
 //            signal *= kd;
 //            signal += error*kp;
 
