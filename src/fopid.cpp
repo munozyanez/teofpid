@@ -13,7 +13,7 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = 1;
+bool useRobot = 0;
 
 int main()
 {
@@ -152,23 +152,23 @@ int main()
 //    SystemBlock teognd(gnd);
 //    SystemBlock teogni(gni);
 
-    //HS (8)
-    kp=0.996;
-    ki=0.094;
-    kd=0.01;
-    SystemBlock gnd(s_0_263);
-    SystemBlock gni(is_0_792);
-    SystemBlock teognd(gnd);
-    SystemBlock teogni(gni);
-
-//    //HS (11)//PD w=1
-//    kp=0.01;
-//    ki=0;
-//    kd=1.001;
-//    SystemBlock gnd(s_0_99);
-//    SystemBlock gni(is_0_99);
+//    //HS (8)
+//    kp=0.996;
+//    ki=0.094;
+//    kd=0.01;
+//    SystemBlock gnd(s_0_263);
+//    SystemBlock gni(is_0_792);
 //    SystemBlock teognd(gnd);
 //    SystemBlock teogni(gni);
+
+    //HS (11)//PD w=1
+    kp=0.01;
+    ki=0;
+    kd=1.001;
+    SystemBlock gnd(s_0_99);
+    SystemBlock gni(is_0_99);
+    SystemBlock teognd(gnd);
+    SystemBlock teogni(gni);
 
 //    //isow1
 //    kp=0.541;
