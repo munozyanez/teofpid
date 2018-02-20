@@ -32,7 +32,7 @@ int main()
 
         }
         rightArm.SetControlMode(1);
-        rightArm.SetJointPositions(std::vector<double>{0,0,0,30,0,0});
+        rightArm.SetJointPositions(std::vector<double>{0,0,0,0,0,0});
         yarp::os::Time::delay(6);
         //rightArm.DefaultPosition();
         //yarp::os::Time::delay(5);
@@ -213,7 +213,7 @@ int main()
 
 
     //time_t t;
-    double target = 65;
+    double target = 37;
     double error, modelError;
     int jointNumber = 3;
 
@@ -235,6 +235,7 @@ int main()
         //signal out from controller
         //modelSignal = modelError > fopid;
         modelSignal = modelError*kp + kd*gnd.OutputUpdate(modelError) + ki*gni.OutputUpdate(modelError);
+        modelSignal = std::min(modelSignal,double(1000));
 //        modelSignal *= kd;
 //        modelSignal += modelError*kp;
 
@@ -267,6 +268,7 @@ int main()
             //error = error/(Ts*Ts);
             signal = error*kp + kd*teognd.OutputUpdate(error) + ki*teogni.OutputUpdate(error);
 
+            signal = min(signal,1000.0);
 //            signal *= kd;
 //            signal += error*kp;
 
