@@ -13,7 +13,7 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = 0;
+bool useRobot = 1;
 
 int main()
 {
@@ -32,7 +32,7 @@ int main()
 
         }
         rightArm.SetControlMode(1);
-        rightArm.SetJointPositions(std::vector<double>{0,0,0,0,0,0});
+        rightArm.SetJointPositions(std::vector<double>{0,0,0,60,0,0});
         yarp::os::Time::delay(6);
         //rightArm.DefaultPosition();
         //yarp::os::Time::delay(5);
@@ -113,19 +113,19 @@ int main()
                 dts/2 //fopd gain
                 );
 
-//    SystemBlock is_0_99
-//            (
-//                std::vector<double> {-0.0039,    0.0174,   -0.0239,    0.0103,    0.0000},
-//                std::vector<double> {0.3669,   -2.0217,    3.9423,   -3.2875,    1.0000},
-//                1 //fopd gain
-//                );
-
-    SystemBlock is_0_99 //tustin
+    SystemBlock is_0_99
             (
-                std::vector<double> {-0.0018,    0.0066,   -0.0032,   -0.0068,    0.0053},
-                std::vector<double> {0.3458,   -1.9551,    3.8723,   -3.2630,    1.0000},
+                std::vector<double> {-0.0039,    0.0174,   -0.0239,    0.0103,    0.0000},
+                std::vector<double> {0.3669,   -2.0217,    3.9423,   -3.2875,    1.0000},
                 1 //fopd gain
                 );
+
+//    SystemBlock is_0_99 //tustin
+//            (
+//                std::vector<double> {-0.0018,    0.0066,   -0.0032,   -0.0068,    0.0053},
+//                std::vector<double> {0.3458,   -1.9551,    3.8723,   -3.2630,    1.0000},
+//                1 //fopd gain
+//                );
 
     SystemBlock is_0_01
             (
@@ -141,6 +141,36 @@ int main()
                 1 //fopd gain
                 );
 
+
+  /*  SystemBlock s_0_01
+            (
+                std::vector<double> {0.0740,   -0.5111,    1.1659,   -1.0977,    0.3690},
+                std::vector<double> {0.0000,   -0.2005,    1.1848,   -1.9751,    1.0000},
+                1.0e+05 //fopd gain
+                );
+
+    SystemBlock is_0_99
+            (
+                std::vector<double> {0.0323,   -0.6552,    2.1194,   -2.4293,    0.9330},
+                std::vector<double> {0.0479,   -0.7567,    2.3423,   -2.6334,    1.0000},
+                1 //fopd gain
+                );
+
+
+
+    SystemBlock s_0_99
+            (
+                std::vector<double> {0.0611,   -0.8462,    2.5515,   -2.8382,    1.0719},
+                std::vector<double> {0.0441,   -0.7364,    2.3113,   -2.6190,    1.0000},
+                1 //fopd gain
+                );
+
+    SystemBlock is_0_01
+            (
+                std::vector<double> {-0.0039,    0.0174,   -0.0239,    0.0103,    0.0000},
+                std::vector<double> {0.3669,   -2.0217,    3.9423,   -3.2875,    1.0000},
+                1 //fopd gain
+                );*/
 //    SystemBlock s_0_47
 //            (
 //                std::vector<double> {9.1117,  -52.6568,  107.7351,  -94.1323,   29.9426},
@@ -159,16 +189,16 @@ int main()
 
     //W=1-2
 
-    //ABC (3)//HS(11) w=1
-    kp=0.009;
-    ki=0;
-    kd=0.996;
-    SystemBlock gnd(s_0_99);
-    SystemBlock gni(is_0_01);
-    SystemBlock teognd(gnd);
-    SystemBlock teogni(gni);
+//    //ABC (3)//HS(11) w=1
+//    kp=0.009;
+//    ki=0;
+//    kd=0.996;
+//    SystemBlock gnd(s_0_01);//REVERSED FOR 0.99!!!!
+//    SystemBlock gni(is_0_01);
+//    SystemBlock teognd(gnd);
+//    SystemBlock teogni(gni);
 
-//    //PSO (4) 6? w=1 MAL???
+//    //PSO (4) 6? w=1 MAL??? //UNSTABLE
 //    kp=0.995;
 //    ki=0.09;
 //    kd=0.006;
@@ -178,7 +208,7 @@ int main()
 //    SystemBlock teogni(gni);
 
 
-//    //PSO (7)//PD w=1
+//    //PSO (7)//PD w=1 //UNSTABLE AT ROBOT BECAUSE OF SAMPLING TIME
 //    kp=0.036;
 //    ki=0;
 //    kd=0.97;
@@ -187,14 +217,14 @@ int main()
 //    SystemBlock teognd(gnd);
 //    SystemBlock teogni(gni);
 
-    //HS (8)
-    kp=0.996;
-    ki=0.094;
-    kd=0.01;
-    SystemBlock gnd(s_0_263);
-    SystemBlock gni(is_0_792);
-    SystemBlock teognd(gnd);
-    SystemBlock teogni(gni);
+//    //HS (8)
+//    kp=0.996;
+//    ki=0.094;
+//    kd=0.01;
+//    SystemBlock gnd(s_0_263);
+//    SystemBlock gni(is_0_792);
+//    SystemBlock teognd(gnd);
+//    SystemBlock teogni(gni);
 
 //    //HS (11)//PD w=1
 //    kp=0.01;
@@ -205,14 +235,14 @@ int main()
 //    SystemBlock teognd(gnd);
 //    SystemBlock teogni(gni);
 
-//    //isow1
-//    kp=0.541;
-//    ki=0.0;
-//    kd=0.541;
-//    SystemBlock gnd(s_0_47);
-//    SystemBlock gni(is_0_01);
-//    SystemBlock teognd(gnd);
-//    SystemBlock teogni(gni);
+    //isow1
+    kp=0.541;
+    ki=0.0;
+    kd=0.541;
+    SystemBlock gnd(s_0_47);
+    SystemBlock gni(is_0_01);
+    SystemBlock teognd(gnd);
+    SystemBlock teogni(gni);
 
 //    //cmon
 //    kp=1.14;
@@ -240,7 +270,7 @@ int main()
     double jointPos, jointLastPos, jointVel;
 
 
-    //modelEncoder.Reset(0);
+    modelEncoder.Reset(60);
     //time_t t;
     double target = 30;
     double error, modelError;
