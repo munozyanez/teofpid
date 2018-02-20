@@ -92,17 +92,38 @@ int main()
                 1 //fopd gain
                 );
 
-    SystemBlock s_0_99
+    SystemBlock s_0_99 //tustin
             (
-                std::vector<double> {0.0740,   -0.5111,    1.1659,   -1.0977,    0.3690},
-                std::vector<double> {0.0000,   -0.2005,    1.1848,   -1.9751,    1.0000},
-                1.0e+05 //fopd gain
+                std::vector<double> {29.2614, -232.0707,  563.9385, -550.6899,  189.5608},
+                std::vector<double> {-0.1590,    0.9162,   -0.8099,   -0.9274,    1.0000},
+                1 //fopd gain
                 );
 
-    SystemBlock is_0_99
+    SystemBlock s_1_00
             (
-                std::vector<double> {-0.0039,    0.0174,   -0.0239,    0.0103,    0.0000},
-                std::vector<double> {0.3669,   -2.0217,    3.9423,   -3.2875,    1.0000},
+                std::vector<double> {-1,   1},
+                std::vector<double> {1,   1},
+                2/dts //fopd gain
+                );
+
+    SystemBlock is_1_00
+            (
+                std::vector<double> {1,   1},
+                std::vector<double> {-1,   1},
+                dts/2 //fopd gain
+                );
+
+//    SystemBlock is_0_99
+//            (
+//                std::vector<double> {-0.0039,    0.0174,   -0.0239,    0.0103,    0.0000},
+//                std::vector<double> {0.3669,   -2.0217,    3.9423,   -3.2875,    1.0000},
+//                1 //fopd gain
+//                );
+
+    SystemBlock is_0_99 //tustin
+            (
+                std::vector<double> {-0.0018,    0.0066,   -0.0032,   -0.0068,    0.0053},
+                std::vector<double> {0.3458,   -1.9551,    3.8723,   -3.2630,    1.0000},
                 1 //fopd gain
                 );
 
@@ -120,10 +141,17 @@ int main()
                 1 //fopd gain
                 );
 
-    SystemBlock s_0_47
+//    SystemBlock s_0_47
+//            (
+//                std::vector<double> {9.1117,  -52.6568,  107.7351,  -94.1323,   29.9426},
+//                std::vector<double> {0.0013,   -0.4027,    1.7128,   -2.3100,    1.0000},
+//                1 //fopd gain
+//                );
+
+    SystemBlock s_0_47 //tustin
             (
-                std::vector<double> {9.1117,  -52.6568,  107.7351,  -94.1323,   29.9426},
-                std::vector<double> {0.0013,   -0.4027,    1.7128,   -2.3100,    1.0000},
+                std::vector<double> {0.5465,   -9.4621,   28.8985,  -31.8348,   11.8524},
+                std::vector<double> {-0.1853,    0.4272,    0.5655,   -1.8053,    1.0000},
                 1 //fopd gain
                 );
 
@@ -131,14 +159,14 @@ int main()
 
     //W=1-2
 
-//    //ABC (3)//HS(11) w=1
-//    kp=0.009;
-//    ki=0;
-//    kd=0.996;
-//    SystemBlock gnd(s_0_99);
-//    SystemBlock gni(is_0_01);
-//    SystemBlock teognd(gnd);
-//    SystemBlock teogni(gni);
+    //ABC (3)//HS(11) w=1
+    kp=0.009;
+    ki=0;
+    kd=0.996;
+    SystemBlock gnd(s_0_99);
+    SystemBlock gni(is_0_01);
+    SystemBlock teognd(gnd);
+    SystemBlock teogni(gni);
 
 //    //PSO (4) 6? w=1 MAL???
 //    kp=0.995;
@@ -177,14 +205,14 @@ int main()
 //    SystemBlock teognd(gnd);
 //    SystemBlock teogni(gni);
 
-    //isow1
-    kp=0.541;
-    ki=0.0;
-    kd=0.541;
-    SystemBlock gnd(s_0_47);
-    SystemBlock gni(is_0_01);
-    SystemBlock teognd(gnd);
-    SystemBlock teogni(gni);
+//    //isow1
+//    kp=0.541;
+//    ki=0.0;
+//    kd=0.541;
+//    SystemBlock gnd(s_0_47);
+//    SystemBlock gni(is_0_01);
+//    SystemBlock teognd(gnd);
+//    SystemBlock teogni(gni);
 
 //    //cmon
 //    kp=1.14;
@@ -222,7 +250,7 @@ int main()
 
 
     //control loop
-    long loops = 10/dts;
+    long loops = 20/dts;
     //rightArm.SetJointPos(jointNumber,target);
 
     for (ulong i=0; i<loops; i++)
@@ -237,6 +265,12 @@ int main()
         modelSignal = modelError*kp + kd*gnd.OutputUpdate(modelError) + ki*gni.OutputUpdate(modelError);
 //        modelSignal *= kd;
 //        modelSignal += modelError*kp;
+        std::cout << "ks "
+
+                  << " , modelError*kp: " << modelError*kp
+                  << " , kd*gnd.GetState(): " << kd*gnd.GetState()
+                  << " , ki*gni.GetState(): " << ki*gni.GetState()
+                  << std::endl;
 
         //next lines simulates model setjointVel
         if (  modelVel.GetState() > modelSignal )
