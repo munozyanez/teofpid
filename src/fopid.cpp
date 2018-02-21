@@ -13,7 +13,7 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = 1;
+bool useRobot = 0;
 
 int main()
 {
@@ -189,16 +189,16 @@ int main()
 
     //W=1-2
 
-//    //ABC (3)//HS(11) w=1
-//    kp=0.009;
-//    ki=0;
-//    kd=0.996;
-//    SystemBlock gnd(s_0_01);//REVERSED FOR 0.99!!!!
-//    SystemBlock gni(is_0_01);
-//    SystemBlock teognd(gnd);
-//    SystemBlock teogni(gni);
+    //ABC (3)//HS(11) w=1
+    kp=0.009;
+    ki=0;
+    kd=0.996;
+    SystemBlock gnd(s_0_99);
+    SystemBlock gni(is_0_01);
+    SystemBlock teognd(gnd);
+    SystemBlock teogni(gni);
 
-//    //PSO (4) 6? w=1 MAL??? //UNSTABLE
+//    //PSO (4)  w=1 MAL??? //UNSTABLE
 //    kp=0.995;
 //    ki=0.09;
 //    kd=0.006;
@@ -207,6 +207,14 @@ int main()
 //    SystemBlock teognd(gnd);
 //    SystemBlock teogni(gni);
 
+//    //PSO (6) w=1
+//    kp=0.995;
+//    ki=0.0;
+//    kd=0.01;
+//    SystemBlock gnd(s_0_01);
+//    SystemBlock gni(is_0_99);
+//    SystemBlock teognd(gnd);
+//    SystemBlock teogni(gni);
 
 //    //PSO (7)//PD w=1 //UNSTABLE AT ROBOT BECAUSE OF SAMPLING TIME
 //    kp=0.036;
@@ -235,14 +243,14 @@ int main()
 //    SystemBlock teognd(gnd);
 //    SystemBlock teogni(gni);
 
-    //isow1
-    kp=0.541;
-    ki=0.0;
-    kd=0.541;
-    SystemBlock gnd(s_0_47);
-    SystemBlock gni(is_0_01);
-    SystemBlock teognd(gnd);
-    SystemBlock teogni(gni);
+//    //isow1
+//    kp=0.541;
+//    ki=0.0;
+//    kd=0.541;
+//    SystemBlock gnd(s_0_47);
+//    SystemBlock gni(is_0_01);
+//    SystemBlock teognd(gnd);
+//    SystemBlock teogni(gni);
 
 //    //cmon
 //    kp=1.14;
@@ -280,6 +288,10 @@ int main()
     IPlot pt(dts),vt(dts),at(dts),con(dts);
     IPlot ptTeo(dts),vtTeo(dts),atTeo(dts),conTeo(dts);
 
+//    PIDBlock modelPID(kp,ki,kd,dts);
+
+//SystemBlock modelPID(vector<double>{252.2, -505.1, 253},
+//                     vector<double>{-1, 0, 1});
 
     //control loop
     long loops = 20/dts;
@@ -294,15 +306,16 @@ int main()
         //cout<< kd*gnd.OutputUpdate(modelError) << endl;
         //signal out from controller
         //modelSignal = modelError > fopid;
+//        modelSignal = modelPID.OutputUpdate(modelError);
         modelSignal = modelError*kp + kd*gnd.OutputUpdate(modelError) + ki*gni.OutputUpdate(modelError);
 //        modelSignal *= kd;
 //        modelSignal += modelError*kp;
-        std::cout << "ks "
+//        std::cout << "ks "
 
-                  << " , modelError*kp: " << modelError*kp
-                  << " , kd*gnd.GetState(): " << kd*gnd.GetState()
-                  << " , ki*gni.GetState(): " << ki*gni.GetState()
-                  << std::endl;
+//                  << " , modelError*kp: " << modelError*kp
+//                  << " , kd*gnd.GetState(): " << kd*gnd.GetState()
+//                  << " , ki*gni.GetState(): " << ki*gni.GetState()
+//                  << std::endl;
 
         modelSignal=min(modelSignal,1000.);
         //next lines simulates model setjointVel
