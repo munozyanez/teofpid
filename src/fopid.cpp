@@ -13,7 +13,7 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = 0;
+bool useRobot = 1;
 
 int main()
 {
