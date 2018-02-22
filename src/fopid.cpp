@@ -178,25 +178,30 @@ int main()
 //                1 //fopd gain
 //                );
 
-    SystemBlock s_0_47 //tustin
+    SystemBlock s_0_47 //tustin @1
             (
-                std::vector<double> {0.5465,   -9.4621,   28.8985,  -31.8348,   11.8524},
-                std::vector<double> {-0.1853,    0.4272,    0.5655,   -1.8053,    1.0000},
+                std::vector<double> {6.7556,  -28.7681,   45.8479,  -32.4145,    8.5791},
+                std::vector<double> {0.4746,   -2.3762,    4.3277,   -3.4261,    1.0000},
+                1 //fopd gain
+                );
+    SystemBlock s_0_495 //tustin @1
+            (
+                std::vector<double> {7.6670,  -32.6120,   51.9188,  -36.6702,    9.6964},
+                std::vector<double> {0.4546,   -2.3130,    4.2613,   -3.4029,    1.0000},
                 1 //fopd gain
                 );
 
 
-
     //W=1-2
 
-    //ABC (3)//HS(11) w=1
-    kp=0.009;
-    ki=0;
-    kd=0.996;
-    SystemBlock gnd(s_0_99);
-    SystemBlock gni(is_0_01);
-    SystemBlock teognd(gnd);
-    SystemBlock teogni(gni);
+//    //ABC (3)//HS(11) w=1
+//    kp=0.009;
+//    ki=0;
+//    kd=0.996;
+//    SystemBlock gnd(s_0_99);
+//    SystemBlock gni(is_0_01);
+//    SystemBlock teognd(gnd);
+//    SystemBlock teogni(gni);
 
 //    //PSO (4)  w=1 MAL??? //UNSTABLE
 //    kp=0.995;
@@ -252,7 +257,16 @@ int main()
 //    SystemBlock teognd(gnd);
 //    SystemBlock teogni(gni);
 
-//    //cmon
+//    //cmon1
+    kp=0.4630538;
+    kd=0.6211578;
+    ki=0;
+    SystemBlock gnd(s_0_495);
+        SystemBlock gni(is_0_01);
+        SystemBlock teognd(gnd);
+        SystemBlock teogni(gni);
+
+//    //cmon2
 //    kp=1.14;
 //    ki=0.0;
 //    kd=0.768;
