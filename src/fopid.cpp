@@ -248,23 +248,23 @@ int main()
 //    SystemBlock teognd(gnd);
 //    SystemBlock teogni(gni);
 
-//    //isow1
-//    kp=0.541;
-//    ki=0.0;
-//    kd=0.541;
-//    SystemBlock gnd(s_0_47);
-//    SystemBlock gni(is_0_01);
-//    SystemBlock teognd(gnd);
-//    SystemBlock teogni(gni);
+    //isow1
+    kp=0.541;
+    ki=0;
+    kd=0.541;
+    SystemBlock gnd(s_0_47);
+    SystemBlock gni(is_0_01);
+    SystemBlock teognd(gnd);
+    SystemBlock teogni(gni);
 
 //    //cmon1
-    kp=0.4630538;
-    kd=0.6211578;
-    ki=0;
-    SystemBlock gnd(s_0_495);
-        SystemBlock gni(is_0_01);
-        SystemBlock teognd(gnd);
-        SystemBlock teogni(gni);
+//    kp=0.4630538;
+//    kd=0.6211578;
+//    ki=0;
+//    SystemBlock gnd(s_0_495);
+//        SystemBlock gni(is_0_01);
+//        SystemBlock teognd(gnd);
+//        SystemBlock teogni(gni);
 
 //    //cmon2
 //    kp=1.14;
