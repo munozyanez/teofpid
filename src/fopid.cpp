@@ -308,7 +308,7 @@ int main()
 //                     vector<double>{-1, 0, 1});
 
     //control loop
-    long loops = 20/dts;
+    long loops = 8/dts;
     //rightArm.SetJointPos(jointNumber,target);
 
     for (ulong i=0; i<loops; i++)
