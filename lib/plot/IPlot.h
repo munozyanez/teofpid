@@ -37,6 +37,7 @@ private:
     std::vector<double> x,y;
     double px,py; //plot pointer
     double qx,qy; //plot points
+    char tmplabel[100];
 
     XPlotter plt;
 

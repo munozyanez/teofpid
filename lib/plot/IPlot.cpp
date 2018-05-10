@@ -82,6 +82,9 @@ long IPlot::Plot(std::vector<double> datax, std::vector<double> datay, double sc
 
     }
 
+    plt.fmove(0,0);
+    sprintf ( tmplabel, "scalex, scaley: %f, %f", scalex, scaley );
+    plt.alabel(1,1,tmplabel);
     plt.endpath();
     plt.flushpl();
     plt.closepl();
