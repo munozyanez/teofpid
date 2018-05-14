@@ -55,8 +55,16 @@ int main()
 
 //fpi dts=0.01
     SystemBlock con(vector<double>{3.0244,  -13.6715,   22.9928,  -17.0707,    4.7250},
-                      vector<double>{0.8399,   -3.5148,    5.5101,   -3.8351,    1.0000}
-                      );
+                      vector<double>{0.8399,   -3.5148,    5.5101,   -3.8351,    1.0000},
+                      1./26);
+
+    SystemBlock ci(vector<double>{0,1},
+                      vector<double>{-1,1},
+                      1);
+
+    FactorSystemBlock con2(vector<double>{(-0.768576),(-0.0589572),(+0.597801),(+0.956103)},
+                           vector<double>{(-0.967308),(-0.575831),(+0.201927),(+0.747576)},
+                           0.004496);
 
     double out;
     double target=100;
@@ -70,7 +78,7 @@ int main()
         error = target - motor.GetState();
 
         //2-control diagram
-        out= error  > con;
+        out= error  > con2;
         (out) >  motor;
 
         //3-update outputs
