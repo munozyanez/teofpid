@@ -45,7 +45,7 @@ int main()
     //motor dts=0.01
     SystemBlock motor(vector<double>{1, 1},
                       vector<double>{-13, 15},
-                      dts
+                      1
                       );
 
 //    SystemBlock c2(vector<double>{168332,   -2616528,    -4348408,   4721072 ,   6499532},
@@ -72,17 +72,32 @@ int main()
 //                           vector<double>{(-0.967308),(-0.575831),(+0.201927),(+0.747576)},
 //                           28.73);
 
-    //dts=0.01
-    FactorSystemBlock con(vector<double>{(-0.9974326811407542),(-0.9831738686825849),(-0.9317110593037715),(-0.7005978329750263)},
-                           vector<double>{(-1),(-0.9946310142443404),(-0.9703261850905736),(-0.8705018815275843)},
-                           4.74);
+//    //dts=0.01 //w=20
+//    FactorSystemBlock con(vector<double>{-0.9974,   -0.9832,   -0.9317,   -0.7005},
+//                           vector<double>{-0.999,   -0.9946,   -0.9703 ,  -0.8705},
+//                           4.725);
+
+//    //dts=0.01 //w=5
+//    FactorSystemBlock con(vector<double>{-0.9969 ,  -0.9801 ,  -0.9356  , -0.8795},
+//                           vector<double>{-1.0000 ,  -0.9964 ,  -0.9773 ,  -0.8977},
+//                           0.61926 );
+
+    //dts=0.01 //w=10 pm60
+    FactorSystemBlock con(vector<double>{-0.9969  , -0.9795 ,  -0.9104 ,  -0.7040},
+                           vector<double>{-1.0000  , -0.9964   ,-0.9773 ,  -0.8977},
+                           0.78689 );
+
+//    //dts=0.01 //w=25 pm60
+//    FactorSystemBlock con(vector<double>{-0.9970 ,  -0.9807 ,  -0.9207  , -0.7470},
+//                           vector<double>{-0.9999 ,  -0.9960 ,  -0.9755  , -0.8907},
+//                           2.0502 );
 
     double out;
-    double target=100;
+    double target=10;
     double error=0;
     double show;
 
-    for(double t=0;t<25;t+=dts)
+    for(double t=0;t<5;t+=dts)
     {
 
         //1-update inputs
