@@ -192,6 +192,10 @@ int main()
     FSystemBlock teoFs(s_0_66);
     FSystemBlock teoF1s(is_0_00);
 
+    //dts=0.01 //w=10 pm60
+    FactorSystemBlock control(vector<double>{-0.9951 ,  -0.9741 ,  -0.9120 ,  -0.7332},
+                           vector<double>{-0.9950 ,  -0.9729 ,  -0.8973  , -0.0336},
+                           266.04 );
 
 
     double signal;
@@ -220,10 +224,11 @@ int main()
         modelError = target-modelEncoder.GetState();
 
         //signal out from controller
-        modelSignal = kd*(modelError > simFs);
-        modelSignal += ki*(modelError > simF1s);
-        //modelSignal *= kd;
-        modelSignal += modelError*kp;
+//        modelSignal = kd*(modelError > simFs);
+//        modelSignal += ki*(modelError > simF1s);
+//        //modelSignal *= kd;
+//        modelSignal += modelError*kp;
+        modelSignal= modelError > control;
         //next lines simulates model setjointVel
         if (  modelVel.GetState() > modelSignal )
         {
