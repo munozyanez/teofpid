@@ -41,63 +41,58 @@ int main()
 //                      1
 //                      );
 
-
-    //motor dts=0.01
-    SystemBlock motor(vector<double>{1, 1},
-                      vector<double>{-13, 15},
-                      1
-                      );
-
-//    SystemBlock c2(vector<double>{168332,   -2616528,    -4348408,   4721072 ,   6499532},
-//                      vector<double>{861655,   3032620,   -7760070,   -6083380,    10247655},
+//    //motor dts=0.01
+//    SystemBlock motor(vector<double>{1, 1},
+//                      vector<double>{-13, 15},
 //                      1
 //                      );
 
-//    //fractional integral dts=0.01
-//    SystemBlock con(vector<double>{ 0.0163,   -0.0928,    0.1837,   -0.1540,    0.0468},
-//                    vector<double>{0.8399,   -3.5148,    5.5101,   -3.8351,    1.0000},
-//                    1);
-
-////fpi dts=0.01
-//    SystemBlock con(vector<double>{3.0244,  -13.6715,   22.9928,  -17.0707,    4.7250},
-//                      vector<double>{0.8399,   -3.5148,    5.5101,   -3.8351,    1.0000},
-//                      1./26);
+    //motor dts=0.01
+    SystemBlock motor(vector<double>{1, 1},
+                      vector<double>{-0.9048, 1},
+                      0.047619
+                      );
 
 //    SystemBlock con(vector<double>{0,1},
 //                      vector<double>{-1,1},
 //                      1);
 
 //    //dts=1
-//    FactorSystemBlock con(vector<double>{(-0.768576),(-0.0589572),(+0.597801),(+0.956103)},
-//                           vector<double>{(-0.967308),(-0.575831),(+0.201927),(+0.747576)},
+//    FactorSystemBlock con(vector<double>{(0.768576),(0.0589572),(-0.597801),(-0.956103)},
+//                           vector<double>{(0.967308),(0.575831),(-0.201927),(-0.747576)},
 //                           28.73);
 
 //    //dts=0.01 //w=20
-//    FactorSystemBlock con(vector<double>{-0.9974,   -0.9832,   -0.9317,   -0.7005},
-//                           vector<double>{-0.999,   -0.9946,   -0.9703 ,  -0.8705},
+//    FactorSystemBlock con(vector<double>{0.9974,   0.9832,   0.9317,   0.7005},
+//                           vector<double>{0.999,   0.9946,   0.9703 ,  0.8705},
 //                           4.725);
 
 //    //dts=0.01 //w=5
-//    FactorSystemBlock con(vector<double>{-0.9969 ,  -0.9801 ,  -0.9356  , -0.8795},
-//                           vector<double>{-1.0000 ,  -0.9964 ,  -0.9773 ,  -0.8977},
+//    FactorSystemBlock con(vector<double>{0.9969 ,  0.9801 ,  0.9356  , 0.8795},
+//                           vector<double>{1.0000 ,  0.9964 ,  0.9773 ,  0.8977},
 //                           0.61926 );
 
-    //dts=0.01 //w=10 pm60
-    FactorSystemBlock con(vector<double>{-0.9969  , -0.9795 ,  -0.9104 ,  -0.7040},
-                           vector<double>{-1.0000  , -0.9964   ,-0.9773 ,  -0.8977},
-                           0.78689 );
+//    //dts=0.01 //w=10 pm60
+//    FactorSystemBlock con(vector<double>{0.9969  , 0.9795 ,  0.9104 ,  0.7040},
+//                           vector<double>{1.0000  , 0.9964   ,0.9773 ,  0.8977},
+//                           0.78689 );
 
 //    //dts=0.01 //w=25 pm60
-//    FactorSystemBlock con(vector<double>{-0.9970 ,  -0.9807 ,  -0.9207  , -0.7470},
-//                           vector<double>{-0.9999 ,  -0.9960 ,  -0.9755  , -0.8907},
+//    FactorSystemBlock con(vector<double>{0.9970 ,  0.9807 ,  0.9207  , 0.7470},
+//                           vector<double>{0.9999 ,  0.9960 ,  0.9755  , 0.8907},
 //                           2.0502 );
+
+    //dts=0.01 //w=25 pm60 (simplified)
+    FactorSystemBlock con(vector<double>{  0.9807 ,  0.9207  , 0.7470},
+                           vector<double>{0.9999 ,    0.9755  , 0.8907},
+                           2.0502 );
 
     double out;
     double target=10;
     double error=0;
     double show;
 
-    for(double t=0;t<5;t+=dts)
+    for(double t=0;t<1;t+=dts)
     {
 
         //1-update inputs
