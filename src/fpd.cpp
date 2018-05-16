@@ -184,24 +184,28 @@ int main()
 //    FSystemBlock teoF1s(is_0_00);
 
     //isow2
-    kp=1.17;
+    kp=4.13;
     ki=0.0;
-    kd=0.64;
+    kd=0.754;
     FSystemBlock simFs(s_0_66);
     FSystemBlock simF1s(is_0_00);
     FSystemBlock teoFs(s_0_66);
     FSystemBlock teoF1s(is_0_00);
 
 //    //dts=0.01 //w=10 pm60
-//    FactorSystemBlock control(vector<double>{-0.9951 ,  -0.9741 ,  -0.9120 ,  -0.7332},
-//                           vector<double>{-0.9950 ,  -0.9729 ,  -0.8973  , -0.0336},
-//                           266.04 );
+//    FactorSystemBlock control(vector<double>{   -0.9972,   -0.5756 ,   0.7362   , 0.2227},
+//                           vector<double>{-0.6284 ,   0.9926  ,  0.7093  ,  0.1738},
+//                           137.93 );
 
-    //dts pure derivative
-    FactorSystemBlock control(vector<double>{-0.9951 ,  -0.9741 ,  -0.9120 ,  -0.7332},
-                           vector<double>{-0.9950 ,  -0.9729 ,  -0.8973  , -0.0336},
-                           266.04 );
+//    //dts pure derivative
+//    FactorSystemBlock control(vector<double>{-1},
+//                           vector<double>{0},
+//                           1 );
 
+        //dts=0.01 s^0.93
+    FactorSystemBlock control(vector<double>{-0.5344   , 0.9415   , 0.7518  ,  0.1169},
+                    vector<double>{-0.9853  ,  0.7952 ,  -0.4924  ,  0.1693},
+                    108.22 );
 
     double signal;
     double modelSignal;
@@ -210,7 +214,7 @@ int main()
 
     //time_t t;
 //    modelEncoder.Reset(60);
-    double target = 30;
+    double target = 1;
     double error, modelError;
     int jointNumber = 3;
 
@@ -227,13 +231,13 @@ int main()
 
         //MODEL BLOCK DIAGRAM
         modelError = target-modelEncoder.GetState();
+        modelSignal = modelError*kp;
 
-        //signal out from controller
-        modelSignal = kd*(modelError > simFs);
-        modelSignal += ki*(modelError > simF1s);
+//        modelSignal += kd*(modelError > simFs);
+//        modelSignal += ki*(modelError > simF1s);
         //modelSignal *= kd;
-        modelSignal += modelError*kp;
-//        modelSignal= modelError > control;
+        modelSignal += kd*(modelError > control);
+
         //next lines simulates model setjointVel
         if (  modelVel.GetState() > modelSignal )
         {

@@ -82,13 +82,18 @@ int main()
 //                           vector<double>{0.9999 ,  0.9960 ,  0.9755  , 0.8907},
 //                           2.0502 );
 
-    //dts=0.01 //w=25 pm60 (simplified)
-    FactorSystemBlock con(vector<double>{  0.9807 ,  0.9207  , 0.7470},
-                           vector<double>{0.9999 ,    0.9755  , 0.8907},
-                           2.0502 );
+//    //dts=0.01 //w=25 pm60 (simplified)
+//    FactorSystemBlock con(vector<double>{  0.9807 ,  0.9207  , 0.7470},
+//                           vector<double>{0.9999 ,    0.9755  , 0.8907},
+//                           2.0502 );
+
+    //dts=0.01 //w=25 pm60
+    FactorSystemBlock con(vector<double>{ 0.7470, 0.9970 ,  0.9207  ,  0.9807},
+                          vector<double>{0.8907 , 0.9999,  0.9755  ,  0.9960 },
+                          2.0502 );
 
     double out;
-    double target=10;
+    double target=1;
     double error=0;
     double show;
 
