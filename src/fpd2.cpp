@@ -28,10 +28,15 @@ int main()
 //                    vector<double>{0},
 //                    1 );
 
-    //dts pd (s+10)
-    FactorSystemBlock con(vector<double>{0.9415  ,  0.7518  ,-0.5344    ,  0.1169},
-                          vector<double>{-0.9853  ,  0.7952 ,  -0.4924  ,  0.1693},
-                          108.22 );
+//    //dts pd (s+10)
+//    FactorSystemBlock con(vector<double>{0.9415  ,  0.7518  ,-0.5344    ,  0.1169},
+//                          vector<double>{-0.9853  ,  0.7952 ,  -0.4924  ,  0.1693},
+//                          108.22 );
+
+    SystemBlock con(vector<double>{-4.7853  , 43.4275 ,  -6.6602, -138.0768 , 108.2231},
+                    vector<double>{0.0653 ,  -0.2690,   -0.8054  ,  0.5132  ,  1.0000},
+                    1);
+
 
 //    //dts pd (s+10)
 //    FactorSystemBlock con(vector<double>{ 0.1169,-0.5344 ,  0.7518 ,  0.9415     },
@@ -39,12 +44,16 @@ int main()
 //                          108.22 );
 
 
+
+
+
+
     double consig;
     double target=1;
     double error=0;
     double show;
 
-    for(double t=0;t<1;t+=dts)
+    for(double t=0;t<2;t+=dts)
     {
 
         //1-update inputs

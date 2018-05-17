@@ -203,9 +203,14 @@ int main()
 //                           1 );
 
         //dts=0.01 s^0.93
-    FactorSystemBlock control(vector<double>{-0.5344   , 0.9415   , 0.7518  ,  0.1169},
-                    vector<double>{-0.9853  ,  0.7952 ,  -0.4924  ,  0.1693},
-                    108.22 );
+    kd=1;
+    SystemBlock control(vector<double>{-4.7853  , 43.4275 ,  -6.6602, -138.0768 , 108.2231},
+                    vector<double>{0.0653 ,  -0.2690,   -0.8054  ,  0.5132  ,  1.0000},
+                    1);
+
+//    FactorSystemBlock control(vector<double>{-0.5344   , 0.9415   , 0.7518  ,  0.1169},
+//                    vector<double>{-0.9853  ,  0.7952 ,  -0.4924  ,  0.1693},
+//                    108.22 );
 
     double signal;
     double modelSignal;
@@ -231,12 +236,12 @@ int main()
 
         //MODEL BLOCK DIAGRAM
         modelError = target-modelEncoder.GetState();
-        modelSignal = modelError*kp;
 
+//        modelSignal = modelError*kp;
 //        modelSignal += kd*(modelError > simFs);
 //        modelSignal += ki*(modelError > simF1s);
-        //modelSignal *= kd;
-        modelSignal += kd*(modelError > control);
+
+        modelSignal = (modelError > control);
 
         //next lines simulates model setjointVel
         if (  modelVel.GetState() > modelSignal )

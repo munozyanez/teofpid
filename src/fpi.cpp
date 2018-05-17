@@ -55,7 +55,13 @@ int main()
 
 //    SystemBlock con(vector<double>{0,1},
 //                      vector<double>{-1,1},
-//                      1);
+//                      dts);
+
+    SystemBlock con(vector<double>{-0.2127  ,  0.6114  ,  0.8898 ,  -3.2075  ,  1.9294},
+                    vector<double>{-0.1599 ,   0.3405  ,  0.7579 ,  -1.9385  ,  1.0000},
+                    1);
+
+
 
 //    //dts=1
 //    FactorSystemBlock con(vector<double>{(0.768576),(0.0589572),(-0.597801),(-0.956103)},
@@ -87,10 +93,10 @@ int main()
 //                           vector<double>{0.9999 ,    0.9755  , 0.8907},
 //                           2.0502 );
 
-    //dts=0.01 //w=25 pm60
-    FactorSystemBlock con(vector<double>{ 0.7470, 0.9970 ,  0.9207  ,  0.9807},
-                          vector<double>{0.8907 , 0.9999,  0.9755  ,  0.9960 },
-                          2.0502 );
+//    //dts=0.01 //w=25 pm60
+//    FactorSystemBlock con(vector<double>{ 0.7470, 0.9970 ,  0.9207  ,  0.9807},
+//                          vector<double>{0.8907 , 0.9999,  0.9755  ,  0.9960 },
+//                          2.0502 );
 
     double out;
     double target=1;
