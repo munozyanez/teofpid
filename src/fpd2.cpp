@@ -20,7 +20,7 @@ int main()
     //motor dts=0.01
     FactorSystemBlock motor(vector<double>{-1, -1},
                       vector<double>{0.9048, 1},
-                      0.0002381
+                      0.0002381*0.3
                       );
 
 //    //dts pure derivative
@@ -28,14 +28,14 @@ int main()
 //                    vector<double>{0},
 //                    1 );
 
-//    //dts pd (s+10)
+//    //dts fpd
 //    FactorSystemBlock con(vector<double>{0.9415  ,  0.7518  ,-0.5344    ,  0.1169},
 //                          vector<double>{-0.9853  ,  0.7952 ,  -0.4924  ,  0.1693},
 //                          108.22 );
 
-    SystemBlock con(vector<double>{-4.7853  , 43.4275 ,  -6.6602, -138.0768 , 108.2231},
-                    vector<double>{0.0653 ,  -0.2690,   -0.8054  ,  0.5132  ,  1.0000},
-                    1);
+//    SystemBlock con(vector<double>{-4.7853  , 43.4275 ,  -6.6602, -138.0768 , 108.2231},
+//                    vector<double>{0.0653 ,  -0.2690,   -0.8054  ,  0.5132  ,  1.0000},
+//                    1);
 
 
 //    //dts pd (s+10)
@@ -44,12 +44,20 @@ int main()
 //                          108.22 );
 
 
+//    //neck-fpd controller (iros) 59+4.13*s^0.8
+//    SystemBlock con(vector<double>{-6.1207,  114.3922 , -86.2817, -345.2926 , 344.6960},
+//                    vector<double>{0.0828  , -0.1748 ,  -0.8769 ,   0.3245,    1.0000},
+//                    1);
 
 
+    //neck-pd controller (iros) 65.22+2.3*s
+    SystemBlock con(vector<double>{ -394.7800 , 525.2200},
+                    vector<double>{1 ,1},
+                    1);
 
 
     double consig;
-    double target=1;
+    double target=1.7;
     double error=0;
     double show;
 

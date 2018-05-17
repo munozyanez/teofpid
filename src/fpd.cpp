@@ -203,10 +203,14 @@ int main()
 //                           1 );
 
         //dts=0.01 s^0.93
-    kd=1;
     SystemBlock control(vector<double>{-4.7853  , 43.4275 ,  -6.6602, -138.0768 , 108.2231},
                     vector<double>{0.0653 ,  -0.2690,   -0.8054  ,  0.5132  ,  1.0000},
                     1);
+
+//    //neck-fpd controller (iros)
+//    SystemBlock control(vector<double>{-6.1207,  114.3922 , -86.2817, -345.2926 , 344.6960},
+//                    vector<double>{0.0828  , -0.1748 ,  -0.8769 ,   0.3245,    1.0000},
+//                    1);
 
 //    FactorSystemBlock control(vector<double>{-0.5344   , 0.9415   , 0.7518  ,  0.1169},
 //                    vector<double>{-0.9853  ,  0.7952 ,  -0.4924  ,  0.1693},
@@ -219,7 +223,7 @@ int main()
 
     //time_t t;
 //    modelEncoder.Reset(60);
-    double target = 1;
+    double target = 10;
     double error, modelError;
     int jointNumber = 3;
 
