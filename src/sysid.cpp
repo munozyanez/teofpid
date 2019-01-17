@@ -2,7 +2,7 @@
 #include<iostream>
 #include <time.h>
 #include <fstream>      // std::fstream
-
+#include <vector>      // std::vector
 
 #include "MiddlewareInterface.h"
 #include "fcontrol.h"
@@ -13,12 +13,12 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = 0;
+bool useRobot = 1;
 
 int main()
 {
 
-    double dts = 0.01;
+    double dts = 0.1;
 
     MWI::Limb rightArm(ROBOT,"rightArm");
 
@@ -43,7 +43,7 @@ int main()
     }
 
 
-    double jointVel;
+    double jointVel, jointPos=60;
 
     //time_t t;
     double target = 1;
@@ -53,8 +53,10 @@ int main()
     IPlot ptTeo(dts),vtTeo(dts),atTeo(dts),conTeo(dts);
 
     //input wave
-    double w=2;
-    double A=20;
+    double w=1;
+    double A=10;
+
+    vector<double> pos;
 
     for (double t=0; t<10; t+=dts)
     {
@@ -66,7 +68,8 @@ int main()
         if (useRobot)
         {
 
-            jointVel = rightArm.GetJointVel(jointNumber);
+            jointVel = (rightArm.GetJoint(jointNumber) - jointPos)/dts;
+            jointPos = rightArm.GetJoint(jointNumber);
 
             rightArm.SetJointVel(jointNumber,target);
             yarp::os::Time::delay(dts);
@@ -74,7 +77,7 @@ int main()
             //plot data store
             vtTeo.pushBack(jointVel);
 
-//            std::cout << t << " , jointVel: " << jointVel << std::endl;
+            std::cout << t << " , jointVel: " << jointVel << std::endl;
 
         }
 

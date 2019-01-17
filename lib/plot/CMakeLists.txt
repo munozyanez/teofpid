@@ -9,6 +9,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 #deps
 find_package(PLOTUTILS REQUIRED)
 
+
 # source files
 aux_source_directory(. PLOT_SRCS)
 # include files
