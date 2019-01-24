@@ -40,7 +40,7 @@ long IPlot::Save(std::string filename)
     for (ulong i=1; i<x.size(); i++)
     {
 
-        datafile << x[i] << " - "
+        datafile << x[i] << " , "
                  << y[i] << ""
 
                  << std::endl;

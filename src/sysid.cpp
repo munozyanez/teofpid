@@ -53,8 +53,8 @@ int main()
     IPlot ptTeo(dts),vtTeo(dts),atTeo(dts),conTeo(dts);
 
     //input wave
-    double w=1;
-    double A=10;
+    double w=10;
+    double A=20;
 
     vector<double> pos;
 
