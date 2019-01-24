@@ -13,7 +13,7 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = 1;
+bool useRobot = 0;
 
 int main()
 {
@@ -80,15 +80,24 @@ int main()
     double ki;
     double kd;
 
+//    //Pure integrator
+//    SystemBlock con(
+//                std::vector<double> {dts,dts},
+//                std::vector<double> {-2,+2}
+//                );
 
+    FractionalController1DOF con(-0.488,dts);
+
+//    //w1isowfpi
+//    SystemBlock con(vector<double>{   0.0634  , -0.6307  ,  1.6524  , -1.6722  ,  0.5871},
+//                           vector<double>{   0.0634  , -0.6307  ,  1.6524 ,  -1.6722  ,  0.5871},
+//                           1);
 
     //w1isowfpi
-    SystemBlock con(vector<double>{   -0.4998  ,  1.1148 , -0.1453 ,  -1.0582 ,   0.5885},
-                           vector<double>{   -0.8639  ,  1.8624  , -0.1361  , -1.8624  ,  1.0000},
-                           1);
-
-
-    SystemBlock rcon(con);
+//    SystemBlock con(vector<double>{  -0.5405  ,  2.7734 ,  -5.6895  ,  5.8335  , -2.9893  ,  0.6125},
+//                           vector<double>{   -0.9095  ,  4.6370 ,  -9.4541  ,  9.6351 ,  -4.9085  ,  1.0000},
+//                           1);
+    FractionalController1DOF rcon(con);
 
     double signal;
     double modelSignal;
