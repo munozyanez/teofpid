@@ -86,7 +86,7 @@ int main()
 //                std::vector<double> {-2,+2}
 //                );
 
-    FractionalController1DOF con(0,dts);
+    FractionalController1DOF con(-0.25,dts);
 
 //    //w1isowfpi
 //    SystemBlock con(vector<double>{   0.0634  , -0.6307  ,  1.6524  , -1.6722  ,  0.5871},
@@ -97,7 +97,7 @@ int main()
 //    SystemBlock con(vector<double>{  -0.5405  ,  2.7734 ,  -5.6895  ,  5.8335  , -2.9893  ,  0.6125},
 //                           vector<double>{   -0.9095  ,  4.6370 ,  -9.4541  ,  9.6351 ,  -4.9085  ,  1.0000},
 //                           1);
-    FractionalController1DOF rcon(-0.1,dts);
+    FractionalController1DOF rcon(con);
 
     double signal;
     double modelSignal;
@@ -124,11 +124,12 @@ int main()
         //MODEL BLOCK DIAGRAM
         modelError = target-modelEncoder.GetState();
 
-//        modelSignal = modelError*kp;
+        //kp+ki*s^ei
+        modelSignal = 0.5449448 * modelError + 0.5449448 * (modelError > con);
 //        modelSignal += kd*(modelError > simFs);
 //        modelSignal += ki*(modelError > simF1s);
 
-        modelSignal = (modelError > con);
+//        modelSignal = (modelError > con);
 
         //next lines simulates model setjointVel
         if (  modelVel.GetState() > modelSignal )
