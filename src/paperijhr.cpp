@@ -13,7 +13,7 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = 0;
+bool useRobot = 1;
 
 int main()
 {
@@ -86,7 +86,7 @@ int main()
 //                std::vector<double> {-2,+2}
 //                );
 
-    FractionalController1DOF con(-0.25,dts);
+    FractionalController1DOF con(-0.15,dts);
 
 //    //w1isowfpi
 //    SystemBlock con(vector<double>{   0.0634  , -0.6307  ,  1.6524  , -1.6722  ,  0.5871},
@@ -106,7 +106,7 @@ int main()
 
     //time_t t;
     modelEncoder.Reset(60);
-    double target = 30;
+    double target = 40;
     double error, modelError;
     int jointNumber = 3;
 
