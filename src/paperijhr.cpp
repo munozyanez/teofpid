@@ -13,7 +13,7 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = 1;
+bool useRobot = 0;
 
 int main()
 {
@@ -85,19 +85,13 @@ int main()
 //                std::vector<double> {dts,dts},
 //                std::vector<double> {-2,+2}
 //                );
+//    SystemBlock rcon(con);
 
-    FractionalController1DOF con(-0.15,dts);
-
-//    //w1isowfpi
-//    SystemBlock con(vector<double>{   0.0634  , -0.6307  ,  1.6524  , -1.6722  ,  0.5871},
-//                           vector<double>{   0.0634  , -0.6307  ,  1.6524 ,  -1.6722  ,  0.5871},
-//                           1);
-
-    //w1isowfpi
-//    SystemBlock con(vector<double>{  -0.5405  ,  2.7734 ,  -5.6895  ,  5.8335  , -2.9893  ,  0.6125},
-//                           vector<double>{   -0.9095  ,  4.6370 ,  -9.4541  ,  9.6351 ,  -4.9085  ,  1.0000},
-//                           1);
+    FractionalController1DOF con(-0.488,dts);
     FractionalController1DOF rcon(con);
+
+    ToolsFControl tools;
+    tools.SetSamplingTime(dts);
 
     double signal;
     double modelSignal;
@@ -121,6 +115,8 @@ int main()
     for (ulong i=0; i<loops; i++)
     {
 
+
+        tools.WaitSamplingTime();
         //MODEL BLOCK DIAGRAM
         modelError = target-modelEncoder.GetState();
 
