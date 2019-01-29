@@ -13,7 +13,7 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = 0;
+bool useRobot = 1;
 
 int main()
 {
@@ -87,7 +87,7 @@ int main()
 //                );
 //    SystemBlock rcon(con);
 
-    FractionalController1DOF con(-0.488,dts);
+    FractionalController1DOF con(-0.488/1.5,dts);
     FractionalController1DOF rcon(con);
 
     ToolsFControl tools;
