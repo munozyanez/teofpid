@@ -165,7 +165,7 @@ int main()
             }
 
             rightArm.SetJointVel(jointNumber,1*signal);
-            yarp::os::Time::delay(dts);
+//            yarp::os::Time::delay(dts);
             //signal = signal*24.4/15;
 
             //plot data store
