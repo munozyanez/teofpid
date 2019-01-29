@@ -13,12 +13,23 @@
 using namespace std;
 
 #define ROBOT "teo"
-bool useRobot = 1;
+bool useRobot = 0;
 
 int main()
 {
 
     double dts = 0.01;
+    double initialAngle = 50;
+
+
+    //instantiate object motor model
+    SystemBlock motor(
+                std::vector<double> {1 ,2, 1},
+                std::vector<double> { 39750, - 80000, + 40250 }
+                );
+
+    //start at 50 deg
+    motor.Reset(initialAngle);
 
     MWI::Limb rightArm(ROBOT,"rightArm");
 
@@ -32,7 +43,7 @@ int main()
 
         }
         rightArm.SetControlMode(1);
-        rightArm.SetJointPositions(std::vector<double>{0,0,0,60,0,0});
+        rightArm.SetJointPositions(std::vector<double>{0,0,0,initialAngle,0,0});
         yarp::os::Time::delay(5);
         //rightArm.DefaultPosition();
         //yarp::os::Time::delay(5);
@@ -42,43 +53,7 @@ int main()
 
     }
 
-    //instantiate object motor
-    double ka=1;//10.09;//acceleration
-    SystemBlock acc(
-                std::vector<double> {ka},
-                std::vector<double> {1}
-                );
-    //graph: acc.SetSaturation(-24,24);
-    acc.SetSaturation(-10,10);
-    //instantiate object motor
-    SystemBlock modelVel(
-                std::vector<double> {1,1},
-                std::vector<double> {-1,+1},
-//                std::vector<double> {0,dts*1},
-//                std::vector<double> {-1,1}
-//                std::vector<double> {Ts*Ts*ka,2*Ts*Ts*ka,Ts*Ts*ka},
-//                std::vector<double> {Ts*Ts*ka+4,(2*Ts*Ts*ka-8),(Ts*Ts*ka+4)}
-                dts/2);
-    //TODO: Update <maxvel>10</maxvel> and <maxaccel>5</maxaccel> in openrave joints
-    modelVel.SetSaturation(-24.4,24.4);
-    //instantiate object encoder
-    SystemBlock modelEncoder(
-                std::vector<double> {dts,dts},
-                std::vector<double> {-2,+2}
-//                std::vector<double> {0,Ts*1},
-//                std::vector<double> {-1,1}
-                );
 
-
-    //instantiate object control
-
-    double N = 20;    // LPFfilter N
-
-
-
-    double kp;
-    double ki;
-    double kd;
 
 //    //Pure integrator
 //    SystemBlock con(
@@ -87,7 +62,7 @@ int main()
 //                );
 //    SystemBlock rcon(con);
 
-    FractionalController1DOF con(-0.488/1.5,dts);
+    FractionalController1DOF con(-0.488,dts);
     FractionalController1DOF rcon(con);
 
     ToolsFControl tools;
@@ -98,8 +73,7 @@ int main()
     double jointPos, jointLastPos, jointVel;
 
 
-    //time_t t;
-    modelEncoder.Reset(60);
+
     double target = 40;
     double error, modelError;
     int jointNumber = 3;
@@ -116,32 +90,15 @@ int main()
     {
 
 
-        tools.WaitSamplingTime();
+//        tools.WaitSamplingTime();
         //MODEL BLOCK DIAGRAM
-        modelError = target-modelEncoder.GetState();
-
+        //sum
+        modelError = target-motor.GetState();
+        //controller signal
         //kp+ki*s^ei
         modelSignal = 0.5449448 * modelError + 0.5449448 * (modelError > con);
-//        modelSignal += kd*(modelError > simFs);
-//        modelSignal += ki*(modelError > simF1s);
-
-//        modelSignal = (modelError > con);
-
-        //next lines simulates model setjointVel
-        if (  modelVel.GetState() > modelSignal )
-        {
-            //constant deceleration of model
-            -15 > acc > modelVel  >  modelEncoder;
-
-        }
-        else
-        {
-            //constant acceleration of model
-            15 > acc > modelVel  >  modelEncoder;
-
-        }
-
-
+        //actuator
+        modelSignal > motor;
         //ROBOT BLOCK DIAGRAM
         if (useRobot)
         {
@@ -183,17 +140,14 @@ int main()
         }
 
         //plot data store
-        pt.pushBack(modelEncoder.GetState());
-        vt.pushBack(modelVel.GetState());
-        at.pushBack(acc.GetState());
+        pt.pushBack(motor.GetState());
         cs.pushBack(modelSignal);
 
 
         std::cout << i*dts
 
                   << " , modelSignal: " << modelSignal
-                  << " , modelVel: " << modelVel.GetState()
-                  << " , modelPos: " << modelEncoder.GetState()
+                  << " , modelPosition: " << motor.GetState()
                   << std::endl;
 
     }
